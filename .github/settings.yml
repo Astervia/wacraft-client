@@ -73,3 +73,12 @@ branches:
                   - "Rfluid"
               teams: []
               apps: []
+
+labels:
+    - name: "security"
+      color: "d73a4a"
+      description: "Security-related fixes, CVEs, SAST, supply chain"
+
+    - name: "ci"
+      color: "0e8a16"
+      description: "CI/CD workflow updates"
