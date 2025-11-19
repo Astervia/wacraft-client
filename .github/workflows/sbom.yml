@@ -1,0 +1,45 @@
+name: SBOM
+
+on:
+    push:
+        branches: [main, develop]
+    pull_request:
+        branches: [main, develop]
+    schedule:
+        - cron: "0 6 * * 1"
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    generate-sbom:
+        name: Generate SBOM (CycloneDX)
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: "22"
+                  cache: "npm"
+                  cache-dependency-path: "package-lock.json"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Generate CycloneDX SBOM (JSON & XML)
+              run: |
+                  npx @cyclonedx/cyclonedx-npm --output-format json --output-file sbom.json
+                  npx @cyclonedx/cyclonedx-npm --output-format xml  --output-file sbom.xml
+
+            - name: Upload SBOM artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: sbom
+                  path: |
+                      sbom.json
+                      sbom.xml
