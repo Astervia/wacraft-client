@@ -35,7 +35,7 @@
         "async-mutex": "^0.5.0",
         "axios": "^1.7.5",
         "csvtojson": "^2.0.10",
-        "date-fns": "^3.6.0",
+        "date-fns": "^4.1.0",
         "file-saver": "^2.0.5",
         "google-libphonenumber": "^3.2.40",
         "intl-tel-input": "^19.5.7",
