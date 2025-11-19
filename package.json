@@ -45,7 +45,7 @@
         "ngx-intl-tel-input": "^17.0.0",
         "ngx-json-viewer": "^3.2.1",
         "ngx-logger": "^5.0.12",
-        "ngx-material-intl-tel-input": "^19.2.1",
+        "ngx-material-intl-tel-input": "^20.1.2",
         "papaparse": "^5.4.1",
         "rete": "^2.0.5",
         "rete-area-plugin": "^2.1.3",
