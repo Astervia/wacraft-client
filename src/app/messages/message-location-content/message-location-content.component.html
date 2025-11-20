@@ -1,40 +1,40 @@
 <div id="content">
-  <div class="mb-2">
-    @if (options) {
-      <google-map height="250px" id="map" [options]="options">
-        @if (markerPosition) {
-          <map-marker [position]="markerPosition"></map-marker>
+    <div class="mb-2">
+        @if (options) {
+            <google-map height="250px" id="map" [options]="options">
+                @if (markerPosition) {
+                    <map-marker [position]="markerPosition"></map-marker>
+                }
+            </google-map>
         }
-      </google-map>
-    }
-  </div>
-
-  <!-- Header with Google Maps link -->
-  @if ((message | messageData)?.location?.name) {
-    <div class="text-base" id="header">
-      <p class="">
-        <a
-                [href]="
-                    'https://maps.google.com/maps/search/' +
-                    (message | messageData)?.location?.name +
-                    '/@' +
-                    (message | messageData)?.location?.latitude +
-                    ',' +
-                    (message | messageData)?.location?.longitude
-                "
-          target="_blank"
-          rel="noopener noreferrer"
-          >
-          {{ (message | messageData)?.location?.name }}
-        </a>
-      </p>
     </div>
-  }
 
-  <!-- Body -->
-  @if ((message | messageData)?.location?.address) {
-    <p class="" id="body">
-      {{ (message | messageData)?.location?.address }}
-    </p>
-  }
+    <!-- Header with Google Maps link -->
+    @if ((message | messageData)?.location?.name) {
+        <div class="text-base" id="header">
+            <p class="">
+                <a
+                    [href]="
+                        'https://maps.google.com/maps/search/' +
+                        (message | messageData)?.location?.name +
+                        '/@' +
+                        (message | messageData)?.location?.latitude +
+                        ',' +
+                        (message | messageData)?.location?.longitude
+                    "
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    {{ (message | messageData)?.location?.name }}
+                </a>
+            </p>
+        </div>
+    }
+
+    <!-- Body -->
+    @if ((message | messageData)?.location?.address) {
+        <p class="" id="body">
+            {{ (message | messageData)?.location?.address }}
+        </p>
+    }
 </div>

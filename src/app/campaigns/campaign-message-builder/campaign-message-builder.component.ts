@@ -13,12 +13,7 @@ import { SenderData } from "../../../core/message/model/sender-data.model";
 
 @Component({
     selector: "app-campaign-message-builder",
-    imports: [
-    FormsModule,
-    MatTooltipModule,
-    TimeoutErrorModalComponent,
-    FileUploadComponent
-],
+    imports: [FormsModule, MatTooltipModule, TimeoutErrorModalComponent, FileUploadComponent],
     templateUrl: "./campaign-message-builder.component.html",
     styleUrl: "./campaign-message-builder.component.scss",
     standalone: true,

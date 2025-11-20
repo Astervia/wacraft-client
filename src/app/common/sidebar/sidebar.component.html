@@ -1,193 +1,190 @@
 <div
-  class="flex h-screen w-14 flex-col items-center justify-between overflow-auto border-r border-gray-300 bg-gray-200 py-2 dark:border-gray-700 dark:bg-gray-700"
-  >
-  <div class="flex flex-col items-center justify-center">
-    <div
+    class="flex h-screen w-14 flex-col items-center justify-between overflow-auto border-r border-gray-300 bg-gray-200 py-2 dark:border-gray-700 dark:bg-gray-700"
+>
+    <div class="flex flex-col items-center justify-center">
+        <div
             [ngClass]="{
                 'flex flex-col items-center justify-center overflow-hidden transition-all duration-300': true,
                 'max-h-0': isCollapsed,
                 'max-h-80': !isCollapsed,
             }"
-      >
-      <button
-        id="sidebar-toggle"
-        class="flex aspect-square w-10 items-center justify-center rounded-lg border border-gray-500 text-white dark:border-gray-500"
+        >
+            <button
+                id="sidebar-toggle"
+                class="flex aspect-square w-10 items-center justify-center rounded-lg border border-gray-500 text-white dark:border-gray-500"
                 (click)="
                     queryParamsService.sidebarOpen
                         ? queryParamsService.closeSidebar()
                         : queryParamsService.openSidebar()
                 "
-        >
-        <i
+            >
+                <i
                     [ngClass]="{
                         'fa-solid fa-chevron-right outline-none transition-transform duration-300': true,
                         'text-gray-500 dark:text-gray-500': true,
                         'rotate-180': queryParamsService.sidebarOpen,
                     }"
-        ></i>
-      </button>
+                ></i>
+            </button>
 
-      <hr class="my-5 w-8 border-b border-gray-600 dark:border-gray-600" />
+            <hr class="my-5 w-8 border-b border-gray-600 dark:border-gray-600" />
+        </div>
+
+        <a
+            [routerLink]="['/', RoutePath.home]"
+            [fragment]="HomeFragment.chats"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class="navigator"
+        >
+            <app-small-button
+                [active]="activePage === HomeFragment.chats"
+                matTooltip="Chats"
+                matIcon="chat"
+                i18n-matTooltip
+            >
+            </app-small-button>
+        </a>
+
+        <a
+            [routerLink]="['/', RoutePath.home]"
+            [fragment]="HomeFragment.templates"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class="navigator"
+        >
+            <app-small-button
+                [active]="activePage === HomeFragment.templates"
+                matTooltip="Templates"
+                matSymbol="format_image_left"
+                i18n-matTooltip
+            >
+            </app-small-button>
+        </a>
+
+        @if (!environment.isLite) {
+            <a
+                [routerLink]="['/', RoutePath.home]"
+                [fragment]="HomeFragment.campaigns"
+                [queryParams]="queryParamsService.globalQueryParams"
+                queryParamsHandling="replace"
+                class="navigator"
+            >
+                <app-small-button
+                    matIcon="campaign"
+                    [active]="activePage === HomeFragment.campaigns"
+                    matTooltip="Campaigns"
+                    i18n-matTooltip
+                ></app-small-button>
+            </a>
+        }
+
+        @if (environment.isLite) {
+            <a
+                href="https://wacraft.astervia.tech/support/plans/"
+                class="navigator unavailable-pro-feature"
+            >
+                <app-small-button
+                    matIcon="campaign"
+                    [active]="activePage === HomeFragment.campaigns"
+                    matTooltip="Campaigns are available to supporters. Visit the supporter area to learn more."
+                    i18n-matTooltip
+                ></app-small-button>
+            </a>
+        }
+
+        @if (
+            userStore.currentUser &&
+            !environment.isLite &&
+            (userStore.currentUser.role === Role.admin ||
+                userStore.currentUser.role === Role.developer ||
+                userStore.currentUser.role === Role.automation)
+        ) {
+            <a
+                [routerLink]="['/', RoutePath.automation]"
+                [queryParams]="queryParamsService.globalQueryParams"
+                queryParamsHandling="replace"
+                class="navigator"
+            >
+                <app-small-button
+                    [active]="activePage === RoutePath.automation"
+                    matTooltip="Automations"
+                    matSymbol="automation"
+                    i18n-matTooltip
+                ></app-small-button>
+            </a>
+        }
+
+        @if (environment.isLite) {
+            <a
+                href="https://wacraft.astervia.tech/support/plans/"
+                class="navigator unavailable-pro-feature"
+            >
+                <app-small-button
+                    [active]="activePage === RoutePath.automation"
+                    matTooltip="Automations are available to supporters. Visit the supporter area to learn more."
+                    matSymbol="automation"
+                    i18n-matTooltip
+                ></app-small-button>
+            </a>
+        }
+
+        @if (
+            userStore.currentUser &&
+            (userStore.currentUser.role === Role.admin ||
+                userStore.currentUser.role === Role.developer ||
+                userStore.currentUser.role === Role.automation)
+        ) {
+            <a
+                [routerLink]="['/', RoutePath.webhooks]"
+                [queryParams]="queryParamsService.globalQueryParams"
+                queryParamsHandling="replace"
+                class="navigator"
+            >
+                <app-small-button
+                    matIcon="webhook"
+                    [active]="activePage === RoutePath.webhooks"
+                    matTooltip="Webhooks"
+                    i18n-matTooltip
+                ></app-small-button>
+            </a>
+        }
+
+        @if (userStore.currentUser && userStore.currentUser.role === Role.admin) {
+            <a
+                [routerLink]="['/', RoutePath.users]"
+                [queryParams]="queryParamsService.globalQueryParams"
+                queryParamsHandling="replace"
+                class="navigator"
+            >
+                <app-small-button
+                    [active]="activePage === RoutePath.users"
+                    matTooltip="Users"
+                    matIcon="people"
+                    i18n-matTooltip
+                >
+                </app-small-button>
+            </a>
+        }
     </div>
 
-    <a
-      [routerLink]="['/', RoutePath.home]"
-      [fragment]="HomeFragment.chats"
-      [queryParams]="queryParamsService.globalQueryParams"
-      queryParamsHandling="replace"
-      class="navigator"
-      >
-      <app-small-button
-        [active]="activePage === HomeFragment.chats"
-        matTooltip="Chats"
-        matIcon="chat"
-        i18n-matTooltip
+    <div class="flex flex-col items-center justify-center">
+        <a
+            [routerLink]="['/', RoutePath.account]"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class=""
         >
-      </app-small-button>
-    </a>
-
-    <a
-      [routerLink]="['/', RoutePath.home]"
-      [fragment]="HomeFragment.templates"
-      [queryParams]="queryParamsService.globalQueryParams"
-      queryParamsHandling="replace"
-      class="navigator"
-      >
-      <app-small-button
-        [active]="activePage === HomeFragment.templates"
-        matTooltip="Templates"
-        matSymbol="format_image_left"
-        i18n-matTooltip
-        >
-      </app-small-button>
-    </a>
-
-    @if (!environment.isLite) {
-      <a
-        [routerLink]="['/', RoutePath.home]"
-        [fragment]="HomeFragment.campaigns"
-        [queryParams]="queryParamsService.globalQueryParams"
-        queryParamsHandling="replace"
-        class="navigator"
-        >
-        <app-small-button
-          matIcon="campaign"
-          [active]="activePage === HomeFragment.campaigns"
-          matTooltip="Campaigns"
-          i18n-matTooltip
-        ></app-small-button>
-      </a>
-    }
-
-    @if (environment.isLite) {
-      <a
-        href="https://wacraft.astervia.tech/support/plans/"
-        class="navigator unavailable-pro-feature"
-        >
-        <app-small-button
-          matIcon="campaign"
-          [active]="activePage === HomeFragment.campaigns"
-          matTooltip="Campaigns are available to supporters. Visit the supporter area to learn more."
-          i18n-matTooltip
-        ></app-small-button>
-      </a>
-    }
-
-    @if (
-      userStore.currentUser &&
-      !environment.isLite &&
-      (userStore.currentUser.role === Role.admin ||
-      userStore.currentUser.role === Role.developer ||
-      userStore.currentUser.role === Role.automation)
-      ) {
-      <a
-        [routerLink]="['/', RoutePath.automation]"
-        [queryParams]="queryParamsService.globalQueryParams"
-        queryParamsHandling="replace"
-        class="navigator"
-        >
-        <app-small-button
-          [active]="activePage === RoutePath.automation"
-          matTooltip="Automations"
-          matSymbol="automation"
-          i18n-matTooltip
-        ></app-small-button>
-      </a>
-    }
-
-    @if (environment.isLite) {
-      <a
-        href="https://wacraft.astervia.tech/support/plans/"
-        class="navigator unavailable-pro-feature"
-        >
-        <app-small-button
-          [active]="activePage === RoutePath.automation"
-          matTooltip="Automations are available to supporters. Visit the supporter area to learn more."
-          matSymbol="automation"
-          i18n-matTooltip
-        ></app-small-button>
-      </a>
-    }
-
-    @if (
-      userStore.currentUser &&
-      (userStore.currentUser.role === Role.admin ||
-      userStore.currentUser.role === Role.developer ||
-      userStore.currentUser.role === Role.automation)
-      ) {
-      <a
-        [routerLink]="['/', RoutePath.webhooks]"
-        [queryParams]="queryParamsService.globalQueryParams"
-        queryParamsHandling="replace"
-        class="navigator"
-        >
-        <app-small-button
-          matIcon="webhook"
-          [active]="activePage === RoutePath.webhooks"
-          matTooltip="Webhooks"
-          i18n-matTooltip
-        ></app-small-button>
-      </a>
-    }
-
-    @if (userStore.currentUser && userStore.currentUser.role === Role.admin) {
-      <a
-        [routerLink]="['/', RoutePath.users]"
-        [queryParams]="queryParamsService.globalQueryParams"
-        queryParamsHandling="replace"
-        class="navigator"
-        >
-        <app-small-button
-          [active]="activePage === RoutePath.users"
-          matTooltip="Users"
-          matIcon="people"
-          i18n-matTooltip
-          >
-        </app-small-button>
-      </a>
-    }
-  </div>
-
-  <div class="flex flex-col items-center justify-center">
-    <a
-      [routerLink]="['/', RoutePath.account]"
-      [queryParams]="queryParamsService.globalQueryParams"
-      queryParamsHandling="replace"
-      class=""
-      >
-      <app-small-button
-        [active]="activePage === 'account'"
-        matTooltip="Account configuration"
-        matIcon="settings"
-        i18n-matTooltip
-      ></app-small-button>
-    </a>
-  </div>
+            <app-small-button
+                [active]="activePage === 'account'"
+                matTooltip="Account configuration"
+                matIcon="settings"
+                i18n-matTooltip
+            ></app-small-button>
+        </a>
+    </div>
 </div>
 
 @if (showShortcuts) {
-  <app-shortcuts
-    [navItems]="navItems"
-    (close)="showShortcuts = false"
-  ></app-shortcuts>
+    <app-shortcuts [navItems]="navItems" (close)="showShortcuts = false"></app-shortcuts>
 }

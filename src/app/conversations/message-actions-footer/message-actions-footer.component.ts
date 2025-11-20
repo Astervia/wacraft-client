@@ -1,4 +1,3 @@
-
 import { Component, EventEmitter, Input, Output, ViewChild, inject } from "@angular/core";
 import { SenderData } from "../../../core/message/model/sender-data.model";
 import { MessageControllerService } from "../../../core/message/controller/message-controller.service";
@@ -17,11 +16,11 @@ import { ContactsModalComponent } from "../../contacts/contact-modal/contacts-mo
 @Component({
     selector: "app-message-actions-footer",
     imports: [
-    SmallButtonComponent,
-    TimeoutErrorModalComponent,
-    MatIconModule,
-    ContactsModalComponent
-],
+        SmallButtonComponent,
+        TimeoutErrorModalComponent,
+        MatIconModule,
+        ContactsModalComponent,
+    ],
     templateUrl: "./message-actions-footer.component.html",
     styleUrl: "./message-actions-footer.component.scss",
 })

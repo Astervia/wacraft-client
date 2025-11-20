@@ -1,12 +1,12 @@
 @if (environment.nodeRedServerUrl) {
-  <iframe
-    [src]="
-        (environment.nodeRedServerUrl | urlWithHttp: environment.nodeRedServerSecurity) +
-            '?access_token=' +
-            accessToken | safeUrl
-    "
-    width="100%"
-    height="100%"
-    style="border: none"
-  ></iframe>
+    <iframe
+        [src]="
+            (environment.nodeRedServerUrl | urlWithHttp: environment.nodeRedServerSecurity) +
+                '?access_token=' +
+                accessToken | safeUrl
+        "
+        width="100%"
+        height="100%"
+        style="border: none"
+    ></iframe>
 }

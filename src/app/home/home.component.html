@@ -1,64 +1,55 @@
 <div class="flex h-screen w-screen justify-center">
-  <app-sidebar class="" [activePage]="currentFragment"></app-sidebar>
+    <app-sidebar class="" [activePage]="currentFragment"></app-sidebar>
 
-  <app-chats-sidebar
+    <app-chats-sidebar
         [ngClass]="{
             hidden: currentFragment !== HomeFragment.chats,
         }"
-    (selectMessagingProductContact)="conversations.getCurrentMessagingProductContactId($event)"
-    #chatsSidebar
-  ></app-chats-sidebar>
+        (selectMessagingProductContact)="conversations.getCurrentMessagingProductContactId($event)"
+        #chatsSidebar
+    ></app-chats-sidebar>
 
-  <div
-    class="w-full dark:bg-gray-800"
+    <div
+        class="w-full dark:bg-gray-800"
         [ngClass]="{
             hidden: currentFragment !== HomeFragment.chats || queryParamIs('mode', 'new_contact'),
         }"
     >
-    <app-conversations
-      class=""
-      #conversations
-      (searchAtContactId)="chatsSidebar.addMessagingProductContactIdField($event)"
+        <app-conversations
+            class=""
+            #conversations
+            (searchAtContactId)="chatsSidebar.addMessagingProductContactIdField($event)"
             [ngClass]="{
                 hidden: !hasQueryParam('messaging_product_contact.id'),
             }"
-    ></app-conversations>
-  </div>
-
-  @if (
-    currentFragment === HomeFragment.chats &&
-    !hasQueryParam('messaging_product_contact.id') &&
-    queryParamIs('mode', 'new_contact')
-    ) {
-    <div
-      class="w-full dark:bg-gray-800"
-      >
-      <app-new-contact
-        (select)="conversations.getCurrentMessagingProductContactId($event)"
-      ></app-new-contact>
+        ></app-conversations>
     </div>
-  }
 
-  @if (currentFragment === HomeFragment.templates) {
-    <app-template-sidebar
-      class=""
-    ></app-template-sidebar>
-  }
+    @if (
+        currentFragment === HomeFragment.chats &&
+        !hasQueryParam("messaging_product_contact.id") &&
+        queryParamIs("mode", "new_contact")
+    ) {
+        <div class="w-full dark:bg-gray-800">
+            <app-new-contact
+                (select)="conversations.getCurrentMessagingProductContactId($event)"
+            ></app-new-contact>
+        </div>
+    }
 
-  @if (currentFragment === HomeFragment.templates) {
-    <app-template-details
-      class="w-full dark:bg-gray-800"
-    ></app-template-details>
-  }
+    @if (currentFragment === HomeFragment.templates) {
+        <app-template-sidebar class=""></app-template-sidebar>
+    }
 
-  @if (currentFragment === HomeFragment.campaigns && !environment.isLite) {
-    <app-campaigns-sidebar
-    ></app-campaigns-sidebar>
-  }
+    @if (currentFragment === HomeFragment.templates) {
+        <app-template-details class="w-full dark:bg-gray-800"></app-template-details>
+    }
 
-  @if (currentFragment === HomeFragment.campaigns && !environment.isLite) {
-    <app-campaign-details
-      class="w-full dark:bg-gray-800"
-    ></app-campaign-details>
-  }
+    @if (currentFragment === HomeFragment.campaigns && !environment.isLite) {
+        <app-campaigns-sidebar></app-campaigns-sidebar>
+    }
+
+    @if (currentFragment === HomeFragment.campaigns && !environment.isLite) {
+        <app-campaign-details class="w-full dark:bg-gray-800"></app-campaign-details>
+    }
 </div>

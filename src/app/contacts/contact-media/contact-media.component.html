@@ -1,76 +1,75 @@
 <div
-  class="relative flex h-full w-full flex-col items-center border-l pt-8 text-white dark:border-gray-700 dark:bg-gray-900"
-  >
-  <a [routerLink]="[]" [queryParams]="{ mode: 'contact_info' }" queryParamsHandling="merge">
-    <app-small-button class="absolute left-2 top-2" matIcon="arrow_back"></app-small-button>
-  </a>
+    class="relative flex h-full w-full flex-col items-center border-l pt-8 text-white dark:border-gray-700 dark:bg-gray-900"
+>
+    <a [routerLink]="[]" [queryParams]="{ mode: 'contact_info' }" queryParamsHandling="merge">
+        <app-small-button class="absolute left-2 top-2" matIcon="arrow_back"></app-small-button>
+    </a>
 
-  <a [routerLink]="[]" [queryParams]="{ mode: 'chat' }" queryParamsHandling="merge">
-    <app-small-button class="absolute right-2 top-2" matIcon="close"></app-small-button>
-  </a>
+    <a [routerLink]="[]" [queryParams]="{ mode: 'chat' }" queryParamsHandling="merge">
+        <app-small-button class="absolute right-2 top-2" matIcon="close"></app-small-button>
+    </a>
 
-  <div class="mt-7 grid w-full grid-cols-5 dark:bg-gray-800">
-    @for (mode of mediaModes; track mode) {
-      <button
-            [ngClass]="{
-                'col-span-1 flex items-center justify-center border-b-4 py-4 text-sm font-thin hover:font-normal': true,
-                'border-b-blue-600 text-blue-600': currentMediaMode === mode,
-                'text-gray-500 hover:border-blue-600 hover:text-blue-600 dark:border-gray-700':
-                    currentMediaMode !== mode,
-            }"
-        (click)="selectMediaMode(mode)"
-        i18n
-        >
-            
-@switch (mode) {
-                @case (MediaMode.image) {
-<span>Image</span>
-}
-                @case (MediaMode.video) {
-<span>Video</span>
-}
-                @case (MediaMode.audio) {
-<span>Audio</span>
-}
-                @case (MediaMode.sticker) {
-<span>Sticker</span>
-}
-                @case (MediaMode.document) {
-<span>Document</span>
-}
-                <!-- Add more cases as needed -->
-                @default {
-<span>{{ mode | capitalizeFirstLetter }}</span>
-}
-            }
-
-        </button>
-    }
-  </div>
-
-  @for (mode of mediaModes; track mode) {
-    <div
-        [ngClass]="{
-            'scrollable grid h-auto w-full gap-2 overflow-y-scroll p-2': true,
-            'grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4': mode !== MediaMode.audio,
-            'grid-cols-1': mode === MediaMode.audio,
-            hidden: currentMediaMode !== mode,
-        }"
-      >
-      @for (mediaContent of media.get(mode); track mediaContent) {
-        <app-media-preview
-          [message]="mediaContent"
-            [ngClass]="{
-                'h-auto': true,
-            }"
-        ></app-media-preview>
-      }
+    <div class="mt-7 grid w-full grid-cols-5 dark:bg-gray-800">
+        @for (mode of mediaModes; track mode) {
+            <button
+                [ngClass]="{
+                    'col-span-1 flex items-center justify-center border-b-4 py-4 text-sm font-thin hover:font-normal': true,
+                    'border-b-blue-600 text-blue-600': currentMediaMode === mode,
+                    'text-gray-500 hover:border-blue-600 hover:text-blue-600 dark:border-gray-700':
+                        currentMediaMode !== mode,
+                }"
+                (click)="selectMediaMode(mode)"
+                i18n
+            >
+                @switch (mode) {
+                    @case (MediaMode.image) {
+                        <span>Image</span>
+                    }
+                    @case (MediaMode.video) {
+                        <span>Video</span>
+                    }
+                    @case (MediaMode.audio) {
+                        <span>Audio</span>
+                    }
+                    @case (MediaMode.sticker) {
+                        <span>Sticker</span>
+                    }
+                    @case (MediaMode.document) {
+                        <span>Document</span>
+                    }
+                    <!-- Add more cases as needed -->
+                    @default {
+                        <span>{{ mode | capitalizeFirstLetter }}</span>
+                    }
+                }
+            </button>
+        }
     </div>
-  }
+
+    @for (mode of mediaModes; track mode) {
+        <div
+            [ngClass]="{
+                'scrollable grid h-auto w-full gap-2 overflow-y-scroll p-2': true,
+                'grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4':
+                    mode !== MediaMode.audio,
+                'grid-cols-1': mode === MediaMode.audio,
+                hidden: currentMediaMode !== mode,
+            }"
+        >
+            @for (mediaContent of media.get(mode); track mediaContent) {
+                <app-media-preview
+                    [message]="mediaContent"
+                    [ngClass]="{
+                        'h-auto': true,
+                    }"
+                ></app-media-preview>
+            }
+        </div>
+    }
 </div>
 
 <app-timeout-error-modal
-  [message]="errorStr"
-  [data]="errorData"
-  #errorModal
+    [message]="errorStr"
+    [data]="errorData"
+    #errorModal
 ></app-timeout-error-modal>

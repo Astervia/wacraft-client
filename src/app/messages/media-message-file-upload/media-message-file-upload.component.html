@@ -1,6 +1,3 @@
 @if (type && acceptedFormats[type]) {
-  <app-file-upload
-    (change)="change.emit($event)"
-    [acceptedFormats]="acceptedFormats[type]"
-  />
+    <app-file-upload (change)="change.emit($event)" [acceptedFormats]="acceptedFormats[type]" />
 }

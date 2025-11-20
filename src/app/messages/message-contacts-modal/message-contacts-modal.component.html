@@ -1,130 +1,140 @@
 <div
-  class="fixed bottom-0 left-0 right-0 top-0 z-10 flex items-center justify-center bg-gray-800 bg-opacity-70 py-8"
-  (click)="closeModal()"
-  role="button"
-  tabindex="0"
-  aria-label="Close contacts"
-  (keyup.enter)="closeModal()"
-  (keyup.space)="closeModal()"
-  >
-  <div
-    class="flex h-[500px] max-h-full w-[500px] max-w-full flex-col overflow-hidden rounded-sm"
-    id="content"
-    (click)="$event.stopPropagation()"
+    class="fixed bottom-0 left-0 right-0 top-0 z-10 flex items-center justify-center bg-gray-800 bg-opacity-70 py-8"
+    (click)="closeModal()"
+    role="button"
     tabindex="0"
-    role="dialog"
-    (keyup.enter)="$event.stopPropagation()"
-    (keyup.space)="$event.stopPropagation()"
-    >
-    <!-- Header -->
+    aria-label="Close contacts"
+    (keyup.enter)="closeModal()"
+    (keyup.space)="closeModal()"
+>
     <div
-      class="flex w-full items-center bg-blue-600 px-6 py-2 text-white dark:bg-gray-700"
-      id="header"
-      >
-      <button
-        class="mr-2 flex aspect-square w-10 items-center justify-center rounded-full"
-        (click)="closeModal()"
+        class="flex h-[500px] max-h-full w-[500px] max-w-full flex-col overflow-hidden rounded-sm"
+        id="content"
+        (click)="$event.stopPropagation()"
+        tabindex="0"
+        role="dialog"
+        (keyup.enter)="$event.stopPropagation()"
+        (keyup.space)="$event.stopPropagation()"
+    >
+        <!-- Header -->
+        <div
+            class="flex w-full items-center bg-blue-600 px-6 py-2 text-white dark:bg-gray-700"
+            id="header"
         >
-        <mat-icon fontIcon="close"></mat-icon>
-      </button>
+            <button
+                class="mr-2 flex aspect-square w-10 items-center justify-center rounded-full"
+                (click)="closeModal()"
+            >
+                <mat-icon fontIcon="close"></mat-icon>
+            </button>
 
-      <span class="text-lg font-normal" i18n>{{ contacts.length }} contacts</span>
-    </div>
-
-    <!-- Body -->
-    <div class="scrollable h-full w-full overflow-y-auto bg-white dark:bg-gray-900" id="body">
-      @for (contact of contacts; track contact) {
-        <div class="px-4 py-2">
-          <!-- Contact header -->
-          <div class="flex items-center justify-between py-4">
-            <div>
-              <p
-                class="text-base font-medium text-gray-800 dark:text-white"
-                [textContent]="contact.name.formatted_name"
-              ></p>
-              @if (
-                contact.org?.title ||
-                contact.org?.department ||
-                contact.org?.company
-                ) {
-                <span
-                  class="text-sm text-gray-500"
-                  >{{ contact.org?.title }}@if (contact.org?.title) {
-                  <span> - </span
-                    >
-                    }{{ contact.org?.department
-                    }}@if (contact.org?.department) {
-                    <span>, </span
-                      >
-                      }{{ contact.org?.company }}</span
-                      >
-                    }
-                  </div>
-                  <a
-                    [routerLink]="[]"
-                    [queryParams]="addChatQueryParams"
-                    queryParamsHandling="replace"
-                    [preserveFragment]="true"
-                    class="rounded-full bg-blue-600 px-4 py-1.5 text-sm text-white"
-                    i18n
-                    >Save</a
-                    >
-                  </div>
-                  <div class="space-y-3">
-                    <!-- Phones -->
-                    <div class="space-y-2">
-                      @for (phone of contact.phones; track phone) {
-                        <div class="text-sm">
-                          <a class="text-gray-800 dark:text-white" [href]="'tel:' + phone.phone">
-                            {{ phone.phone }}
-                          </a>
-                          <p
-                            class="text-xs uppercase text-blue-500"
-                            [textContent]="phone.type"
-                          ></p>
-                        </div>
-                      }
-                    </div>
-                    <!-- Emails -->
-                    @if (contact.emails?.length) {
-                      <div
-                        class="space-y-2 border-t border-gray-300 pt-3 dark:border-gray-700"
-                        >
-                        @for (email of contact.emails; track email) {
-                          <div class="text-sm">
-                            <a
-                              class="text-gray-800 dark:text-white"
-                              [href]="'mailto:' + email.email"
-                              >
-                              {{ email.email }}
-                            </a>
-                            <p class="text-xs text-blue-500" [textContent]="email.type"></p>
-                          </div>
-                        }
-                      </div>
-                    }
-                    <!-- URLs -->
-                    @if (contact.urls?.length) {
-                      <div
-                        class="space-y-2 border-t border-gray-300 pt-3 dark:border-gray-700"
-                        >
-                        @for (url of contact.urls; track url) {
-                          <div class="text-sm">
-                            <a
-                              [href]="url.url.startsWith('http') ? url.url : 'https://' + url.url"
-                              target="_blank"
-                              class="text-sm"
-                              >
-                              {{ url.url }}
-                            </a>
-                            <p class="text-xs text-blue-500">{{ url.type }}</p>
-                          </div>
-                        }
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
-            </div>
-          </div>
+            <span class="text-lg font-normal" i18n>{{ contacts.length }} contacts</span>
         </div>
+
+        <!-- Body -->
+        <div class="scrollable h-full w-full overflow-y-auto bg-white dark:bg-gray-900" id="body">
+            @for (contact of contacts; track contact) {
+                <div class="px-4 py-2">
+                    <!-- Contact header -->
+                    <div class="flex items-center justify-between py-4">
+                        <div>
+                            <p
+                                class="text-base font-medium text-gray-800 dark:text-white"
+                                [textContent]="contact.name.formatted_name"
+                            ></p>
+                            @if (
+                                contact.org?.title ||
+                                contact.org?.department ||
+                                contact.org?.company
+                            ) {
+                                <span class="text-sm text-gray-500"
+                                    >{{ contact.org?.title }}
+                                    @if (contact.org?.title) {
+                                        <span> - </span>
+                                    }
+                                    {{ contact.org?.department }}
+                                    @if (contact.org?.department) {
+                                        <span>, </span>
+                                    }
+                                    {{ contact.org?.company }}</span
+                                >
+                            }
+                        </div>
+                        <a
+                            [routerLink]="[]"
+                            [queryParams]="addChatQueryParams"
+                            queryParamsHandling="replace"
+                            [preserveFragment]="true"
+                            class="rounded-full bg-blue-600 px-4 py-1.5 text-sm text-white"
+                            i18n
+                            >Save</a
+                        >
+                    </div>
+                    <div class="space-y-3">
+                        <!-- Phones -->
+                        <div class="space-y-2">
+                            @for (phone of contact.phones; track phone) {
+                                <div class="text-sm">
+                                    <a
+                                        class="text-gray-800 dark:text-white"
+                                        [href]="'tel:' + phone.phone"
+                                    >
+                                        {{ phone.phone }}
+                                    </a>
+                                    <p
+                                        class="text-xs uppercase text-blue-500"
+                                        [textContent]="phone.type"
+                                    ></p>
+                                </div>
+                            }
+                        </div>
+                        <!-- Emails -->
+                        @if (contact.emails?.length) {
+                            <div
+                                class="space-y-2 border-t border-gray-300 pt-3 dark:border-gray-700"
+                            >
+                                @for (email of contact.emails; track email) {
+                                    <div class="text-sm">
+                                        <a
+                                            class="text-gray-800 dark:text-white"
+                                            [href]="'mailto:' + email.email"
+                                        >
+                                            {{ email.email }}
+                                        </a>
+                                        <p
+                                            class="text-xs text-blue-500"
+                                            [textContent]="email.type"
+                                        ></p>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        <!-- URLs -->
+                        @if (contact.urls?.length) {
+                            <div
+                                class="space-y-2 border-t border-gray-300 pt-3 dark:border-gray-700"
+                            >
+                                @for (url of contact.urls; track url) {
+                                    <div class="text-sm">
+                                        <a
+                                            [href]="
+                                                url.url.startsWith('http')
+                                                    ? url.url
+                                                    : 'https://' + url.url
+                                            "
+                                            target="_blank"
+                                            class="text-sm"
+                                        >
+                                            {{ url.url }}
+                                        </a>
+                                        <p class="text-xs text-blue-500">{{ url.type }}</p>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

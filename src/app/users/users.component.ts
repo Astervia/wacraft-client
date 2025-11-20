@@ -1,4 +1,3 @@
-
 import { Component, HostListener, inject } from "@angular/core";
 import { SidebarComponent } from "../common/sidebar/sidebar.component";
 import { RoutePath } from "../app.routes";

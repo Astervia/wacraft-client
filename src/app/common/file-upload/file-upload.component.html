@@ -1,59 +1,59 @@
 <div
-  class="flex w-full flex-col items-center justify-center rounded-lg bg-white px-4 py-6 shadow-md dark:bg-gray-800"
-  >
-  <label
-    for="file-upload"
-    class="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed bg-gray-50 transition hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600"
+    class="flex w-full flex-col items-center justify-center rounded-lg bg-white px-4 py-6 shadow-md dark:bg-gray-800"
+>
+    <label
+        for="file-upload"
+        class="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed bg-gray-50 transition hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600"
         [ngClass]="{
             'border-green-500 bg-green-50 dark:border-green-600 dark:bg-green-900':
                 uploadedFileName,
         }"
     >
-    <div class="flex flex-col items-center justify-center pb-6 pt-5">
-      <mat-icon class="material-symbols-outlined mb-3">
-        {{ uploadedFileName ? "check_circle" : "upload" }}
-      </mat-icon>
+        <div class="flex flex-col items-center justify-center pb-6 pt-5">
+            <mat-icon class="material-symbols-outlined mb-3">
+                {{ uploadedFileName ? "check_circle" : "upload" }}
+            </mat-icon>
 
-      <p class="mb-2 text-sm text-gray-500 dark:text-gray-300">
-        @if (uploadedFileName) {
-          <span class="font-semibold" i18n>File uploaded:</span>
-        }
-        @if (!uploadedFileName) {
-          <span class="font-semibold" i18n>Click to upload</span>
-        }
-        @if (!uploadedFileName) {
-          <span>&nbsp;</span>
-        }
-        @if (!uploadedFileName) {
-          <span i18n>or drag and drop</span>
-        }
-      </p>
-      <p class="text-xs text-gray-500 dark:text-gray-300">
-        @if (uploadedFileName) {
-          {{ uploadedFileName }}
-        } @else {
-          @if (acceptedFormats) {
-            <span>{{ acceptedFormats }}</span>
-          }
-        }
-      </p>
-    </div>
-    <input
-      #fileInput
-      id="file-upload"
-      type="file"
-      class="hidden"
-      (change)="onFileChange($event)"
-      />
-  </label>
+            <p class="mb-2 text-sm text-gray-500 dark:text-gray-300">
+                @if (uploadedFileName) {
+                    <span class="font-semibold" i18n>File uploaded:</span>
+                }
+                @if (!uploadedFileName) {
+                    <span class="font-semibold" i18n>Click to upload</span>
+                }
+                @if (!uploadedFileName) {
+                    <span>&nbsp;</span>
+                }
+                @if (!uploadedFileName) {
+                    <span i18n>or drag and drop</span>
+                }
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-300">
+                @if (uploadedFileName) {
+                    {{ uploadedFileName }}
+                } @else {
+                    @if (acceptedFormats) {
+                        <span>{{ acceptedFormats }}</span>
+                    }
+                }
+            </p>
+        </div>
+        <input
+            #fileInput
+            id="file-upload"
+            type="file"
+            class="hidden"
+            (change)="onFileChange($event)"
+        />
+    </label>
 
-  @if (uploadedFileName) {
-    <button
-      (click)="clearFile(fileInput)"
-      class="mt-4 text-sm text-red-600 hover:underline"
-      i18n
-      >
-        Remove file
-    </button>
-  }
+    @if (uploadedFileName) {
+        <button
+            (click)="clearFile(fileInput)"
+            class="mt-4 text-sm text-red-600 hover:underline"
+            i18n
+        >
+            Remove file
+        </button>
+    }
 </div>

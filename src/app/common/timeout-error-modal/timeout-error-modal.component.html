@@ -1,35 +1,35 @@
 @if (isVisible) {
-  <div
-    class="fixed left-1/2 top-4 max-h-full w-full max-w-md -translate-x-1/2 transform rounded-lg border border-red-900 bg-red-900 bg-opacity-30 p-4 text-gray-400 shadow-lg backdrop-blur-md transition-opacity duration-300"
+    <div
+        class="fixed left-1/2 top-4 max-h-full w-full max-w-md -translate-x-1/2 transform rounded-lg border border-red-900 bg-red-900 bg-opacity-30 p-4 text-gray-400 shadow-lg backdrop-blur-md transition-opacity duration-300"
     >
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-lg font-medium">{{ headerMessage }}</p>
-      </div>
-      @if (data) {
-        <button (click)="toggleData()" class="rounded">
-          @if (!showData) {
-            <i class="fas fa-chevron-down"></i>
-          }
-          @if (showData) {
-            <i class="fas fa-chevron-up"></i>
-          }
-        </button>
-      }
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-lg font-medium">{{ headerMessage }}</p>
+            </div>
+            @if (data) {
+                <button (click)="toggleData()" class="rounded">
+                    @if (!showData) {
+                        <i class="fas fa-chevron-down"></i>
+                    }
+                    @if (showData) {
+                        <i class="fas fa-chevron-up"></i>
+                    }
+                </button>
+            }
+        </div>
+        <p class="text-sm" [textContent]="message"></p>
+        @if (data && showData) {
+            <div
+                class="scrollable mb-2 mt-2 max-h-full overflow-y-scroll rounded bg-red-900 bg-opacity-40 p-2 text-gray-200"
+            >
+                <pre class="scrollable whitespace-pre-wrap">{{ data | json }}</pre>
+            </div>
+        }
+        <div class="relative mt-2 h-1 w-full rounded bg-red-900 dark:bg-red-900">
+            <div
+                class="absolute left-0 top-0 h-1 rounded bg-red-800 dark:bg-red-700"
+                [style.width.%]="progress"
+            ></div>
+        </div>
     </div>
-    <p class="text-sm" [textContent]="message"></p>
-    @if (data && showData) {
-      <div
-        class="scrollable mb-2 mt-2 max-h-full overflow-y-scroll rounded bg-red-900 bg-opacity-40 p-2 text-gray-200"
-        >
-        <pre class="scrollable whitespace-pre-wrap">{{ data | json }}</pre>
-      </div>
-    }
-    <div class="relative mt-2 h-1 w-full rounded bg-red-900 dark:bg-red-900">
-      <div
-        class="absolute left-0 top-0 h-1 rounded bg-red-800 dark:bg-red-700"
-        [style.width.%]="progress"
-      ></div>
-    </div>
-  </div>
 }

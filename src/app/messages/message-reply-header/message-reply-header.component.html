@@ -1,129 +1,122 @@
 @if (replyToMessage) {
-  <div
-    class=""
-    [ngClass]="{
-        'text-xm rounded-md border-l-4 border-green-700 p-2': true,
-        'bg-blue-400 dark:bg-blue-900': backgroundColor === 'blue',
-        'bg-gray-200 dark:bg-gray-800': backgroundColor === 'gray',
-    }"
-    (click)="setIdAsQueryParam()"
-    role="button"
-    tabindex="0"
-    (keyup.enter)="setIdAsQueryParam()"
-    (keyup.space)="setIdAsQueryParam()"
+    <div
+        class=""
+        [ngClass]="{
+            'text-xm rounded-md border-l-4 border-green-700 p-2': true,
+            'bg-blue-400 dark:bg-blue-900': backgroundColor === 'blue',
+            'bg-gray-200 dark:bg-gray-800': backgroundColor === 'gray',
+        }"
+        (click)="setIdAsQueryParam()"
+        role="button"
+        tabindex="0"
+        (keyup.enter)="setIdAsQueryParam()"
+        (keyup.space)="setIdAsQueryParam()"
     >
-    <p class="mb-2 text-green-700">
-      @if (replyToMessage.receiver_data) {
-        <span [textContent]="contactName"></span>
-      }
-      @if (!replyToMessage.receiver_data) {
-        <span i18n>You</span>
-      }
-    </p>
-    @if ((replyToMessage | messageData).type === 'interactive') {
-      <div class="text-gray-300">
-        @if (
-          replyToMessage.sender_data &&
-          (replyToMessage.sender_data.interactive?.type === 'list' ||
-          replyToMessage.sender_data.interactive?.type === 'button')
-          ) {
-          <div
-            class="w-full"
-            >
-            @if (
-              replyToMessage.sender_data &&
-              replyToMessage.sender_data.interactive?.header?.type === 'text'
-              ) {
-              <p
-                class="w-full font-bold"
-                >
-                {{ replyToMessage.sender_data.interactive?.header?.text }}
-              </p>
+        <p class="mb-2 text-green-700">
+            @if (replyToMessage.receiver_data) {
+                <span [textContent]="contactName"></span>
             }
-            <p class="mt-2 w-full truncate">
-              {{ replyToMessage.sender_data.interactive?.body?.text }}
-            </p>
-          </div>
-        }
-        @if (
-          replyToMessage.receiver_data &&
-          replyToMessage.receiver_data.interactive?.type === 'button_reply'
-          ) {
-          <div
-            class="w-full"
-            >
-            <p class="w-full">
-              {{ replyToMessage.receiver_data.interactive?.button_reply?.title }}
-            </p>
-          </div>
-        }
-        @if (
-          replyToMessage.receiver_data &&
-          replyToMessage.receiver_data.interactive?.type === 'list_reply'
-          ) {
-          <div
-            class="w-full"
-            >
-            <p class="w-full font-bold">
-              {{ replyToMessage.receiver_data.interactive?.list_reply?.title }}
-            </p>
-            @if (replyToMessage.receiver_data.interactive?.list_reply?.description) {
-              <p
-                class="mt-2 w-full truncate"
-                >
-                {{ replyToMessage.receiver_data.interactive?.list_reply?.description }}
-              </p>
+            @if (!replyToMessage.receiver_data) {
+                <span i18n>You</span>
             }
-          </div>
+        </p>
+        @if ((replyToMessage | messageData).type === "interactive") {
+            <div class="text-gray-300">
+                @if (
+                    replyToMessage.sender_data &&
+                    (replyToMessage.sender_data.interactive?.type === "list" ||
+                        replyToMessage.sender_data.interactive?.type === "button")
+                ) {
+                    <div class="w-full">
+                        @if (
+                            replyToMessage.sender_data &&
+                            replyToMessage.sender_data.interactive?.header?.type === "text"
+                        ) {
+                            <p class="w-full font-bold">
+                                {{ replyToMessage.sender_data.interactive?.header?.text }}
+                            </p>
+                        }
+                        <p class="mt-2 w-full truncate">
+                            {{ replyToMessage.sender_data.interactive?.body?.text }}
+                        </p>
+                    </div>
+                }
+                @if (
+                    replyToMessage.receiver_data &&
+                    replyToMessage.receiver_data.interactive?.type === "button_reply"
+                ) {
+                    <div class="w-full">
+                        <p class="w-full">
+                            {{ replyToMessage.receiver_data.interactive?.button_reply?.title }}
+                        </p>
+                    </div>
+                }
+                @if (
+                    replyToMessage.receiver_data &&
+                    replyToMessage.receiver_data.interactive?.type === "list_reply"
+                ) {
+                    <div class="w-full">
+                        <p class="w-full font-bold">
+                            {{ replyToMessage.receiver_data.interactive?.list_reply?.title }}
+                        </p>
+                        @if (replyToMessage.receiver_data.interactive?.list_reply?.description) {
+                            <p class="mt-2 w-full truncate">
+                                {{
+                                    replyToMessage.receiver_data.interactive?.list_reply
+                                        ?.description
+                                }}
+                            </p>
+                        }
+                    </div>
+                }
+            </div>
         }
-      </div>
-    }
-    @if ((replyToMessage | messageData).type === 'template') {
-      <div class="text-gray-300">
-        @if (interpolatedTemplate.headerText) {
-          <p class="w-full font-bold">
-            {{ interpolatedTemplate.headerText }}
-          </p>
+        @if ((replyToMessage | messageData).type === "template") {
+            <div class="text-gray-300">
+                @if (interpolatedTemplate.headerText) {
+                    <p class="w-full font-bold">
+                        {{ interpolatedTemplate.headerText }}
+                    </p>
+                }
+                @if (
+                    ["image", "video", "audio", "sticker", "document"].indexOf(
+                        interpolatedTemplate.headerType
+                    ) > -1
+                ) {
+                    <app-message-content-preview
+                        class="w-full font-bold"
+                        [message]="headerUseMediaAsSenderData"
+                    ></app-message-content-preview>
+                }
+                <p class="mt-2 w-full truncate">
+                    {{ interpolatedTemplate.bodyText }}
+                </p>
+            </div>
+        }
+        @if ((replyToMessage | messageData).type === "text") {
+            <div class="text-gray-300">
+                <p class="mt-2 w-full truncate">
+                    {{ (replyToMessage | messageData).text?.body }}
+                </p>
+            </div>
         }
         @if (
-          ['image', 'video', 'audio', 'sticker', 'document'].indexOf(
-          interpolatedTemplate.headerType
-          ) > -1
-          ) {
-          <app-message-content-preview
-            class="w-full font-bold"
-            [message]="headerUseMediaAsSenderData"
-          ></app-message-content-preview>
+            [
+                "image",
+                "video",
+                "audio",
+                "document",
+                "sticker",
+                "location",
+                "reaction",
+                "contacts",
+                "template",
+            ].indexOf((replyToMessage | messageData).type) > -1
+        ) {
+            <app-message-content-preview
+                class="text-gray-300"
+                [message]="replyToMessage | messageData"
+            ></app-message-content-preview>
         }
-        <p class="mt-2 w-full truncate">
-          {{ interpolatedTemplate.bodyText }}
-        </p>
-      </div>
-    }
-    @if ((replyToMessage | messageData).type === 'text') {
-      <div class="text-gray-300">
-        <p class="mt-2 w-full truncate">
-          {{ (replyToMessage | messageData).text?.body }}
-        </p>
-      </div>
-    }
-    @if (
-      [
-      'image',
-      'video',
-      'audio',
-      'document',
-      'sticker',
-      'location',
-      'reaction',
-      'contacts',
-      'template',
-      ].indexOf((replyToMessage | messageData).type) > -1
-      ) {
-      <app-message-content-preview
-        class="text-gray-300"
-        [message]="replyToMessage | messageData"
-      ></app-message-content-preview>
-    }
-  </div>
+    </div>
 }

@@ -1,4 +1,3 @@
-
 import {
     Component,
     ElementRef,
@@ -34,12 +33,12 @@ interface EmojiSelectEvent {
 @Component({
     selector: "app-message-options",
     imports: [
-    MessageInfoDataComponent,
-    MatIconModule,
-    PickerModule,
-    TimeoutErrorModalComponent,
-    MessageDataPipe
-],
+        MessageInfoDataComponent,
+        MatIconModule,
+        PickerModule,
+        TimeoutErrorModalComponent,
+        MessageDataPipe,
+    ],
     templateUrl: "./message-options.component.html",
     styleUrl: "./message-options.component.scss",
     standalone: true,

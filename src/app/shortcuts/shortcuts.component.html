@@ -1,419 +1,380 @@
 <!-- black scrim -->
 <div
-  class="fixed inset-0 z-50 flex h-full items-center justify-center bg-black/50 p-4"
-  (click)="close.emit()"
-  aria-label="Close shortcuts panel"
-  role="button"
-  tabindex="0"
-  (keyup.enter)="close.emit()"
-  (keyup.space)="close.emit()"
-  >
-  <!-- modal card -->
-  <div
-    id="content"
-    class="max-h-full max-w-full rounded-xl bg-white shadow-xl dark:bg-gray-800"
-    (click)="$event.stopPropagation()"
+    class="fixed inset-0 z-50 flex h-full items-center justify-center bg-black/50 p-4"
+    (click)="close.emit()"
+    aria-label="Close shortcuts panel"
+    role="button"
     tabindex="0"
-    role="dialog"
-    (keyup.enter)="$event.stopPropagation()"
-    (keyup.space)="$event.stopPropagation()"
+    (keyup.enter)="close.emit()"
+    (keyup.space)="close.emit()"
+>
+    <!-- modal card -->
+    <div
+        id="content"
+        class="max-h-full max-w-full rounded-xl bg-white shadow-xl dark:bg-gray-800"
+        (click)="$event.stopPropagation()"
+        tabindex="0"
+        role="dialog"
+        (keyup.enter)="$event.stopPropagation()"
+        (keyup.space)="$event.stopPropagation()"
     >
-    <!-- header -->
-    <header
-      class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-700"
-      >
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100" i18n>
+        <!-- header -->
+        <header
+            class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-700"
+        >
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100" i18n>
                 Keyboard shortcuts
             </h2>
 
-      <button
-        class="focus-visible:ring-primary-500 rounded-md p-2 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 dark:hover:bg-gray-700"
-        (click)="close.emit()"
-        >
-        <span class="sr-only" i18n>Close</span>
-        <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300"></i>
-      </button>
-    </header>
-
-    <!-- body -->
-    <div class="text-gray-700 dark:text-gray-300">
-      <!-- search -->
-      <div class="relative mx-2 mb-2 mt-2">
-        <i class="fas fa-search absolute left-3 top-3 text-gray-500 dark:text-gray-400"></i>
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          placeholder="Search shortcuts"
-          class="w-full rounded-md bg-gray-100 py-2 pl-10 pr-3 text-gray-900 focus:outline-none dark:bg-gray-700 dark:text-gray-100"
-          #searchInput
-          />
-      </div>
-
-      <div id="shortcuts-container" class="scrollable max-h-[70vh] overflow-y-auto p-3">
-        <!-- Navigation (show section only if at least one item matches) -->
-        @if (
-          matches('jump to sidebar buttons', '1', navItems.length.toString()) ||
-          matches('toggle sidebar', '0')
-          ) {
-          <section
+            <button
+                class="focus-visible:ring-primary-500 rounded-md p-2 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 dark:hover:bg-gray-700"
+                (click)="close.emit()"
             >
-            <h3 class="heading" i18n>Navigation</h3>
-            <ul class="list">
-              @if (
-                matches('jump to sidebar buttons', '1', navItems.length.toString())
+                <span class="sr-only" i18n>Close</span>
+                <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300"></i>
+            </button>
+        </header>
+
+        <!-- body -->
+        <div class="text-gray-700 dark:text-gray-300">
+            <!-- search -->
+            <div class="relative mx-2 mb-2 mt-2">
+                <i class="fas fa-search absolute left-3 top-3 text-gray-500 dark:text-gray-400"></i>
+                <input
+                    type="text"
+                    [(ngModel)]="searchTerm"
+                    placeholder="Search shortcuts"
+                    class="w-full rounded-md bg-gray-100 py-2 pl-10 pr-3 text-gray-900 focus:outline-none dark:bg-gray-700 dark:text-gray-100"
+                    #searchInput
+                />
+            </div>
+
+            <div id="shortcuts-container" class="scrollable max-h-[70vh] overflow-y-auto p-3">
+                <!-- Navigation (show section only if at least one item matches) -->
+                @if (
+                    matches("jump to sidebar buttons", "1", navItems.length.toString()) ||
+                    matches("toggle sidebar", "0")
                 ) {
-                <li
-                  class="item"
-                  >
-                  <kbd class="kbd">1–{{ navItems.length }}</kbd>
-                  <span i18n>Jump to sidebar buttons</span>
-                </li>
-              }
-              @if (matches('toggle sidebar', '0')) {
-                <li class="item">
-                  <kbd class="kbd">0</kbd><span i18n>Toggle sidebar</span>
-                </li>
-              }
-            </ul>
-          </section>
-        }
+                    <section>
+                        <h3 class="heading" i18n>Navigation</h3>
+                        <ul class="list">
+                            @if (
+                                matches("jump to sidebar buttons", "1", navItems.length.toString())
+                            ) {
+                                <li class="item">
+                                    <kbd class="kbd">1–{{ navItems.length }}</kbd>
+                                    <span i18n>Jump to sidebar buttons</span>
+                                </li>
+                            }
+                            @if (matches("toggle sidebar", "0")) {
+                                <li class="item">
+                                    <kbd class="kbd">0</kbd><span i18n>Toggle sidebar</span>
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                }
 
-        <!-- General -->
-        @if (
-          matches('open help', 'ctrl /') ||
-          matches('focus search', 'ctrl shift f') ||
-          matches('close dialog', 'shift esc')
-          ) {
-          <section
-            >
-            <h3 class="heading" i18n>General</h3>
-            <ul class="list">
-              @if (matches('open help', 'ctrl /')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl /</kbd><span i18n>Open help</span>
-                </li>
-              }
-              @if (matches('focus search', 'ctrl shift f')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl Shift F</kbd><span i18n>Focus search</span>
-                </li>
-              }
-              @if (matches('close dialog', 'shift esc')) {
-                <li class="item">
-                  <kbd class="kbd">Shift Esc</kbd><span i18n>Close dialog</span>
-                </li>
-              }
-            </ul>
-          </section>
-        }
-
-        <!-- Chats -->
-        @if (
-          matches('focus chats list', 'ctrl k') ||
-          matches('move selection', 'arrow up', 'arrow down', '↑', '↓') ||
-          matches('open selected chat', 'enter')
-          ) {
-          <section
-            >
-            <h3 class="heading">Chats</h3>
-            <ul class="list">
-              @if (matches('focus chats list', 'ctrl k')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl K</kbd>
-                  <span i18n>Focus chats list</span>
-                </li>
-              }
-              @if (matches('move selection', 'arrow up', 'arrow down', '↑', '↓')) {
-                <li
-                  class="item"
-                  >
-                  <kbd class="kbd">↑ / ↓</kbd>
-                  <span i18n>Move selection up / down</span>
-                </li>
-              }
-              @if (matches('open selected chat', 'enter')) {
-                <li class="item">
-                  <kbd class="kbd">Enter</kbd>
-                  <span i18n>Open selected chat</span>
-                </li>
-              }
-            </ul>
-          </section>
-        }
-
-        <!-- Templates -->
-        @if (
-          matches('focus templates list', 'ctrl k') ||
-          matches('move selection', 'arrow up', 'arrow down', '↑', '↓') ||
-          matches('open selected chat', 'enter')
-          ) {
-          <section
-            >
-            <h3 class="heading" i18n>Templates</h3>
-            <ul class="list">
-              @if (matches('focus templates list', 'ctrl k')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl K</kbd>
-                  <span i18n>Focus templates list</span>
-                </li>
-              }
-              @if (matches('move selection', 'arrow up', 'arrow down', '↑', '↓')) {
-                <li
-                  class="item"
-                  >
-                  <kbd class="kbd">↑ / ↓</kbd>
-                  <span i18n>Move selection up / down</span>
-                </li>
-              }
-              @if (matches('open selected template', 'enter')) {
-                <li class="item">
-                  <kbd class="kbd">Enter</kbd>
-                  <span i18n>Open selected template</span>
-                </li>
-              }
-            </ul>
-          </section>
-        }
-
-        <!-- Campaigns -->
-        @if (
-          matches('focus campaigns list', 'ctrl k') ||
-          matches('move selection', 'arrow up', 'arrow down', '↑', '↓') ||
-          matches('open selected campaign', 'enter')
-          ) {
-          <section
-            >
-            <h3 class="heading" i18n>Campaigns</h3>
-            <ul class="list">
-              @if (matches('focus campaigns list', 'ctrl k')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl K</kbd>
-                  <span i18n>Focus campaigns list</span>
-                </li>
-              }
-              @if (matches('move selection', 'arrow up', 'arrow down', '↑', '↓')) {
-                <li
-                  class="item"
-                  >
-                  <kbd class="kbd">↑ / ↓</kbd>
-                  <span i18n>Move selection up / down</span>
-                </li>
-              }
-              @if (matches('open selected campaign', 'enter')) {
-                <li class="item">
-                  <kbd class="kbd">Enter</kbd>
-                  <span i18n>Open selected campaign</span>
-                </li>
-              }
-            </ul>
-          </section>
-        }
-
-        <!-- Webhooks -->
-        @if (
-          matches('focus webhooks list', 'ctrl k') ||
-          matches('move selection', 'arrow up', 'arrow down', '↑', '↓') ||
-          matches('open selected webhook', 'enter')
-          ) {
-          <section
-            >
-            <h3 class="heading">Webhooks</h3>
-            <ul class="list">
-              @if (matches('focus webhooks list', 'ctrl k')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl K</kbd>
-                  <span i18n>Focus webhooks list</span>
-                </li>
-              }
-              @if (matches('move selection', 'arrow up', 'arrow down', '↑', '↓')) {
-                <li
-                  class="item"
-                  >
-                  <kbd class="kbd">↑ / ↓</kbd>
-                  <span i18n>Move selection up / down</span>
-                </li>
-              }
-              @if (matches('open selected webhook', 'enter')) {
-                <li class="item">
-                  <kbd class="kbd">Enter</kbd>
-                  <span i18n>Open selected webhook</span>
-                </li>
-              }
-            </ul>
-          </section>
-        }
-
-        <!-- Users -->
-        @if (
-          matches('focus users list', 'ctrl k') ||
-          matches('move selection', 'arrow up', 'arrow down', '↑', '↓') ||
-          matches('open selected user', 'enter')
-          ) {
-          <section
-            >
-            <h3 class="heading" i18n>Users</h3>
-            <ul class="list">
-              @if (matches('focus users list', 'ctrl k')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl K</kbd>
-                  <span i18n>Focus users list</span>
-                </li>
-              }
-              @if (matches('move selection', 'arrow up', 'arrow down', '↑', '↓')) {
-                <li
-                  class="item"
-                  >
-                  <kbd class="kbd">↑ / ↓</kbd>
-                  <span i18n>Move selection up / down</span>
-                </li>
-              }
-              @if (matches('open selected user', 'enter')) {
-                <li class="item">
-                  <kbd class="kbd">Enter</kbd>
-                  <span>Open selected user</span>
-                </li>
-              }
-            </ul>
-          </section>
-        }
-
-        <!-- Conversation -->
-        @if (
-          matches('focus conversation messages list', 'ctrl ;') ||
-          matches(
-          'move conversation selection',
-          'arrow up',
-          'arrow down',
-          '↑',
-          '↓'
-          ) ||
-          matches('open message options', 'enter') ||
-          matches('focus text message area', 'ctrl y')
-          ) {
-          <section
-            >
-            <h3 class="heading" i18n>Conversation</h3>
-            <ul class="list">
-              @if (matches('focus conversation messages list', 'ctrl ;')) {
-                <li
-                  class="item"
-                  >
-                  <kbd class="kbd">Ctrl ;</kbd>
-                  <span i18n>Focus messages list</span>
-                </li>
-              }
-              @if (
-                matches(
-                'move conversation selection',
-                'arrow up',
-                'arrow down',
-                '↑',
-                '↓'
-                )
+                <!-- General -->
+                @if (
+                    matches("open help", "ctrl /") ||
+                    matches("focus search", "ctrl shift f") ||
+                    matches("close dialog", "shift esc")
                 ) {
-                <li
-                  class="item"
-                  >
-                  <kbd class="kbd">↑ / ↓</kbd>
-                  <span i18n>Move selection up / down</span>
-                </li>
-              }
-              @if (matches('open message options', 'enter')) {
-                <li class="item">
-                  <kbd class="kbd">Enter</kbd>
-                  <span i18n>Open message options</span>
-                </li>
-              }
-              @if (matches('focus text message area', 'ctrl y')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl Y</kbd>
-                  <span i18n>Focus text message area</span>
-                </li>
-              }
-            </ul>
-          </section>
-        }
+                    <section>
+                        <h3 class="heading" i18n>General</h3>
+                        <ul class="list">
+                            @if (matches("open help", "ctrl /")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl /</kbd><span i18n>Open help</span>
+                                </li>
+                            }
+                            @if (matches("focus search", "ctrl shift f")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl Shift F</kbd
+                                    ><span i18n>Focus search</span>
+                                </li>
+                            }
+                            @if (matches("close dialog", "shift esc")) {
+                                <li class="item">
+                                    <kbd class="kbd">Shift Esc</kbd><span i18n>Close dialog</span>
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                }
 
-        <!-- Message type selector -->
-        @if (
-          matches('open message type selector', 'ctrl m') ||
-          matches(
-          'move message type selection',
-          'arrow up',
-          'arrow down',
-          '↑',
-          '↓'
-          ) ||
-          matches('select message type', 'enter')
-          ) {
-          <section
-            >
-            <h3 class="heading" i18n>Message type selector</h3>
-            <ul class="list">
-              @if (matches('open message type selector', 'ctrl m')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl M</kbd>
-                  <span i18n>Open message type selector</span>
-                </li>
-              }
-              @if (
-                matches(
-                'move message type selection',
-                'arrow up',
-                'arrow down',
-                '↑',
-                '↓'
-                )
+                <!-- Chats -->
+                @if (
+                    matches("focus chats list", "ctrl k") ||
+                    matches("move selection", "arrow up", "arrow down", "↑", "↓") ||
+                    matches("open selected chat", "enter")
                 ) {
-                <li
-                  class="item"
-                  >
-                  <kbd class="kbd">↑ / ↓</kbd>
-                  <span i18n>Move message type selection up / down</span>
-                </li>
-              }
-              @if (matches('select message type', 'enter')) {
-                <li class="item">
-                  <kbd class="kbd">Enter</kbd>
-                  <span i18n>Select message type</span>
-                </li>
-              }
-            </ul>
-          </section>
-        }
+                    <section>
+                        <h3 class="heading">Chats</h3>
+                        <ul class="list">
+                            @if (matches("focus chats list", "ctrl k")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl K</kbd>
+                                    <span i18n>Focus chats list</span>
+                                </li>
+                            }
+                            @if (matches("move selection", "arrow up", "arrow down", "↑", "↓")) {
+                                <li class="item">
+                                    <kbd class="kbd">↑ / ↓</kbd>
+                                    <span i18n>Move selection up / down</span>
+                                </li>
+                            }
+                            @if (matches("open selected chat", "enter")) {
+                                <li class="item">
+                                    <kbd class="kbd">Enter</kbd>
+                                    <span i18n>Open selected chat</span>
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                }
 
-        <!-- Message options -->
-        @if (
-          matches('reply to message', 'ctrl r') ||
-          matches('open message data', 'ctrl d') ||
-          matches('mark message; as read', 'ctrl m')
-          ) {
-          <section
-            >
-            <h3 class="heading" i18n>Message options</h3>
-            <ul class="list">
-              @if (matches('reply to message', 'ctrl r')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl R</kbd>
-                  <span i18n>Reply to message</span>
-                </li>
-              }
-              @if (matches('open message data', 'ctrl d')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl&nbsp;D</kbd>
-                  <span i18n>Open message data</span>
-                </li>
-              }
-              @if (matches('mark message; as read', 'ctrl m')) {
-                <li class="item">
-                  <kbd class="kbd">Ctrl&nbsp;M</kbd>
-                  <span i18n>Mark message as read</span>
-                </li>
-              }
-            </ul>
-          </section>
-        }
-      </div>
+                <!-- Templates -->
+                @if (
+                    matches("focus templates list", "ctrl k") ||
+                    matches("move selection", "arrow up", "arrow down", "↑", "↓") ||
+                    matches("open selected chat", "enter")
+                ) {
+                    <section>
+                        <h3 class="heading" i18n>Templates</h3>
+                        <ul class="list">
+                            @if (matches("focus templates list", "ctrl k")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl K</kbd>
+                                    <span i18n>Focus templates list</span>
+                                </li>
+                            }
+                            @if (matches("move selection", "arrow up", "arrow down", "↑", "↓")) {
+                                <li class="item">
+                                    <kbd class="kbd">↑ / ↓</kbd>
+                                    <span i18n>Move selection up / down</span>
+                                </li>
+                            }
+                            @if (matches("open selected template", "enter")) {
+                                <li class="item">
+                                    <kbd class="kbd">Enter</kbd>
+                                    <span i18n>Open selected template</span>
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                }
+
+                <!-- Campaigns -->
+                @if (
+                    matches("focus campaigns list", "ctrl k") ||
+                    matches("move selection", "arrow up", "arrow down", "↑", "↓") ||
+                    matches("open selected campaign", "enter")
+                ) {
+                    <section>
+                        <h3 class="heading" i18n>Campaigns</h3>
+                        <ul class="list">
+                            @if (matches("focus campaigns list", "ctrl k")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl K</kbd>
+                                    <span i18n>Focus campaigns list</span>
+                                </li>
+                            }
+                            @if (matches("move selection", "arrow up", "arrow down", "↑", "↓")) {
+                                <li class="item">
+                                    <kbd class="kbd">↑ / ↓</kbd>
+                                    <span i18n>Move selection up / down</span>
+                                </li>
+                            }
+                            @if (matches("open selected campaign", "enter")) {
+                                <li class="item">
+                                    <kbd class="kbd">Enter</kbd>
+                                    <span i18n>Open selected campaign</span>
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                }
+
+                <!-- Webhooks -->
+                @if (
+                    matches("focus webhooks list", "ctrl k") ||
+                    matches("move selection", "arrow up", "arrow down", "↑", "↓") ||
+                    matches("open selected webhook", "enter")
+                ) {
+                    <section>
+                        <h3 class="heading">Webhooks</h3>
+                        <ul class="list">
+                            @if (matches("focus webhooks list", "ctrl k")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl K</kbd>
+                                    <span i18n>Focus webhooks list</span>
+                                </li>
+                            }
+                            @if (matches("move selection", "arrow up", "arrow down", "↑", "↓")) {
+                                <li class="item">
+                                    <kbd class="kbd">↑ / ↓</kbd>
+                                    <span i18n>Move selection up / down</span>
+                                </li>
+                            }
+                            @if (matches("open selected webhook", "enter")) {
+                                <li class="item">
+                                    <kbd class="kbd">Enter</kbd>
+                                    <span i18n>Open selected webhook</span>
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                }
+
+                <!-- Users -->
+                @if (
+                    matches("focus users list", "ctrl k") ||
+                    matches("move selection", "arrow up", "arrow down", "↑", "↓") ||
+                    matches("open selected user", "enter")
+                ) {
+                    <section>
+                        <h3 class="heading" i18n>Users</h3>
+                        <ul class="list">
+                            @if (matches("focus users list", "ctrl k")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl K</kbd>
+                                    <span i18n>Focus users list</span>
+                                </li>
+                            }
+                            @if (matches("move selection", "arrow up", "arrow down", "↑", "↓")) {
+                                <li class="item">
+                                    <kbd class="kbd">↑ / ↓</kbd>
+                                    <span i18n>Move selection up / down</span>
+                                </li>
+                            }
+                            @if (matches("open selected user", "enter")) {
+                                <li class="item">
+                                    <kbd class="kbd">Enter</kbd>
+                                    <span>Open selected user</span>
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                }
+
+                <!-- Conversation -->
+                @if (
+                    matches("focus conversation messages list", "ctrl ;") ||
+                    matches("move conversation selection", "arrow up", "arrow down", "↑", "↓") ||
+                    matches("open message options", "enter") ||
+                    matches("focus text message area", "ctrl y")
+                ) {
+                    <section>
+                        <h3 class="heading" i18n>Conversation</h3>
+                        <ul class="list">
+                            @if (matches("focus conversation messages list", "ctrl ;")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl ;</kbd>
+                                    <span i18n>Focus messages list</span>
+                                </li>
+                            }
+                            @if (
+                                matches(
+                                    "move conversation selection",
+                                    "arrow up",
+                                    "arrow down",
+                                    "↑",
+                                    "↓"
+                                )
+                            ) {
+                                <li class="item">
+                                    <kbd class="kbd">↑ / ↓</kbd>
+                                    <span i18n>Move selection up / down</span>
+                                </li>
+                            }
+                            @if (matches("open message options", "enter")) {
+                                <li class="item">
+                                    <kbd class="kbd">Enter</kbd>
+                                    <span i18n>Open message options</span>
+                                </li>
+                            }
+                            @if (matches("focus text message area", "ctrl y")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl Y</kbd>
+                                    <span i18n>Focus text message area</span>
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                }
+
+                <!-- Message type selector -->
+                @if (
+                    matches("open message type selector", "ctrl m") ||
+                    matches("move message type selection", "arrow up", "arrow down", "↑", "↓") ||
+                    matches("select message type", "enter")
+                ) {
+                    <section>
+                        <h3 class="heading" i18n>Message type selector</h3>
+                        <ul class="list">
+                            @if (matches("open message type selector", "ctrl m")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl M</kbd>
+                                    <span i18n>Open message type selector</span>
+                                </li>
+                            }
+                            @if (
+                                matches(
+                                    "move message type selection",
+                                    "arrow up",
+                                    "arrow down",
+                                    "↑",
+                                    "↓"
+                                )
+                            ) {
+                                <li class="item">
+                                    <kbd class="kbd">↑ / ↓</kbd>
+                                    <span i18n>Move message type selection up / down</span>
+                                </li>
+                            }
+                            @if (matches("select message type", "enter")) {
+                                <li class="item">
+                                    <kbd class="kbd">Enter</kbd>
+                                    <span i18n>Select message type</span>
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                }
+
+                <!-- Message options -->
+                @if (
+                    matches("reply to message", "ctrl r") ||
+                    matches("open message data", "ctrl d") ||
+                    matches("mark message; as read", "ctrl m")
+                ) {
+                    <section>
+                        <h3 class="heading" i18n>Message options</h3>
+                        <ul class="list">
+                            @if (matches("reply to message", "ctrl r")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl R</kbd>
+                                    <span i18n>Reply to message</span>
+                                </li>
+                            }
+                            @if (matches("open message data", "ctrl d")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl&nbsp;D</kbd>
+                                    <span i18n>Open message data</span>
+                                </li>
+                            }
+                            @if (matches("mark message; as read", "ctrl m")) {
+                                <li class="item">
+                                    <kbd class="kbd">Ctrl&nbsp;M</kbd>
+                                    <span i18n>Mark message as read</span>
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                }
+            </div>
+        </div>
     </div>
-  </div>
 </div>

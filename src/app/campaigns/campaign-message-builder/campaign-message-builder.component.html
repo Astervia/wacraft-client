@@ -1,98 +1,100 @@
 <div class="">
-  <div class="mb-4 flex flex-col gap-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
-    <p class="">
-      <span i18n>
+    <div class="mb-4 flex flex-col gap-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
+        <p class="">
+            <span i18n>
                 Upload new messages using a file. Only template messages can initiate a conversation
                 (lasting 24 hours). If you attempt to send another type of message, it may take too
                 long and result in an error.
             </span>
-      @if (uploadFileType === 'json') {
-        <span i18n>
-                Upload a JSON file containing message specifications. The JSON should be an array of
-                objects similar to the sender_data used to send raw messages. Copy a sender_data
-                object from the templates section to create a new message.
-            </span>
-      }
+            @if (uploadFileType === "json") {
+                <span i18n>
+                    Upload a JSON file containing message specifications. The JSON should be an
+                    array of objects similar to the sender_data used to send raw messages. Copy a
+                    sender_data object from the templates section to create a new message.
+                </span>
+            }
 
-      @if (uploadFileType !== 'json') {
-        <span i18n
-          >Upload a CSV file with message specifications. Download the CSV template to
-                complete it in the templates section.</span
-          >
-        }
-      </p>
+            @if (uploadFileType !== "json") {
+                <span i18n
+                    >Upload a CSV file with message specifications. Download the CSV template to
+                    complete it in the templates section.</span
+                >
+            }
+        </p>
 
-      <!-- File Upload -->
-      <label class="block text-sm font-medium">
-        <select
-          id="media-mode"
-          class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-          name="uploadMode"
-          i18n-matTooltip
-          [matTooltip]=""
-          =""
+        <!-- File Upload -->
+        <label class="block text-sm font-medium">
+            <select
+                id="media-mode"
+                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                name="uploadMode"
+                i18n-matTooltip
+                [matTooltip]=""
+                =""
                 ="
                     uploadFileType === 'json'
                         ? 'Upload a JSON file with message specifications. The JSON is an array of objects like the sender_data used to send raw messages. Copy a sender_data object from the templates section to create a new message.'
                         : 'Upload a CSV file with message specifications. Download the CSV to fill in the templates section.'
                 "
-          [(ngModel)]="uploadFileType"
-          >
-          <option value="json">JSON</option>
-          <option value="csv">CSV</option>
-        </select>
-      </label>
+                [(ngModel)]="uploadFileType"
+            >
+                <option value="json">JSON</option>
+                <option value="csv">CSV</option>
+            </select>
+        </label>
 
-      <app-file-upload
-        name="fileInput"
-        id="file-input"
-        (change)="onFileSelected($event)"
-        [acceptedFormats]="uploadFileType === 'json' ? 'JSON' : 'CSV'"
-        i18n
-      ></app-file-upload>
+        <app-file-upload
+            name="fileInput"
+            id="file-input"
+            (change)="onFileSelected($event)"
+            [acceptedFormats]="uploadFileType === 'json' ? 'JSON' : 'CSV'"
+            i18n
+        ></app-file-upload>
 
-      @if (errors + successes) {
-        <div class="text-bold grid grid-cols-12">
-          <span class="col-span-6 grid text-green-600" i18n> Successes: {{ successes }} </span>
-            <span class="col-span-6 grid text-red-600" i18n>
-                             Errors due to invalid object: {{ errors }}
-            </span>
+        @if (errors + successes) {
+            <div class="text-bold grid grid-cols-12">
+                <span class="col-span-6 grid text-green-600" i18n>
+                    Successes: {{ successes }}
+                </span>
+                <span class="col-span-6 grid text-red-600" i18n>
+                    Errors due to invalid object: {{ errors }}
+                </span>
             </div>
-          }
+        }
 
-          @if (error) {
+        @if (error) {
             <span class="w-full text-red-600">
-              {{ error }}
+                {{ error }}
             </span>
-          }
+        }
 
-          @if (selectedFile) {
+        @if (selectedFile) {
             <div class="grid grid-cols-12 gap-4">
-              <div class="col-span-6 flex flex-col items-center">
-                <button
-                  (click)="cancel()"
-                  class="rounded bg-red-600 p-2 font-bold text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
-                  i18n
-                  >
-                                     Cancel
-                </button>
+                <div class="col-span-6 flex flex-col items-center">
+                    <button
+                        (click)="cancel()"
+                        class="rounded bg-red-600 p-2 font-bold text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
+                        i18n
+                    >
+                        Cancel
+                    </button>
                 </div>
                 <div class="col-span-6 flex flex-col items-center">
-                  <button
-                    (click)="add()"
-                    class="rounded bg-blue-600 p-2 font-bold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-                    i18n
+                    <button
+                        (click)="add()"
+                        class="rounded bg-blue-600 p-2 font-bold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                        i18n
                     >
-                                       Add
-                </button>
-                  </div>
+                        Add
+                    </button>
                 </div>
-              }
             </div>
-          </div>
+        }
+    </div>
+</div>
 
-          <app-timeout-error-modal
-            [message]="errorStr"
-            [data]="errorData"
-            #errorModal
-          ></app-timeout-error-modal>
+<app-timeout-error-modal
+    [message]="errorStr"
+    [data]="errorData"
+    #errorModal
+></app-timeout-error-modal>

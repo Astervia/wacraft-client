@@ -1,69 +1,72 @@
 <div class="relative grid h-screen w-full grid-cols-12 grid-rows-12 dark:bg-gray-800">
-  <div
+    <div
         [ngClass]="{
             'row-span-12 flex flex-col': true,
             'col-span-12': !contactInfoEnabled && !contactMediaEnabled,
             'col-span-7': contactInfoEnabled || contactMediaEnabled,
         }"
     >
-    <!-- Top: User Data -->
-    <app-conversation-header
-      [messagingProductContact]="messagingProductContact"
-      (searchAtContactId)="searchAtContactId.next($event)"
-      (contactDetails)="openContactInfo()"
-    ></app-conversation-header>
+        <!-- Top: User Data -->
+        <app-conversation-header
+            [messagingProductContact]="messagingProductContact"
+            (searchAtContactId)="searchAtContactId.next($event)"
+            (contactDetails)="openContactInfo()"
+        ></app-conversation-header>
 
-    <!-- Middle: Messages -->
-    <app-conversation-body
-      class="hide-scrollbar flex-1 overflow-y-auto"
-      [messagingProductContact]="messagingProductContact"
+        <!-- Middle: Messages -->
+        <app-conversation-body
+            class="hide-scrollbar flex-1 overflow-y-auto"
+            [messagingProductContact]="messagingProductContact"
             [contactName]="
                 messagingProductContact.contact.name ||
                 messagingProductContact.product_details.phone_number
             "
-      [isTyping]="isTyping"
-      (reply)="conversationFooter.setReplyToMessage($event)"
-      (reactionSent)="userConversationStore.addUnsent($event, messagingProductContact.id)"
-      #body
-    ></app-conversation-body>
+            [isTyping]="isTyping"
+            (reply)="conversationFooter.setReplyToMessage($event)"
+            (reactionSent)="userConversationStore.addUnsent($event, messagingProductContact.id)"
+            #body
+        ></app-conversation-body>
 
-    <!-- Bottom: New Message -->
-    <app-conversation-footer
-      class="scrollable overflow-y-auto"
+        <!-- Bottom: New Message -->
+        <app-conversation-footer
+            class="scrollable overflow-y-auto"
             [ngClass]="{
                 hidden: !!body.selectedMessages.length,
             }"
-      [toId]="messagingProductContact.id"
-      (sent)="userConversationStore.addUnsent($event, messagingProductContact.id)"
-      (typingStateChange)="onTypingStateChange($event)"
+            [toId]="messagingProductContact.id"
+            (sent)="userConversationStore.addUnsent($event, messagingProductContact.id)"
+            (typingStateChange)="onTypingStateChange($event)"
             [contactName]="
                 messagingProductContact.contact.name ||
                 messagingProductContact.product_details.phone_number
             "
-      [toPhoneNumber]="messagingProductContact.product_details.phone_number"
-      #conversationFooter
-    ></app-conversation-footer>
+            [toPhoneNumber]="messagingProductContact.product_details.phone_number"
+            #conversationFooter
+        ></app-conversation-footer>
 
-    <app-message-actions-footer
+        <app-message-actions-footer
             [ngClass]="{
                 hidden: !!!body.selectedMessages.length,
             }"
-      [messages]="body.selectedMessages"
-      (clear)="body.clearSelectedMessages()"
-      (sent)="userConversationStore.addUnsent($event[0], $event[1])"
-    ></app-message-actions-footer>
-  </div>
-
-  <!-- Right side: User Information (25% width) -->
-  @if (contactInfoEnabled) {
-    <div class="col-span-5 row-span-12">
-      <app-contact-info [messagingProductContact]="messagingProductContact"></app-contact-info>
+            [messages]="body.selectedMessages"
+            (clear)="body.clearSelectedMessages()"
+            (sent)="userConversationStore.addUnsent($event[0], $event[1])"
+        ></app-message-actions-footer>
     </div>
-  }
 
-  @if (contactMediaEnabled) {
-    <div class="col-span-5 row-span-12">
-      <app-contact-media [messagingProductContact]="messagingProductContact"> </app-contact-media>
-    </div>
-  }
+    <!-- Right side: User Information (25% width) -->
+    @if (contactInfoEnabled) {
+        <div class="col-span-5 row-span-12">
+            <app-contact-info
+                [messagingProductContact]="messagingProductContact"
+            ></app-contact-info>
+        </div>
+    }
+
+    @if (contactMediaEnabled) {
+        <div class="col-span-5 row-span-12">
+            <app-contact-media [messagingProductContact]="messagingProductContact">
+            </app-contact-media>
+        </div>
+    }
 </div>

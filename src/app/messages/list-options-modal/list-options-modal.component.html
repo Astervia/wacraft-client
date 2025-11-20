@@ -1,114 +1,116 @@
 <div
-  class="fixed bottom-0 left-0 right-0 top-0 z-10 flex items-center justify-center bg-gray-800 bg-opacity-70 py-8"
-  (click)="close.emit()"
-  role="button"
-  tabindex="0"
-  (keyup.enter)="close.emit()"
-  (keyup.space)="close.emit()"
-  aria-label="Close modal"
-  >
-  <div
-    class="flex h-full max-w-md flex-col"
-    id="content"
-    (click)="$event.stopPropagation()"
+    class="fixed bottom-0 left-0 right-0 top-0 z-10 flex items-center justify-center bg-gray-800 bg-opacity-70 py-8"
+    (click)="close.emit()"
+    role="button"
     tabindex="0"
-    role="dialog"
-    (keyup.enter)="$event.stopPropagation()"
-    (keyup.space)="$event.stopPropagation()"
-    >
-    <!-- Header -->
+    (keyup.enter)="close.emit()"
+    (keyup.space)="close.emit()"
+    aria-label="Close modal"
+>
     <div
-      class="flex w-full items-center justify-start bg-blue-800 px-6 py-2 text-white dark:bg-gray-700"
-      id="header"
-      >
-      <button
+        class="flex h-full max-w-md flex-col"
+        id="content"
+        (click)="$event.stopPropagation()"
+        tabindex="0"
+        role="dialog"
+        (keyup.enter)="$event.stopPropagation()"
+        (keyup.space)="$event.stopPropagation()"
+    >
+        <!-- Header -->
+        <div
+            class="flex w-full items-center justify-start bg-blue-800 px-6 py-2 text-white dark:bg-gray-700"
+            id="header"
+        >
+            <button
                 [ngClass]="{
                     'mr-2 flex aspect-square w-10 items-center justify-center rounded-full': true,
                 }"
-        (click)="close.emit()"
+                (click)="close.emit()"
+            >
+                <mat-icon fontIcon="close"></mat-icon>
+            </button>
+
+            <span class="text-lg font-normal">{{ listName }}</span>
+        </div>
+
+        <!-- Body -->
+        <div
+            class="by-2 hide-scrollbar h-full w-full overflow-y-scroll bg-white dark:bg-gray-900"
+            id="body"
         >
-        <mat-icon fontIcon="close"></mat-icon>
-      </button>
-
-      <span class="text-lg font-normal">{{ listName }}</span>
-    </div>
-
-    <!-- Body -->
-    <div
-      class="by-2 hide-scrollbar h-full w-full overflow-y-scroll bg-white dark:bg-gray-900"
-      id="body"
-      >
-      <div class="h-full w-full">
-        @for (section of sections; track section) {
-          <div class="section w-full">
-            @if (section.title) {
-              <p
-                class="w-full px-4 pb-5 pt-8 text-lg text-blue-700"
-                [textContent]="section.title"
-              ></p>
-            }
-            @for (row of section.rows; track row) {
-              <div
-                class="min-h-18 juftify-between flex w-full items-center px-6 hover:bg-gray-100 dark:hover:bg-gray-800"
-                (click)="selectRow(row)"
-                role="button"
-                tabindex="0"
-                (keyup.enter)="selectRow(row)"
-                (keyup.space)="selectRow(row)"
-                [attr.aria-pressed]="isSelectedRow(row)"
-                >
-                <div class="flex w-full flex-col py-3">
-                  <span class="text-lg dark:text-white">{{ row.title }}</span>
-                  <span class="text-base text-gray-600">{{ row.description }}</span>
-                </div>
-                <!-- Selector Div -->
-                <div
-                  class="selector aspect-square h-6 w-6"
-                  (click)="selectRow(row)"
-                  role="button"
-                  tabindex="0"
-                  (keyup.enter)="selectRow(row)"
-                  (keyup.space)="selectRow(row)"
-                  [attr.aria-pressed]="isSelectedRow(row)"
-                  >
-                  @if (isSelectedRow(row)) {
-                    <mat-icon
-                      class="material-symbols-outlined"
-                      class="opacity-100"
-                      [class.selected]="true"
-                      >radio_button_checked</mat-icon
-                      >
-                    }
-                    @if (!isSelectedRow(row)) {
-                      <mat-icon
-                        class="material-symbols-outlined"
-                        class="opacity-100 brightness-50 dark:opacity-50 dark:brightness-100"
-                        [class.selected]="false"
-                        >radio_button_unchecked</mat-icon
-                        >
-                      }
+            <div class="h-full w-full">
+                @for (section of sections; track section) {
+                    <div class="section w-full">
+                        @if (section.title) {
+                            <p
+                                class="w-full px-4 pb-5 pt-8 text-lg text-blue-700"
+                                [textContent]="section.title"
+                            ></p>
+                        }
+                        @for (row of section.rows; track row) {
+                            <div
+                                class="min-h-18 juftify-between flex w-full items-center px-6 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                (click)="selectRow(row)"
+                                role="button"
+                                tabindex="0"
+                                (keyup.enter)="selectRow(row)"
+                                (keyup.space)="selectRow(row)"
+                                [attr.aria-pressed]="isSelectedRow(row)"
+                            >
+                                <div class="flex w-full flex-col py-3">
+                                    <span class="text-lg dark:text-white">{{ row.title }}</span>
+                                    <span class="text-base text-gray-600">{{
+                                        row.description
+                                    }}</span>
+                                </div>
+                                <!-- Selector Div -->
+                                <div
+                                    class="selector aspect-square h-6 w-6"
+                                    (click)="selectRow(row)"
+                                    role="button"
+                                    tabindex="0"
+                                    (keyup.enter)="selectRow(row)"
+                                    (keyup.space)="selectRow(row)"
+                                    [attr.aria-pressed]="isSelectedRow(row)"
+                                >
+                                    @if (isSelectedRow(row)) {
+                                        <mat-icon
+                                            class="material-symbols-outlined"
+                                            class="opacity-100"
+                                            [class.selected]="true"
+                                            >radio_button_checked</mat-icon
+                                        >
+                                    }
+                                    @if (!isSelectedRow(row)) {
+                                        <mat-icon
+                                            class="material-symbols-outlined"
+                                            class="opacity-100 brightness-50 dark:opacity-50 dark:brightness-100"
+                                            [class.selected]="false"
+                                            >radio_button_unchecked</mat-icon
+                                        >
+                                    }
+                                </div>
+                            </div>
+                        }
                     </div>
-                  </div>
                 }
-              </div>
-            }
-          </div>
+            </div>
         </div>
 
         @if (selectedRow) {
-          <div
-            class="relative flex w-full items-center justify-start bg-blue-800 px-6 py-5 dark:bg-gray-700"
-            id="footer"
+            <div
+                class="relative flex w-full items-center justify-start bg-blue-800 px-6 py-5 dark:bg-gray-700"
+                id="footer"
             >
-            <span class="text-sm font-normal text-white">{{ selectedRow.title }}</span>
-            <button
-              type=""
-              class="absolute bottom-8 right-6 flex aspect-square w-16 items-center justify-center rounded-full bg-blue-700 dark:bg-blue-800"
-              (click)="copyText(selectedRow.id)"
-              >
-              <mat-icon class="material-icons-outlined">copy</mat-icon>
-            </button>
-          </div>
+                <span class="text-sm font-normal text-white">{{ selectedRow.title }}</span>
+                <button
+                    type=""
+                    class="absolute bottom-8 right-6 flex aspect-square w-16 items-center justify-center rounded-full bg-blue-700 dark:bg-blue-800"
+                    (click)="copyText(selectedRow.id)"
+                >
+                    <mat-icon class="material-icons-outlined">copy</mat-icon>
+                </button>
+            </div>
         }
-      </div>
     </div>
+</div>

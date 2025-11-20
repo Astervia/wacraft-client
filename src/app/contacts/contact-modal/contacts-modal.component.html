@@ -1,165 +1,169 @@
 <div
-  class="fixed bottom-0 left-0 right-0 top-0 z-10 flex items-center justify-center bg-gray-800 bg-opacity-70 py-8"
-  (click)="closeModal()"
-  role="button"
-  tabindex="0"
-  aria-label="Close contacts modal"
-  (keyup.enter)="closeModal()"
-  (keyup.space)="closeModal()"
-  >
-  <div
-    class="flex h-full max-h-full max-w-md flex-col"
-    id="content"
-    (click)="$event.stopPropagation()"
+    class="fixed bottom-0 left-0 right-0 top-0 z-10 flex items-center justify-center bg-gray-800 bg-opacity-70 py-8"
+    (click)="closeModal()"
+    role="button"
     tabindex="0"
-    role="dialog"
-    (keyup.enter)="$event.stopPropagation()"
-    (keyup.space)="$event.stopPropagation()"
-    >
-    <!-- Header -->
+    aria-label="Close contacts modal"
+    (keyup.enter)="closeModal()"
+    (keyup.space)="closeModal()"
+>
     <div
-      class="flex w-full flex-grow-0 items-center justify-start bg-blue-800 px-6 py-2 text-white dark:bg-gray-700"
-      id="header"
-      >
-      <button
+        class="flex h-full max-h-full max-w-md flex-col"
+        id="content"
+        (click)="$event.stopPropagation()"
+        tabindex="0"
+        role="dialog"
+        (keyup.enter)="$event.stopPropagation()"
+        (keyup.space)="$event.stopPropagation()"
+    >
+        <!-- Header -->
+        <div
+            class="flex w-full flex-grow-0 items-center justify-start bg-blue-800 px-6 py-2 text-white dark:bg-gray-700"
+            id="header"
+        >
+            <button
                 [ngClass]="{
                     'mr-2 flex aspect-square w-10 items-center justify-center rounded-full': true,
                 }"
-        (click)="closeModal()"
-        >
-        <mat-icon fontIcon="close"></mat-icon>
-      </button>
-
-      <p>
-        <span class="text-lg font-normal">{{ headerText }}</span>
-
-        @if (
-          !conversationStore.searchValue && !messagingProductContactIdFilter
-          ? conversationStore.count
-          : conversationStore.searchCount
-          ) {
-          <span
-            class="ml-2 rounded-md bg-white px-2 py-1 text-sm font-normal text-gray-500 dark:bg-gray-900 dark:text-gray-200"
-            >{{
-            !conversationStore.searchValue && !messagingProductContactIdFilter
-            ? conversationStore.count
-            : conversationStore.searchCount
-            }}</span
+                (click)="closeModal()"
             >
-          }
-        </p>
-      </div>
-
-      <!-- Body -->
-      <div
-        class="by-2 flex-grow-1 flex h-full w-full flex-col overflow-y-auto bg-white dark:bg-gray-900"
-        id="body"
-        >
-        <div class="relative mb-4 mt-4 flex w-full flex-grow-0 flex-row gap-2 px-2">
-          <div class="absolute left-2 top-0 flex h-10 w-10 items-center justify-center">
-            <i class="fas fa-search text-gray-500 dark:text-gray-400"></i>
-          </div>
-          <textarea
-            class="hide-scrollbar w-full resize-none rounded-md bg-gray-200 p-2 pl-10 text-gray-800 outline-none dark:bg-gray-700 dark:text-gray-200"
-            rows="1"
-            (input)="adjustHeight($event)"
-            [(ngModel)]="conversationStore.searchValue"
-            (keydown.control.enter)="conversationStore.getInitialSearchConcurrent()"
-            (ngModelChange)="conversationStore.getInitialSearchConcurrent()"
-            placeholder="Search"
-            i18n-placeholder
-            #searchTextarea
-            >
-          </textarea>
-
-          <select
-            class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            [(ngModel)]="conversationStore.searchMode"
-            (ngModelChange)="conversationStore.getInitialSearchConcurrent()"
-            >
-            <option [value]="'contact'" i18n>Contact</option>
-            <option [value]="'message'" i18n>Message</option>
-          </select>
-        </div>
-
-        <div
-          class="scrollable h-full max-h-full w-full flex-grow overflow-auto"
-          (scroll)="onScroll($event)"
-          >
-          @if (!conversationStore.searchValue && !messagingProductContactIdFilter) {
-            <ul>
-              @for (conversation of conversationStore.conversations; track conversation) {
-                <li>
-                  <app-conversation-preview
-                    selectMode="multiple"
-                    [lastMessage]="conversation.message"
-                            [messagingProductContact]="
-                                conversation.message | messagingProductContactFromMessage
-                            "
-                    [date]="conversation.message.created_at"
-                    [unread]="conversation.unread"
-                    (select)="selectConversation($event)"
-                    (unSelect)="unselectConversation($event)"
-                            [selected]="
-                                isConversationSelected(
-                                    conversation.message | messagingProductContactFromMessage
-                                )
-                            "
-                  ></app-conversation-preview>
-                </li>
-              }
-            </ul>
-          }
-
-          @if (conversationStore.searchValue || messagingProductContactIdFilter) {
-            <ul>
-              @for (conversation of conversationStore.searchConversations; track conversation) {
-                <li>
-                  <app-conversation-preview
-                    [lastMessage]="conversation"
-                            [messagingProductContact]="
-                                conversation | messagingProductContactFromMessage
-                            "
-                    [date]="conversation.created_at"
-                    [messageId]="conversation.id"
-                    (select)="selectConversation($event)"
-                    (unSelect)="unselectConversation($event)"
-                            [selected]="
-                                isConversationSelected(
-                                    conversation | messagingProductContactFromMessage
-                                )
-                            "
-                  ></app-conversation-preview>
-                </li>
-              }
-            </ul>
-          }
-        </div>
-      </div>
-
-      @if (selectedConversations.length) {
-        <div
-          class="relative flex w-full items-center justify-start bg-blue-800 px-6 py-5 dark:bg-gray-700"
-          id="footer"
-          >
-          <!-- *ngIf="selectedRow" -->
-          <span class="text-sm font-normal text-white"
-            >{{ bottomText }} {{ selectedConversations.length }}</span
-            >
-            <button
-              type=""
-              class="absolute bottom-8 right-6 flex aspect-square w-16 items-center justify-center rounded-full bg-blue-700 text-white dark:bg-blue-800"
-              (click)="sendToContacts()"
-              >
-              <mat-icon class="">send</mat-icon>
+                <mat-icon fontIcon="close"></mat-icon>
             </button>
-          </div>
-        }
-      </div>
-    </div>
 
-    <app-timeout-error-modal
-      [message]="errorStr"
-      [data]="errorData"
-      #errorModal
-    ></app-timeout-error-modal>
+            <p>
+                <span class="text-lg font-normal">{{ headerText }}</span>
+
+                @if (
+                    !conversationStore.searchValue && !messagingProductContactIdFilter
+                        ? conversationStore.count
+                        : conversationStore.searchCount
+                ) {
+                    <span
+                        class="ml-2 rounded-md bg-white px-2 py-1 text-sm font-normal text-gray-500 dark:bg-gray-900 dark:text-gray-200"
+                        >{{
+                            !conversationStore.searchValue && !messagingProductContactIdFilter
+                                ? conversationStore.count
+                                : conversationStore.searchCount
+                        }}</span
+                    >
+                }
+            </p>
+        </div>
+
+        <!-- Body -->
+        <div
+            class="by-2 flex-grow-1 flex h-full w-full flex-col overflow-y-auto bg-white dark:bg-gray-900"
+            id="body"
+        >
+            <div class="relative mb-4 mt-4 flex w-full flex-grow-0 flex-row gap-2 px-2">
+                <div class="absolute left-2 top-0 flex h-10 w-10 items-center justify-center">
+                    <i class="fas fa-search text-gray-500 dark:text-gray-400"></i>
+                </div>
+                <textarea
+                    class="hide-scrollbar w-full resize-none rounded-md bg-gray-200 p-2 pl-10 text-gray-800 outline-none dark:bg-gray-700 dark:text-gray-200"
+                    rows="1"
+                    (input)="adjustHeight($event)"
+                    [(ngModel)]="conversationStore.searchValue"
+                    (keydown.control.enter)="conversationStore.getInitialSearchConcurrent()"
+                    (ngModelChange)="conversationStore.getInitialSearchConcurrent()"
+                    placeholder="Search"
+                    i18n-placeholder
+                    #searchTextarea
+                >
+                </textarea>
+
+                <select
+                    class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                    [(ngModel)]="conversationStore.searchMode"
+                    (ngModelChange)="conversationStore.getInitialSearchConcurrent()"
+                >
+                    <option [value]="'contact'" i18n>Contact</option>
+                    <option [value]="'message'" i18n>Message</option>
+                </select>
+            </div>
+
+            <div
+                class="scrollable h-full max-h-full w-full flex-grow overflow-auto"
+                (scroll)="onScroll($event)"
+            >
+                @if (!conversationStore.searchValue && !messagingProductContactIdFilter) {
+                    <ul>
+                        @for (conversation of conversationStore.conversations; track conversation) {
+                            <li>
+                                <app-conversation-preview
+                                    selectMode="multiple"
+                                    [lastMessage]="conversation.message"
+                                    [messagingProductContact]="
+                                        conversation.message | messagingProductContactFromMessage
+                                    "
+                                    [date]="conversation.message.created_at"
+                                    [unread]="conversation.unread"
+                                    (select)="selectConversation($event)"
+                                    (unSelect)="unselectConversation($event)"
+                                    [selected]="
+                                        isConversationSelected(
+                                            conversation.message
+                                                | messagingProductContactFromMessage
+                                        )
+                                    "
+                                ></app-conversation-preview>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                @if (conversationStore.searchValue || messagingProductContactIdFilter) {
+                    <ul>
+                        @for (
+                            conversation of conversationStore.searchConversations;
+                            track conversation
+                        ) {
+                            <li>
+                                <app-conversation-preview
+                                    [lastMessage]="conversation"
+                                    [messagingProductContact]="
+                                        conversation | messagingProductContactFromMessage
+                                    "
+                                    [date]="conversation.created_at"
+                                    [messageId]="conversation.id"
+                                    (select)="selectConversation($event)"
+                                    (unSelect)="unselectConversation($event)"
+                                    [selected]="
+                                        isConversationSelected(
+                                            conversation | messagingProductContactFromMessage
+                                        )
+                                    "
+                                ></app-conversation-preview>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+
+        @if (selectedConversations.length) {
+            <div
+                class="relative flex w-full items-center justify-start bg-blue-800 px-6 py-5 dark:bg-gray-700"
+                id="footer"
+            >
+                <!-- *ngIf="selectedRow" -->
+                <span class="text-sm font-normal text-white"
+                    >{{ bottomText }} {{ selectedConversations.length }}</span
+                >
+                <button
+                    type=""
+                    class="absolute bottom-8 right-6 flex aspect-square w-16 items-center justify-center rounded-full bg-blue-700 text-white dark:bg-blue-800"
+                    (click)="sendToContacts()"
+                >
+                    <mat-icon class="">send</mat-icon>
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+<app-timeout-error-modal
+    [message]="errorStr"
+    [data]="errorData"
+    #errorModal
+></app-timeout-error-modal>

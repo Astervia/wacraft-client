@@ -1,124 +1,110 @@
 @if (message && (message | messageData).type === MessageType.template && messageSent.template) {
-  <div
-    class="max-w-xs"
-    [ngStyle]="{
-        'word-break': 'break-word',
-        'white-space': 'pre-wrap',
-    }"
-    >
-    @if (
-      message.receiver_data?.context &&
-      (message.receiver_data?.context?.forwarded ||
-      message.receiver_data?.context?.frequently_forwarded)
-      ) {
-      <div
-        class="px-1 pt-1"
-        >
-        <app-message-forwarded-header
-          [context]="message.receiver_data?.context"
-        ></app-message-forwarded-header>
-      </div>
-    }
-    @if (message.sender_data?.context?.message_id || message.receiver_data?.context?.id) {
-      <div
-        class="w-full px-1 pt-1"
-        >
-        <app-message-reply-header
-          [message]="message"
-          [sent]="!!message.sender_data"
-          [backgroundColor]="!!message.sender_data ? 'blue' : 'gray'"
-          [contactName]="contactName"
-        ></app-message-reply-header>
-      </div>
-    }
     <div
-      id="content"
-        [ngClass]="{
-            'rounded-md bg-blue-300 dark:bg-blue-800': true,
+        class="max-w-xs"
+        [ngStyle]="{
+            'word-break': 'break-word',
+            'white-space': 'pre-wrap',
         }"
-      >
-      <div class="px-1 pb-1 pt-1">
-        <!-- Header -->
-        @if (headerText || headerUseMedia.link || headerUseMedia.id) {
-          <div
-            class="mb-2 text-base"
-            id="header"
-            >
-            @if (headerText) {
-              <p class="">
-                {{ headerText }}
-              </p>
-            }
-            @if (headerType !== 'text') {
-              <app-message-media-content
-                [isSent]="true"
-                [mediaData]="headerUseMedia"
-                [messageType]="headerType"
-              ></app-message-media-content>
-            }
-          </div>
+    >
+        @if (
+            message.receiver_data?.context &&
+            (message.receiver_data?.context?.forwarded ||
+                message.receiver_data?.context?.frequently_forwarded)
+        ) {
+            <div class="px-1 pt-1">
+                <app-message-forwarded-header
+                    [context]="message.receiver_data?.context"
+                ></app-message-forwarded-header>
+            </div>
         }
-        <!-- Body -->
-        @if (bodyText) {
-          <p id="body">
-            {{ bodyText }}
-          </p>
+        @if (message.sender_data?.context?.message_id || message.receiver_data?.context?.id) {
+            <div class="w-full px-1 pt-1">
+                <app-message-reply-header
+                    [message]="message"
+                    [sent]="!!message.sender_data"
+                    [backgroundColor]="!!message.sender_data ? 'blue' : 'gray'"
+                    [contactName]="contactName"
+                ></app-message-reply-header>
+            </div>
         }
-        <!-- Footer -->
-        @if (footerText) {
-          <p
-            class="mt-2 text-xs font-light text-gray-600 dark:text-gray-200"
-            id="footer"
-            >
-            {{ footerText }}
-          </p>
-        }
-        <app-message-info class="pb-1" [sent]="sent" [message]="message"></app-message-info>
-      </div>
-    </div>
-    <!-- Buttons -->
-    @if (buttons) {
-      <div class="mt-1 flex flex-col gap-1 rounded-md">
-        @for (button of buttons; track button) {
-          <button
-            type=""
+        <div
+            id="content"
             [ngClass]="{
-                'relative flex h-10 w-full items-center justify-center rounded-md opacity-100': true,
-                'bg-blue-300 dark:bg-blue-800': true,
+                'rounded-md bg-blue-300 dark:bg-blue-800': true,
             }"
-            (click)="copyText(button.url || button.phone_number || button.text || '')"
-            >
-            @if (button.url) {
-              <a
-                href="{{ button.url }}"
-                class="flex h-full w-full items-center justify-center"
-                >
-                <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>
-                {{ button.text }}
-              </a>
-            }
-            @if (button.phone_number) {
-              <span
-                class="flex h-full w-full items-center justify-center"
-                >
-                <i class="fa-solid fa-phone mr-1"></i>
-                {{ button.phone_number }}
-              </span>
-            }
-            @if (!button.phone_number && !button.url) {
-              <span
-                class="flex h-full w-full items-center justify-center"
-                >
-                {{ button.text }}
-              </span>
-            }
-            <!-- Bottom left reply id -->
-            <span class="text-xs/2 absolute bottom-1 right-1 font-light text-gray-200">
-              {{ button.flow_id }}
-            </span>
-          </button>
+        >
+            <div class="px-1 pb-1 pt-1">
+                <!-- Header -->
+                @if (headerText || headerUseMedia.link || headerUseMedia.id) {
+                    <div class="mb-2 text-base" id="header">
+                        @if (headerText) {
+                            <p class="">
+                                {{ headerText }}
+                            </p>
+                        }
+                        @if (headerType !== "text") {
+                            <app-message-media-content
+                                [isSent]="true"
+                                [mediaData]="headerUseMedia"
+                                [messageType]="headerType"
+                            ></app-message-media-content>
+                        }
+                    </div>
+                }
+                <!-- Body -->
+                @if (bodyText) {
+                    <p id="body">
+                        {{ bodyText }}
+                    </p>
+                }
+                <!-- Footer -->
+                @if (footerText) {
+                    <p class="mt-2 text-xs font-light text-gray-600 dark:text-gray-200" id="footer">
+                        {{ footerText }}
+                    </p>
+                }
+                <app-message-info class="pb-1" [sent]="sent" [message]="message"></app-message-info>
+            </div>
+        </div>
+        <!-- Buttons -->
+        @if (buttons) {
+            <div class="mt-1 flex flex-col gap-1 rounded-md">
+                @for (button of buttons; track button) {
+                    <button
+                        type=""
+                        [ngClass]="{
+                            'relative flex h-10 w-full items-center justify-center rounded-md opacity-100': true,
+                            'bg-blue-300 dark:bg-blue-800': true,
+                        }"
+                        (click)="copyText(button.url || button.phone_number || button.text || '')"
+                    >
+                        @if (button.url) {
+                            <a
+                                href="{{ button.url }}"
+                                class="flex h-full w-full items-center justify-center"
+                            >
+                                <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>
+                                {{ button.text }}
+                            </a>
+                        }
+                        @if (button.phone_number) {
+                            <span class="flex h-full w-full items-center justify-center">
+                                <i class="fa-solid fa-phone mr-1"></i>
+                                {{ button.phone_number }}
+                            </span>
+                        }
+                        @if (!button.phone_number && !button.url) {
+                            <span class="flex h-full w-full items-center justify-center">
+                                {{ button.text }}
+                            </span>
+                        }
+                        <!-- Bottom left reply id -->
+                        <span class="text-xs/2 absolute bottom-1 right-1 font-light text-gray-200">
+                            {{ button.flow_id }}
+                        </span>
+                    </button>
+                }
+            </div>
         }
-      </div>
-    }
-  </div>
+    </div>
 }

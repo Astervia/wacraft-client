@@ -1,4 +1,3 @@
-
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { SmallButtonComponent } from "../../common/small-button/small-button.component";
 import { ConversationMessagingProductContact } from "../../../core/message/model/conversation.model";

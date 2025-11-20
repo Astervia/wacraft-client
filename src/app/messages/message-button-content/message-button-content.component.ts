@@ -1,7 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { ButtonData } from "../../../core/message/model/button-data.model";
 
-
 @Component({
     selector: "app-message-button-content",
     imports: [],

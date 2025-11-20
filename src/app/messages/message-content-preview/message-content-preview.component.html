@@ -1,76 +1,80 @@
 <div class="flex flex-row items-center text-sm text-gray-600 dark:text-gray-400">
-  <!-- Messages with specifier emoji -->
-  @if (
-    [
-    'image',
-    'video',
-    'audio',
-    'sticker',
-    'location',
-    'interactive',
-    'template',
-    'reaction',
-    'contacts',
-    ].indexOf(message.type) > -1
+    <!-- Messages with specifier emoji -->
+    @if (
+        [
+            "image",
+            "video",
+            "audio",
+            "sticker",
+            "location",
+            "interactive",
+            "template",
+            "reaction",
+            "contacts",
+        ].indexOf(message.type) > -1
     ) {
-    <div
-      class="mr-1"
-      >
-      @if (message.type === 'image') {
-        <div>
-          <mat-icon class="material-icons-outlined message-type-icon">image</mat-icon>
+        <div class="mr-1">
+            @if (message.type === "image") {
+                <div>
+                    <mat-icon class="material-icons-outlined message-type-icon">image</mat-icon>
+                </div>
+            }
+            @if (message.type === "video") {
+                <div>
+                    <mat-icon class="material-icons-outlined message-type-icon">videocam</mat-icon>
+                </div>
+            }
+            @if (message.type === "audio") {
+                <div>
+                    <mat-icon class="material-icons-outlined message-type-icon">mic</mat-icon>
+                </div>
+            }
+            @if (message.type === "sticker") {
+                <div>
+                    <mat-icon class="material-symbols-outlined message-type-icon"
+                        >ar_stickers</mat-icon
+                    >
+                </div>
+            }
+            @if (message.type === "document") {
+                <div>
+                    <mat-icon class="material-icons-outlined message-type-icon"
+                        >description</mat-icon
+                    >
+                </div>
+            }
+            @if (message.type === "location") {
+                <div>
+                    <mat-icon class="material-icons-outlined message-type-icon">pin_drop</mat-icon>
+                </div>
+            }
+            @if (message.type === "interactive") {
+                <div>
+                    <mat-icon class="material-symbols-outlined message-type-icon"
+                        >interactive_space</mat-icon
+                    >
+                </div>
+            }
+            @if (message.type === "template") {
+                <div>
+                    <mat-icon class="material-symbols-outlined message-type-icon"
+                        >format_image_left</mat-icon
+                    >
+                </div>
+            }
+            @if (message.type === "reaction") {
+                <div>
+                    <mat-icon class="material-icons-outlined message-type-icon"
+                        >add_reaction</mat-icon
+                    >
+                </div>
+            }
+            @if (message.type === "contacts") {
+                <div>
+                    <i class="fa fa-user text-xm"></i>
+                </div>
+            }
         </div>
-      }
-      @if (message.type === 'video') {
-        <div>
-          <mat-icon class="material-icons-outlined message-type-icon">videocam</mat-icon>
-        </div>
-      }
-      @if (message.type === 'audio') {
-        <div>
-          <mat-icon class="material-icons-outlined message-type-icon">mic</mat-icon>
-        </div>
-      }
-      @if (message.type === 'sticker') {
-        <div>
-          <mat-icon class="material-symbols-outlined message-type-icon">ar_stickers</mat-icon>
-        </div>
-      }
-      @if (message.type === 'document') {
-        <div>
-          <mat-icon class="material-icons-outlined message-type-icon">description</mat-icon>
-        </div>
-      }
-      @if (message.type === 'location') {
-        <div>
-          <mat-icon class="material-icons-outlined message-type-icon">pin_drop</mat-icon>
-        </div>
-      }
-      @if (message.type === 'interactive') {
-        <div>
-          <mat-icon class="material-symbols-outlined message-type-icon"
-            >interactive_space</mat-icon
-            >
-          </div>
-        }
-        @if (message.type === 'template') {
-          <div>
-            <mat-icon class="material-symbols-outlined message-type-icon"
-              >format_image_left</mat-icon
-              >
-            </div>
-          }
-          @if (message.type === 'reaction') {
-            <div>
-              <mat-icon class="material-icons-outlined message-type-icon">add_reaction</mat-icon>
-            </div>
-          }
-          @if (message.type === 'contacts') {
-            <div>
-              <i class="fa fa-user text-xm"></i>
-            </div>
-          }
-        </div>
-      }
-      {{ message | messagePreview }}
-    </div>
+    }
+    {{ message | messagePreview }}
+</div>

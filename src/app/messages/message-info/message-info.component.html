@@ -1,121 +1,119 @@
 <div
-  class="flex w-full items-center justify-between px-1 text-xs text-gray-600 dark:text-gray-400"
+    class="flex w-full items-center justify-between px-1 text-xs text-gray-600 dark:text-gray-400"
     [ngClass]="{
         'text-left': message.sender_data,
         'text-right': !message.sender_data,
     }"
-  >
-  <p>{{ message.created_at | date: "short" }}</p>
+>
+    <p>{{ message.created_at | date: "short" }}</p>
 
-  <div class="ml-2 flex flex-row items-center justify-center">
-    @if (sent && message.statuses && message.statuses.length) {
-      <div
-        class="flex items-center justify-center brightness-50 dark:brightness-100"
-        >
-        @if (message.statuses[0].product_data.status === 'sent') {
-          <img
-            width="10px"
-            src="assets/icons/flaticon/check-mark.png"
-            alt="Message sent"
-            />
+    <div class="ml-2 flex flex-row items-center justify-center">
+        @if (sent && message.statuses && message.statuses.length) {
+            <div class="flex items-center justify-center brightness-50 dark:brightness-100">
+                @if (message.statuses[0].product_data.status === "sent") {
+                    <img
+                        width="10px"
+                        src="assets/icons/flaticon/check-mark.png"
+                        alt="Message sent"
+                    />
+                }
+                @if (message.statuses[0].product_data.status === "delivered") {
+                    <img
+                        width="15px"
+                        src="assets/icons/flaticon/double-check-mark.png"
+                        alt="Message delivered"
+                    />
+                }
+                @if (message.statuses[0].product_data.status === "read") {
+                    <img
+                        width="15px"
+                        src="assets/icons/flaticon/double-green-check-mark.png"
+                        alt="Message read"
+                    />
+                }
+                <!-- Error icon with modal trigger -->
+                @if (message.statuses[0].product_data.status === "failed") {
+                    <i
+                        class="fa fa-exclamation-circle cursor-pointer text-red-600"
+                        height="15px"
+                        width="15px"
+                        aria-hidden="true"
+                        matTooltip="Click to view error details"
+                        i18n-matTooltip
+                        (click)="toggleErrorModal()"
+                    ></i>
+                }
+            </div>
         }
-        @if (message.statuses[0].product_data.status === 'delivered') {
-          <img
-            width="15px"
-            src="assets/icons/flaticon/double-check-mark.png"
-            alt="Message delivered"
-            />
-        }
-        @if (message.statuses[0].product_data.status === 'read') {
-          <img
-            width="15px"
-            src="assets/icons/flaticon/double-green-check-mark.png"
-            alt="Message read"
-            />
-        }
-        <!-- Error icon with modal trigger -->
-        @if (message.statuses[0].product_data.status === 'failed') {
-          <i
-            class="fa fa-exclamation-circle cursor-pointer text-red-600"
-            height="15px"
-            width="15px"
-            aria-hidden="true"
-            matTooltip="Click to view error details"
-            i18n-matTooltip
-            (click)="toggleErrorModal()"
-          ></i>
-        }
-      </div>
-    }
 
-    <!-- Clock icon when not sent -->
-    @if (!sent) {
-      <mat-icon
-        class="material-icons-outlined !flex !h-4 !w-4 !items-center !justify-center text-sm"
-        >schedule</mat-icon
-        >
-      }
-    </div>
-  </div>
-
-  @if (showErrorModal) {
-    <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 ease-in-out"
-      id="error-modal"
-      (click)="closeErrorModal()"
-      role="button"
-      tabindex="0"
-      aria-label="Close error modal"
-      (keyup.enter)="closeErrorModal()"
-      (keyup.space)="closeErrorModal()"
-      >
-      <div
-        class="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-xl transition-all dark:bg-gray-900"
-        role="dialog"
-        aria-modal="true"
-        (click)="$event.stopPropagation()"
-        tabindex="0"
-        (keyup.enter)="$event.stopPropagation()"
-        (keyup.space)="$event.stopPropagation()"
-        >
-        <!-- Header -->
-        <div class="mb-5 flex items-center justify-between border-b pb-3">
-          <h2 class="text-xl font-bold leading-tight tracking-wide">
-            <span i18n>Message delivery failed</span>
-          </h2>
-          <button
-            class="ml-4 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-black dark:hover:bg-gray-800 dark:hover:text-white"
-            (click)="closeErrorModal()"
-            aria-label="Close"
-            i18n-aria-label
+        <!-- Clock icon when not sent -->
+        @if (!sent) {
+            <mat-icon
+                class="material-icons-outlined !flex !h-4 !w-4 !items-center !justify-center text-sm"
+                >schedule</mat-icon
             >
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
-        <!-- Modal Content -->
-        @if (error) {
-          <div class="space-y-2 text-sm leading-relaxed">
-            <a
-              href="https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes/#error-codes"
-              target="_blank"
-              >
-              <strong i18n>Code:</strong>&nbsp;
-              <span class="cursor-pointer text-red-600 underline dark:text-red-400">{{
-                error.code
-              }}</span>
-            </a>
-            <p>
-              <strong i18n>Message:</strong>
-              {{ error.message }}
-            </p>
-            @if (error.error_data.details) {
-              <p>
-                <strong i18n>Details:</strong>
-                {{ error.error_data.details }}
-              </p>
-            }
-          </div>
         }
-      </div>
     </div>
-  }
+</div>
+
+@if (showErrorModal) {
+    <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 ease-in-out"
+        id="error-modal"
+        (click)="closeErrorModal()"
+        role="button"
+        tabindex="0"
+        aria-label="Close error modal"
+        (keyup.enter)="closeErrorModal()"
+        (keyup.space)="closeErrorModal()"
+    >
+        <div
+            class="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-xl transition-all dark:bg-gray-900"
+            role="dialog"
+            aria-modal="true"
+            (click)="$event.stopPropagation()"
+            tabindex="0"
+            (keyup.enter)="$event.stopPropagation()"
+            (keyup.space)="$event.stopPropagation()"
+        >
+            <!-- Header -->
+            <div class="mb-5 flex items-center justify-between border-b pb-3">
+                <h2 class="text-xl font-bold leading-tight tracking-wide">
+                    <span i18n>Message delivery failed</span>
+                </h2>
+                <button
+                    class="ml-4 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-black dark:hover:bg-gray-800 dark:hover:text-white"
+                    (click)="closeErrorModal()"
+                    aria-label="Close"
+                    i18n-aria-label
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+            <!-- Modal Content -->
+            @if (error) {
+                <div class="space-y-2 text-sm leading-relaxed">
+                    <a
+                        href="https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes/#error-codes"
+                        target="_blank"
+                    >
+                        <strong i18n>Code:</strong>&nbsp;
+                        <span class="cursor-pointer text-red-600 underline dark:text-red-400">{{
+                            error.code
+                        }}</span>
+                    </a>
+                    <p>
+                        <strong i18n>Message:</strong>
+                        {{ error.message }}
+                    </p>
+                    @if (error.error_data.details) {
+                        <p>
+                            <strong i18n>Details:</strong>
+                            {{ error.error_data.details }}
+                        </p>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}

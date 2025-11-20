@@ -1,4 +1,3 @@
-
 import { Component, ElementRef, ViewChild, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "../../core/auth/service/auth.service";
