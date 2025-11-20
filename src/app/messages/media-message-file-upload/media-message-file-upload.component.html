@@ -1,4 +1,4 @@
-@if (type; in: acceptedFormats) {
+@if (acceptedFormats?.[type]) {
   <app-file-upload
     (change)="change.emit($event)"
     [acceptedFormats]="acceptedFormats[type]"

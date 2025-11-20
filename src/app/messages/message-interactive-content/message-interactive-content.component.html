@@ -43,24 +43,24 @@
           <div class="px-1 pb-1 pt-1">
             <!-- Header -->
             @if (
-              messageSent.interactive?.header &&
-              (messageSent.interactive?.header?.text || useMediaData)
+              messageSent.interactive.header &&
+              (messageSent.interactive.header.text || useMediaData)
               ) {
               <div
-                [class]="'text-base' + (messageSent.interactive.header?.text && 'mb-2')"
+                [class]="'text-base' + (messageSent.interactive.header.text && 'mb-2')"
                 id="header"
                 >
-                @if (
-                  messageSent.interactive?.header?.type === HeaderType.text &&
-                  messageSent.interactive?.header?.text
+              @if (
+                  messageSent.interactive.header.type === HeaderType.text &&
+                  messageSent.interactive.header.text
                   ) {
                   <p
                     class=""
-                    [textContent]="messageSent.interactive.header?.text"
+                    [textContent]="messageSent.interactive.header.text"
                   ></p>
                 }
                 @if (
-                  messageSent.interactive?.header?.type !== HeaderType.text &&
+                  messageSent.interactive.header.type !== HeaderType.text &&
                   useMediaData
                   ) {
                   <app-message-media-content
@@ -72,14 +72,14 @@
               </div>
             }
             <!-- Body -->
-            @if (messageSent.interactive?.body?.text) {
+            @if (messageSent.interactive.body?.text) {
               <p
                 id="body"
                 [textContent]="messageSent.interactive.body?.text"
               ></p>
             }
             <!-- Footer -->
-            @if (messageSent.interactive?.footer?.text) {
+            @if (messageSent.interactive.footer?.text) {
               <p
                 class="mt-2 text-xs font-light text-gray-600 dark:text-gray-200"
                 id="footer"
@@ -90,7 +90,7 @@
           </div>
           <!-- Action -->
           <!-- List -->
-          @if (messageSent.interactive?.action?.button) {
+          @if (messageSent.interactive.action?.button) {
             <button
               type="button"
                 [ngClass]="{
@@ -104,11 +104,11 @@
         </div>
         <!-- Action -->
         <!-- Buttons -->
-        @if (messageSent.interactive?.action?.buttons) {
+        @if (messageSent.interactive.action?.buttons) {
           <div
             class="mt-1 flex flex-col gap-1 rounded-md"
             >
-            @for (button of messageSent.interactive?.action?.buttons; track button) {
+            @for (button of messageSent.interactive.action?.buttons; track button) {
               <button
                 type="button"
                 [ngClass]="{

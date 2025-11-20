@@ -108,7 +108,7 @@
               <strong i18n>Message:</strong>
               {{ error.message }}
             </p>
-            @if (error.error_data?.details) {
+            @if (error.error_data.details) {
               <p>
                 <strong i18n>Details:</strong>
                 {{ error.error_data.details }}
