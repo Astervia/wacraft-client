@@ -14,10 +14,13 @@ branches:
           required_status_checks:
               strict: true # branch must be up-to-date
               contexts:
+                  # --- JS CI checks ---
                   - "Quality & Security / Code Quality – Lint & Prettier"
                   - "Quality & Security / Dependency Security Scan"
                   - "Quality & Security / Production Build Validation"
 
+                  # --- CodeQL SAST scan ---
+                  - "CodeQL Analysis / CodeQL SAST Scan"
           # ✅ Require reviews (non-admins need 1, admins can bypass)
           required_pull_request_reviews:
               required_approving_review_count: 1
@@ -50,10 +53,13 @@ branches:
           required_status_checks:
               strict: true
               contexts:
+                  # --- JS CI checks ---
                   - "Quality & Security / Code Quality – Lint & Prettier"
                   - "Quality & Security / Dependency Security Scan"
                   - "Quality & Security / Production Build Validation"
 
+                  # --- CodeQL SAST scan ---
+                  - "CodeQL Analysis / CodeQL SAST Scan"
           required_pull_request_reviews:
               required_approving_review_count: 1
               dismiss_stale_reviews: true
