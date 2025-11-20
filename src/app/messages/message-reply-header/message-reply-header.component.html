@@ -1,4 +1,5 @@
-<div
+@if (replyToMessage) {
+  <div
     class=""
     [ngClass]="{
         'text-xm rounded-md border-l-4 border-green-700 p-2': true,
@@ -6,114 +7,123 @@
         'bg-gray-200 dark:bg-gray-800': backgroundColor === 'gray',
     }"
     (click)="setIdAsQueryParam()"
-    *ngIf="replyToMessage"
     role="button"
     tabindex="0"
     (keyup.enter)="setIdAsQueryParam()"
     (keyup.space)="setIdAsQueryParam()"
->
+    >
     <p class="mb-2 text-green-700">
-        <span *ngIf="replyToMessage.receiver_data" [textContent]="contactName"></span>
-        <span *ngIf="!replyToMessage.receiver_data" i18n>You</span>
+      @if (replyToMessage.receiver_data) {
+        <span [textContent]="contactName"></span>
+      }
+      @if (!replyToMessage.receiver_data) {
+        <span i18n>You</span>
+      }
     </p>
-
-    <div class="text-gray-300" *ngIf="(replyToMessage | messageData).type === 'interactive'">
-        <div
+    @if ((replyToMessage | messageData).type === 'interactive') {
+      <div class="text-gray-300">
+        @if (
+          replyToMessage.sender_data &&
+          (replyToMessage.sender_data.interactive?.type === 'list' ||
+          replyToMessage.sender_data.interactive?.type === 'button')
+          ) {
+          <div
             class="w-full"
-            *ngIf="
-                replyToMessage.sender_data &&
-                (replyToMessage.sender_data.interactive?.type === 'list' ||
-                    replyToMessage.sender_data.interactive?.type === 'button')
-            "
-        >
-            <p
+            >
+            @if (
+              replyToMessage.sender_data &&
+              replyToMessage.sender_data.interactive?.header?.type === 'text'
+              ) {
+              <p
                 class="w-full font-bold"
-                *ngIf="
-                    replyToMessage.sender_data &&
-                    replyToMessage.sender_data.interactive?.header?.type === 'text'
-                "
-            >
+                >
                 {{ replyToMessage.sender_data.interactive?.header?.text }}
-            </p>
-
+              </p>
+            }
             <p class="mt-2 w-full truncate">
-                {{ replyToMessage.sender_data.interactive?.body?.text }}
+              {{ replyToMessage.sender_data.interactive?.body?.text }}
             </p>
-        </div>
-
-        <div
+          </div>
+        }
+        @if (
+          replyToMessage.receiver_data &&
+          replyToMessage.receiver_data.interactive?.type === 'button_reply'
+          ) {
+          <div
             class="w-full"
-            *ngIf="
-                replyToMessage.receiver_data &&
-                replyToMessage.receiver_data.interactive?.type === 'button_reply'
-            "
-        >
-            <p class="w-full">
-                {{ replyToMessage.receiver_data.interactive?.button_reply?.title }}
-            </p>
-        </div>
-
-        <div
-            class="w-full"
-            *ngIf="
-                replyToMessage.receiver_data &&
-                replyToMessage.receiver_data.interactive?.type === 'list_reply'
-            "
-        >
-            <p class="w-full font-bold">
-                {{ replyToMessage.receiver_data.interactive?.list_reply?.title }}
-            </p>
-
-            <p
-                class="mt-2 w-full truncate"
-                *ngIf="replyToMessage.receiver_data.interactive?.list_reply?.description"
             >
-                {{ replyToMessage.receiver_data.interactive?.list_reply?.description }}
+            <p class="w-full">
+              {{ replyToMessage.receiver_data.interactive?.button_reply?.title }}
             </p>
-        </div>
-    </div>
-
-    <div class="text-gray-300" *ngIf="(replyToMessage | messageData).type === 'template'">
-        <p class="w-full font-bold" *ngIf="interpolatedTemplate.headerText">
+          </div>
+        }
+        @if (
+          replyToMessage.receiver_data &&
+          replyToMessage.receiver_data.interactive?.type === 'list_reply'
+          ) {
+          <div
+            class="w-full"
+            >
+            <p class="w-full font-bold">
+              {{ replyToMessage.receiver_data.interactive?.list_reply?.title }}
+            </p>
+            @if (replyToMessage.receiver_data.interactive?.list_reply?.description) {
+              <p
+                class="mt-2 w-full truncate"
+                >
+                {{ replyToMessage.receiver_data.interactive?.list_reply?.description }}
+              </p>
+            }
+          </div>
+        }
+      </div>
+    }
+    @if ((replyToMessage | messageData).type === 'template') {
+      <div class="text-gray-300">
+        @if (interpolatedTemplate.headerText) {
+          <p class="w-full font-bold">
             {{ interpolatedTemplate.headerText }}
-        </p>
-
-        <app-message-content-preview
+          </p>
+        }
+        @if (
+          ['image', 'video', 'audio', 'sticker', 'document'].indexOf(
+          interpolatedTemplate.headerType
+          ) > -1
+          ) {
+          <app-message-content-preview
             class="w-full font-bold"
             [message]="headerUseMediaAsSenderData"
-            *ngIf="
-                ['image', 'video', 'audio', 'sticker', 'document'].indexOf(
-                    interpolatedTemplate.headerType
-                ) > -1
-            "
-        ></app-message-content-preview>
-
+          ></app-message-content-preview>
+        }
         <p class="mt-2 w-full truncate">
-            {{ interpolatedTemplate.bodyText }}
+          {{ interpolatedTemplate.bodyText }}
         </p>
-    </div>
-
-    <div class="text-gray-300" *ngIf="(replyToMessage | messageData).type === 'text'">
+      </div>
+    }
+    @if ((replyToMessage | messageData).type === 'text') {
+      <div class="text-gray-300">
         <p class="mt-2 w-full truncate">
-            {{ (replyToMessage | messageData).text?.body }}
+          {{ (replyToMessage | messageData).text?.body }}
         </p>
-    </div>
-
-    <app-message-content-preview
+      </div>
+    }
+    @if (
+      [
+      'image',
+      'video',
+      'audio',
+      'document',
+      'sticker',
+      'location',
+      'reaction',
+      'contacts',
+      'template',
+      ].indexOf((replyToMessage | messageData).type) > -1
+      ) {
+      <app-message-content-preview
         class="text-gray-300"
         [message]="replyToMessage | messageData"
-        *ngIf="
-            [
-                'image',
-                'video',
-                'audio',
-                'document',
-                'sticker',
-                'location',
-                'reaction',
-                'contacts',
-                'template',
-            ].indexOf((replyToMessage | messageData).type) > -1
-        "
-    ></app-message-content-preview>
-</div>
+      ></app-message-content-preview>
+    }
+  </div>
+}

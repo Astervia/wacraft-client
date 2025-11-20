@@ -7,7 +7,7 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { FormsModule } from "@angular/forms";
 import { NavItem } from "../common/sidebar/model/nav-item.model";
 
@@ -26,7 +26,7 @@ import { NavItem } from "../common/sidebar/model/nav-item.model";
 @Component({
     selector: "app-shortcuts",
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [FormsModule],
     templateUrl: "./shortcuts.component.html",
     styleUrl: "./shortcuts.component.scss",
 })

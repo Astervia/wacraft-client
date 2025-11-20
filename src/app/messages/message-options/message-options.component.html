@@ -1,90 +1,91 @@
-<div
+@if (!showEmojiPicker) {
+  <div
     class="z-10 w-40 rounded-lg bg-gray-100 p-2 shadow-xl dark:bg-gray-800"
-    *ngIf="!showEmojiPicker"
->
+    >
     <ul class="space-y-2">
-        <!-- 'bg-gray-200 dark:bg-gray-800': messageType === 'raw', -->
-        <li
-            (click)="onSelectMessage($event)"
-            role="button"
-            tabindex="0"
-            (keyup.enter)="onSelectMessage($event)"
-            (keyup.space)="onSelectMessage($event)"
+      <!-- 'bg-gray-200 dark:bg-gray-800': messageType === 'raw', -->
+      <li
+        (click)="onSelectMessage($event)"
+        role="button"
+        tabindex="0"
+        (keyup.enter)="onSelectMessage($event)"
+        (keyup.space)="onSelectMessage($event)"
         >
-            <mat-icon class="material-symbols-outlined">select_check_box</mat-icon>
-            <span i18n>Select</span>
-        </li>
-
-        <li
-            (click)="replyToMessage()"
-            role="button"
-            tabindex="0"
-            (keyup.enter)="replyToMessage()"
-            (keyup.space)="replyToMessage()"
+        <mat-icon class="material-symbols-outlined">select_check_box</mat-icon>
+        <span i18n>Select</span>
+      </li>
+      <li
+        (click)="replyToMessage()"
+        role="button"
+        tabindex="0"
+        (keyup.enter)="replyToMessage()"
+        (keyup.space)="replyToMessage()"
         >
-            <mat-icon class="material-icons-outlined">reply</mat-icon>
-            <span i18n>Reply</span>
-        </li>
-
+        <mat-icon class="material-icons-outlined">reply</mat-icon>
+        <span i18n>Reply</span>
+      </li>
+      @if (message.receiver_data) {
         <li
-            (click)="markAsRead()"
-            *ngIf="message.receiver_data"
-            role="button"
-            tabindex="0"
-            (keyup.enter)="markAsRead()"
-            (keyup.space)="markAsRead()"
-        >
-            <img
-                width="24"
-                src="assets/icons/flaticon/double-green-check-mark-24.png"
-                alt="Double blue tick"
+          (click)="markAsRead()"
+          role="button"
+          tabindex="0"
+          (keyup.enter)="markAsRead()"
+          (keyup.space)="markAsRead()"
+          >
+          <img
+            width="24"
+            src="assets/icons/flaticon/double-green-check-mark-24.png"
+            alt="Double blue tick"
             />
-            <span i18n>Mark as read</span>
+          <span i18n>Mark as read</span>
         </li>
-
+      }
+      @if ((message | messageData).type !== MessageType.reaction) {
         <li
-            (click)="toggleEmojiPicker()"
-            *ngIf="(message | messageData).type !== MessageType.reaction"
-            role="button"
-            tabindex="0"
-            (keyup.enter)="toggleEmojiPicker()"
-            (keyup.space)="toggleEmojiPicker()"
-        >
-            <mat-icon class="material-icons-outlined">add_reaction</mat-icon>
-            <span i18n>Add reaction</span>
+          (click)="toggleEmojiPicker()"
+          role="button"
+          tabindex="0"
+          (keyup.enter)="toggleEmojiPicker()"
+          (keyup.space)="toggleEmojiPicker()"
+          >
+          <mat-icon class="material-icons-outlined">add_reaction</mat-icon>
+          <span i18n>Add reaction</span>
         </li>
-
-        <li
-            (click)="openMessageInfo()"
-            role="button"
-            tabindex="0"
-            (keyup.enter)="openMessageInfo()"
-            (keyup.space)="openMessageInfo()"
+      }
+      <li
+        (click)="openMessageInfo()"
+        role="button"
+        tabindex="0"
+        (keyup.enter)="openMessageInfo()"
+        (keyup.space)="openMessageInfo()"
         >
-            <mat-icon class="material-icons-outlined">info</mat-icon>
-            <span i18n>Message data</span>
-        </li>
+        <mat-icon class="material-icons-outlined">info</mat-icon>
+        <span i18n>Message data</span>
+      </li>
     </ul>
-</div>
+  </div>
+}
 
-<emoji-mart
+@if (showEmojiPicker) {
+  <emoji-mart
     [style]="{
         width: '280px',
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
         borderRadius: '0.5rem',
     }"
     (emojiSelect)="onEmojiSelect($event)"
-    *ngIf="showEmojiPicker"
-></emoji-mart>
+  ></emoji-mart>
+}
 
-<app-message-info-data
+@if (showMessageInfo) {
+  <app-message-info-data
     [message]="message"
     (closeModal)="closeMessageInfo()"
-    *ngIf="showMessageInfo"
-></app-message-info-data>
+  ></app-message-info-data>
+}
 
 <app-timeout-error-modal
-    [message]="errorStr"
-    [data]="errorData"
-    #errorModal
+  [message]="errorStr"
+  [data]="errorData"
+  #errorModal
 ></app-timeout-error-modal>

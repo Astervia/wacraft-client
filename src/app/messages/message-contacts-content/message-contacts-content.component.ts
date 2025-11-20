@@ -1,11 +1,11 @@
 import { Component, Input } from "@angular/core";
 import { ContactData } from "../../../core/message/model/contact-data.model";
 import { MessageContactsModalComponent } from "../message-contacts-modal/message-contacts-modal.component";
-import { CommonModule } from "@angular/common";
+
 
 @Component({
     selector: "app-message-contacts-content",
-    imports: [MessageContactsModalComponent, CommonModule],
+    imports: [MessageContactsModalComponent],
     templateUrl: "./message-contacts-content.component.html",
     styleUrl: "./message-contacts-content.component.scss",
     standalone: true,

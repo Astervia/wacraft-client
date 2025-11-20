@@ -1,16 +1,16 @@
 <div
-    class="flex items-start"
+  class="flex items-start"
     [ngClass]="{
         'flex-row-reverse': message.sender_data,
     }"
->
-    <div
-        class="flex items-center"
-        (mouseenter)="showOptionsArrow()"
-        (mouseleave)="hideOptionsArrow()"
+  >
+  <div
+    class="flex items-center"
+    (mouseenter)="showOptionsArrow()"
+    (mouseleave)="hideOptionsArrow()"
     >
-        <div
-            class="relative max-w-xs break-words rounded-md text-sm dark:text-gray-300 sm:max-w-md lg:max-w-lg xl:max-w-2xl"
+    <div
+      class="relative max-w-xs break-words rounded-md text-sm dark:text-gray-300 sm:max-w-md lg:max-w-lg xl:max-w-2xl"
             [ngClass]="{
                 'bg-blue-300 dark:bg-blue-800':
                     message.sender_data &&
@@ -25,145 +25,162 @@
                 'word-break': 'break-word',
                 'white-space': 'pre-wrap',
             }"
-        >
-            <div
-                class="px-1 pt-1"
-                *ngIf="
-                    messageType !== MessageType.interactive &&
-                    messageType !== MessageType.template &&
-                    message.receiver_data?.context &&
-                    (message.receiver_data?.context?.forwarded ||
-                        message.receiver_data?.context?.frequently_forwarded)
-                "
-            >
-                <app-message-forwarded-header
-                    [context]="message.receiver_data?.context"
-                ></app-message-forwarded-header>
-            </div>
-            <div
-                class="w-full px-1 pt-1"
-                *ngIf="
-                    messageType !== MessageType.interactive &&
-                    messageType !== MessageType.template &&
-                    (message.sender_data?.context?.message_id ||
-                        message.receiver_data?.context?.id ||
-                        (message | messageData).reaction?.message_id)
-                "
-            >
-                <app-message-reply-header
-                    [message]="message"
-                    [sent]="!!message.sender_data"
-                    [contactName]="contactName"
-                    [backgroundColor]="!!message.sender_data ? 'blue' : 'gray'"
-                    (asyncContentLoaded)="asyncContentLoaded.emit()"
-                ></app-message-reply-header>
-            </div>
+      >
+      @if (
+        messageType !== MessageType.interactive &&
+        messageType !== MessageType.template &&
+        message.receiver_data?.context &&
+        (message.receiver_data?.context?.forwarded ||
+        message.receiver_data?.context?.frequently_forwarded)
+        ) {
+        <div
+          class="px-1 pt-1"
+          >
+          <app-message-forwarded-header
+            [context]="message.receiver_data?.context"
+          ></app-message-forwarded-header>
+        </div>
+      }
+      @if (
+        messageType !== MessageType.interactive &&
+        messageType !== MessageType.template &&
+        (message.sender_data?.context?.message_id ||
+        message.receiver_data?.context?.id ||
+        (message | messageData).reaction?.message_id)
+        ) {
+        <div
+          class="w-full px-1 pt-1"
+          >
+          <app-message-reply-header
+            [message]="message"
+            [sent]="!!message.sender_data"
+            [contactName]="contactName"
+            [backgroundColor]="!!message.sender_data ? 'blue' : 'gray'"
+            (asyncContentLoaded)="asyncContentLoaded.emit()"
+          ></app-message-reply-header>
+        </div>
+      }
 
-            <!-- Text Message -->
-            <p
-                *ngIf="messageType === MessageType.text"
-                class="px-1 pt-1"
-                [textContent]="(message | messageData)?.text?.body"
-            ></p>
+      <!-- Text Message -->
+      @if (messageType === MessageType.text) {
+        <p
+          class="px-1 pt-1"
+          [textContent]="(message | messageData)?.text?.body"
+        ></p>
+      }
 
-            <app-message-contacts-content
-                class="flex w-80 items-center"
-                [contacts]="(message | messageData).contacts || []"
-                *ngIf="messageType === MessageType.contacts"
-            ></app-message-contacts-content>
+      @if (messageType === MessageType.contacts) {
+        <app-message-contacts-content
+          class="flex w-80 items-center"
+          [contacts]="(message | messageData).contacts || []"
+        ></app-message-contacts-content>
+      }
 
-            <app-message-media-content
-                class="flex w-full items-center px-1 pt-1"
-                [messageType]="messageType"
-                [mediaData]="useMediaData"
-                [isSent]="!!message.sender_data"
-                (asyncContentLoaded)="asyncContentLoaded.emit()"
-                *ngIf="isMediaType"
-            ></app-message-media-content>
+      @if (isMediaType) {
+        <app-message-media-content
+          class="flex w-full items-center px-1 pt-1"
+          [messageType]="messageType"
+          [mediaData]="useMediaData"
+          [isSent]="!!message.sender_data"
+          (asyncContentLoaded)="asyncContentLoaded.emit()"
+        ></app-message-media-content>
+      }
 
-            <app-message-interactive-content
-                class="flex w-full items-center"
-                [message]="message"
-                [sent]="sent"
-                [contactName]="contactName"
-                [isSent]="!!message.sender_data"
-                *ngIf="messageType === MessageType.interactive"
-            >
-            </app-message-interactive-content>
+      @if (messageType === MessageType.interactive) {
+        <app-message-interactive-content
+          class="flex w-full items-center"
+          [message]="message"
+          [sent]="sent"
+          [contactName]="contactName"
+          [isSent]="!!message.sender_data"
+          >
+        </app-message-interactive-content>
+      }
 
-            <app-message-template-content
-                class="flex w-full items-center"
-                [message]="message"
-                [sent]="sent"
-                [contactName]="contactName"
-                (asyncContentLoaded)="asyncContentLoaded.emit()"
-                *ngIf="messageType === MessageType.template"
-                #templateMessage
-            ></app-message-template-content>
+      @if (messageType === MessageType.template) {
+        <app-message-template-content
+          class="flex w-full items-center"
+          [message]="message"
+          [sent]="sent"
+          [contactName]="contactName"
+          (asyncContentLoaded)="asyncContentLoaded.emit()"
+          #templateMessage
+        ></app-message-template-content>
+      }
 
-            <app-message-location-content
-                [message]="message"
-                [sent]="sent"
-                [isSent]="!!message.sender_data"
-                class="flex w-full items-center px-1 pt-1"
-                *ngIf="messageType === MessageType.location"
-            >
-            </app-message-location-content>
+      @if (messageType === MessageType.location) {
+        <app-message-location-content
+          [message]="message"
+          [sent]="sent"
+          [isSent]="!!message.sender_data"
+          class="flex w-full items-center px-1 pt-1"
+          >
+        </app-message-location-content>
+      }
 
-            <app-message-reaction-content
-                [message]="message"
-                [sent]="sent"
-                [isSent]="!!message.sender_data"
-                class="flex w-full items-center px-1 pt-1"
-                *ngIf="messageType === MessageType.reaction"
-            >
-            </app-message-reaction-content>
+      @if (messageType === MessageType.reaction) {
+        <app-message-reaction-content
+          [message]="message"
+          [sent]="sent"
+          [isSent]="!!message.sender_data"
+          class="flex w-full items-center px-1 pt-1"
+          >
+        </app-message-reaction-content>
+      }
 
-            <app-message-button-content
-                [buttonData]="buttonData"
-                [sent]="sent"
-                class="flex w-full items-center px-1 pt-1"
-                *ngIf="messageType === ReceivedMessageType.button"
-            ></app-message-button-content>
+      @if (messageType === ReceivedMessageType.button) {
+        <app-message-button-content
+          [buttonData]="buttonData"
+          [sent]="sent"
+          class="flex w-full items-center px-1 pt-1"
+        ></app-message-button-content>
+      }
 
-            <app-message-info
-                [message]="message"
-                [sent]="sent"
-                *ngIf="
-                    messageType !== MessageType.interactive && messageType !== MessageType.template
-                "
-            ></app-message-info>
+      @if (
+        messageType !== MessageType.interactive && messageType !== MessageType.template
+        ) {
+        <app-message-info
+          [message]="message"
+          [sent]="sent"
+        ></app-message-info>
+      }
 
-            <!-- Open options modal -->
-            <button
+      <!-- Open options modal -->
+      @if (optionsArrow || optionsOpen) {
+        <button
                 [ngClass]="{
                     'absolute top-1 flex aspect-square w-6 items-center justify-center rounded-full backdrop-blur-lg': true,
                     'left-2': message.sender_data,
                     'right-2': message.receiver_data,
                 }"
-                (click)="clickOptionsArrow()"
-                *ngIf="optionsArrow || optionsOpen"
-            >
-                <i class="fa-solid fa-chevron-down" *ngIf="!optionsOpen"></i>
-                <i class="fa-solid fa-chevron-up" *ngIf="optionsOpen"></i>
-            </button>
+          (click)="clickOptionsArrow()"
+          >
+          @if (!optionsOpen) {
+            <i class="fa-solid fa-chevron-down"></i>
+          }
+          @if (optionsOpen) {
+            <i class="fa-solid fa-chevron-up"></i>
+          }
+        </button>
+      }
 
-            <!-- Options modal -->
-            <app-message-options
-                [toPhoneNumber]="messagingProductContact.product_details.phone_number"
-                [toId]="messagingProductContact.id"
-                [message]="message"
-                (close)="closeOptions()"
-                (reply)="reply.emit()"
-                (reactionSent)="reactionSent.emit($event)"
-                (selectMessage)="selectMessage.emit()"
+      <!-- Options modal -->
+      @if (optionsOpen) {
+        <app-message-options
+          [toPhoneNumber]="messagingProductContact.product_details.phone_number"
+          [toId]="messagingProductContact.id"
+          [message]="message"
+          (close)="closeOptions()"
+          (reply)="reply.emit()"
+          (reactionSent)="reactionSent.emit($event)"
+          (selectMessage)="selectMessage.emit()"
                 [ngClass]="{
                     'absolute bottom-full z-10': true,
                     'right-full -mr-8': message.sender_data,
                     'left-full -ml-8': message.receiver_data,
                 }"
-                *ngIf="optionsOpen"
-            ></app-message-options>
-        </div>
+        ></app-message-options>
+      }
     </div>
+  </div>
 </div>

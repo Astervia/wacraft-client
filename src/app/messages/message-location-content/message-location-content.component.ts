@@ -1,13 +1,13 @@
 import { Component, Input, OnInit, inject } from "@angular/core";
 import { Conversation } from "../../../core/message/model/conversation.model";
-import { CommonModule } from "@angular/common";
+
 import { MessageDataPipe } from "../../../core/message/pipe/message-data.pipe";
 import { MessageType } from "../../../core/message/model/message-type.model";
 import { GoogleMapsModule } from "@angular/google-maps";
 
 @Component({
     selector: "app-message-location-content",
-    imports: [CommonModule, MessageDataPipe, GoogleMapsModule],
+    imports: [MessageDataPipe, GoogleMapsModule],
     templateUrl: "./message-location-content.component.html",
     styleUrl: "./message-location-content.component.scss",
     standalone: true,

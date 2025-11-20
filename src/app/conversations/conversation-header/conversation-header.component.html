@@ -1,48 +1,51 @@
 <div
-    class="dark:main-shadow relative flex items-center justify-between bg-gray-200 p-2 dark:bg-gray-700 dark:text-white"
->
-    <a
-        [routerLink]="[]"
-        [queryParams]="contactDetailsQueryParams"
-        queryParamsHandling="merge"
-        class="flex w-full items-center"
+  class="dark:main-shadow relative flex items-center justify-between bg-gray-200 p-2 dark:bg-gray-700 dark:text-white"
+  >
+  <a
+    [routerLink]="[]"
+    [queryParams]="contactDetailsQueryParams"
+    queryParamsHandling="merge"
+    class="flex w-full items-center"
     >
-        <img
-            [src]="messagingProductContact.contact.photo_path"
-            alt="Profile Picture"
-            class="h-12 w-12 rounded-full"
-            *ngIf="messagingProductContact.contact.photo_path"
+    @if (messagingProductContact.contact.photo_path) {
+      <img
+        [src]="messagingProductContact.contact.photo_path"
+        alt="Profile Picture"
+        class="h-12 w-12 rounded-full"
         />
+    }
 
-        <!-- Show Font Awesome icon if profilePictureSrcInput is not provided -->
-        <i
-            class="fas fa-user-circle text-5xl text-gray-500 dark:text-gray-400"
-            *ngIf="!messagingProductContact.contact.photo_path"
-        ></i>
+    <!-- Show Font Awesome icon if profilePictureSrcInput is not provided -->
+    @if (!messagingProductContact.contact.photo_path) {
+      <i
+        class="fas fa-user-circle text-5xl text-gray-500 dark:text-gray-400"
+      ></i>
+    }
 
-        <div class="ml-3">
-            <h2 class="truncate text-lg font-medium text-gray-800 dark:text-gray-200">
-                {{
-                    messagingProductContact.contact.name ||
-                        messagingProductContact.product_details.phone_number
-                }}
-            </h2>
-        </div>
-    </a>
-
-    <div class="relative">
-        <app-small-button
-            [active]="optionsModalOpen"
-            (click)="this.optionsModalOpen = !this.optionsModalOpen"
-            matIcon="menu"
-        ></app-small-button>
-
-        <!-- Modal -->
-        <app-options
-            *ngIf="optionsModalOpen"
-            (close)="this.optionsModalOpen = false"
-            class="absolute right-0 top-full z-10 mt-2 rounded-md"
-        >
-        </app-options>
+    <div class="ml-3">
+      <h2 class="truncate text-lg font-medium text-gray-800 dark:text-gray-200">
+        {{
+        messagingProductContact.contact.name ||
+        messagingProductContact.product_details.phone_number
+        }}
+      </h2>
     </div>
+  </a>
+
+  <div class="relative">
+    <app-small-button
+      [active]="optionsModalOpen"
+      (click)="this.optionsModalOpen = !this.optionsModalOpen"
+      matIcon="menu"
+    ></app-small-button>
+
+    <!-- Modal -->
+    @if (optionsModalOpen) {
+      <app-options
+        (close)="this.optionsModalOpen = false"
+        class="absolute right-0 top-full z-10 mt-2 rounded-md"
+        >
+      </app-options>
+    }
+  </div>
 </div>

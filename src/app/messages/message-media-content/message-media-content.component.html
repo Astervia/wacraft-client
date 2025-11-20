@@ -1,12 +1,12 @@
 <div
-    class="mb-1 inline-block w-fit break-words rounded-lg"
-    [ngStyle]="{ 'word-break': 'break-word' }"
-    (mouseenter)="showOptions()"
-    (mouseleave)="hideOptions()"
->
-    <!-- Placeholder Preview Button -->
+  class="mb-1 inline-block w-fit break-words rounded-lg"
+  [ngStyle]="{ 'word-break': 'break-word' }"
+  (mouseenter)="showOptions()"
+  (mouseleave)="hideOptions()"
+  >
+  <!-- Placeholder Preview Button -->
+  @if (!mediaSafeUrl) {
     <div
-        *ngIf="!mediaSafeUrl"
         [ngClass]="{
             'relative flex items-center justify-center rounded-lg': true,
             'w-80': messageType !== MessageType.sticker,
@@ -20,136 +20,142 @@
             'bg-gray-200 dark:bg-gray-800': !isSent,
             'bg-blue-400 dark:bg-blue-900': isSent,
         }"
-    >
-        <div
-            class="absolute bottom-0 left-0 right-0 top-0 flex w-full items-center justify-center bg-transparent"
+      >
+      <div
+        class="absolute bottom-0 left-0 right-0 top-0 flex w-full items-center justify-center bg-transparent"
         >
-            <div
-                class="h-14 rounded-l-full rounded-r-full bg-gray-900/50"
-                *ngIf="!mediaSafeUrl || options"
+        @if (!mediaSafeUrl || options) {
+          <div
+            class="h-14 rounded-l-full rounded-r-full bg-gray-900/50"
             >
-                <button
-                    class="options"
-                    (click)="downloadMedia()"
+            <button
+              class="options"
+              (click)="downloadMedia()"
                     [ngClass]="{
                         'mr-1': messageType !== MessageType.document && !mediaSafeUrl,
                     }"
+              >
+              <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
+                >download</mat-icon
                 >
-                    <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
-                        >download</mat-icon
-                    >
-                </button>
+              </button>
+              @if (messageType !== MessageType.document && !mediaSafeUrl) {
                 <button
-                    class="options"
-                    (click)="setMediaUrl()"
-                    *ngIf="messageType !== MessageType.document && !mediaSafeUrl"
-                >
-                    <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
-                        >preview</mat-icon
+                  class="options"
+                  (click)="setMediaUrl()"
+                  >
+                  <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
+                    >preview</mat-icon
                     >
-                </button>
-            </div>
-        </div>
-        <p class="absolute bottom-0 left-1 text-sm font-thin text-gray-500">
+                  </button>
+                }
+              </div>
+            }
+          </div>
+          <p class="absolute bottom-0 left-1 text-sm font-thin text-gray-500">
             {{ mediaData.filename }}
-        </p>
-    </div>
+          </p>
+        </div>
+      }
 
-    <!-- Switch by MessageType -->
-    <div
-        *ngIf="mediaSafeUrl"
+      <!-- Switch by MessageType -->
+      @if (mediaSafeUrl) {
+        <div
         [ngClass]="{
             'w-80 max-w-80': messageType !== MessageType.sticker,
         }"
-    >
-        <ng-container [ngSwitch]="messageType">
+          >
+          @switch (messageType) {
             <!-- Image -->
-            <ng-container *ngSwitchCase="MessageType.image">
-                <div class="relative">
-                    <img [src]="mediaSafeUrl" class="simple-media" alt="Image attachment" />
+            @case (MessageType.image) {
+              <div class="relative">
+                <img [src]="mediaSafeUrl" class="simple-media" alt="Image attachment" />
+                <div
+                  class="absolute bottom-0 left-0 right-0 top-0 flex w-full items-center justify-center bg-transparent"
+                  style="pointer-events: none"
+                  >
+                  @if (options) {
                     <div
-                        class="absolute bottom-0 left-0 right-0 top-0 flex w-full items-center justify-center bg-transparent"
-                        style="pointer-events: none"
-                    >
-                        <div
-                            class="h-14 rounded-l-full rounded-r-full bg-gray-800/50"
-                            *ngIf="options"
-                        >
-                            <button class="options" (click)="downloadMedia()">
-                                <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
-                                    >download</mat-icon
-                                >
-                            </button>
-                        </div>
-                    </div>
+                      class="h-14 rounded-l-full rounded-r-full bg-gray-800/50"
+                      >
+                      <button class="options" (click)="downloadMedia()">
+                        <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
+                          >download</mat-icon
+                          >
+                        </button>
+                      </div>
+                    }
+                  </div>
                 </div>
-            </ng-container>
-
-            <!-- Video -->
-            <ng-container *ngSwitchCase="MessageType.video">
+              }
+              <!-- Video -->
+              @case (MessageType.video) {
                 <div class="relative">
-                    <video controls [src]="mediaSafeUrl" class="simple-media"></video>
-                    <div
-                        class="absolute bottom-0 left-0 right-0 top-0 flex w-full items-center justify-center bg-transparent"
-                        style="pointer-events: none"
+                  <video controls [src]="mediaSafeUrl" class="simple-media"></video>
+                  <div
+                    class="absolute bottom-0 left-0 right-0 top-0 flex w-full items-center justify-center bg-transparent"
+                    style="pointer-events: none"
                     >
-                        <div
-                            class="h-14 rounded-l-full rounded-r-full bg-gray-800/50"
-                            *ngIf="options"
+                    @if (options) {
+                      <div
+                        class="h-14 rounded-l-full rounded-r-full bg-gray-800/50"
                         >
-                            <button class="options" (click)="downloadMedia()">
-                                <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
-                                    >download</mat-icon
-                                >
-                            </button>
+                        <button class="options" (click)="downloadMedia()">
+                          <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
+                            >download</mat-icon
+                            >
+                          </button>
                         </div>
+                      }
                     </div>
-                </div>
-            </ng-container>
-
-            <!-- Audio -->
-            <ng-container *ngSwitchCase="MessageType.audio">
-                <div class="relative flex flex-row">
+                  </div>
+                }
+                <!-- Audio -->
+                @case (MessageType.audio) {
+                  <div class="relative flex flex-row">
                     <audio controls [src]="mediaSafeUrl" class="simple-media"></audio>
                     <button
-                        (click)="downloadMedia()"
+                      (click)="downloadMedia()"
                         [ngClass]="{
                             'inline-flex aspect-square items-center justify-center rounded-full transition-all duration-300 ease-in-out hover:bg-gray-800/50': true,
                             'w-0': !options,
                             'ml-3 mr-3 h-14 w-14': options,
                         }"
-                    >
-                        <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
-                            >download</mat-icon
+                      >
+                      <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
+                        >download</mat-icon
                         >
-                    </button>
-                </div>
-            </ng-container>
-
-            <!-- Sticker -->
-            <ng-container *ngSwitchCase="MessageType.sticker">
-                <div class="relative aspect-square h-56 max-h-56 w-56 max-w-56">
-                    <img [src]="mediaSafeUrl" class="rounded-lg" alt="Sticker attachment" />
-                    <div
+                      </button>
+                    </div>
+                  }
+                  <!-- Sticker -->
+                  @case (MessageType.sticker) {
+                    <div class="relative aspect-square h-56 max-h-56 w-56 max-w-56">
+                      <img [src]="mediaSafeUrl" class="rounded-lg" alt="Sticker attachment" />
+                      <div
                         class="absolute bottom-0 left-0 right-0 top-0 flex w-full items-center justify-center bg-transparent"
                         style="pointer-events: none"
-                    >
-                        <div
-                            class="h-14 rounded-l-full rounded-r-full bg-gray-800/50"
-                            *ngIf="options"
                         >
+                        @if (options) {
+                          <div
+                            class="h-14 rounded-l-full rounded-r-full bg-gray-800/50"
+                            >
                             <button class="options" (click)="downloadMedia()">
-                                <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
-                                    >download</mat-icon
+                              <mat-icon class="material-icons-outlined !h-11 !w-11 text-3xl"
+                                >download</mat-icon
                                 >
-                            </button>
+                              </button>
+                            </div>
+                          }
                         </div>
-                    </div>
+                      </div>
+                    }
+                  }
                 </div>
-            </ng-container>
-        </ng-container>
-    </div>
+              }
 
-    <!-- Caption -->
-    <p [textContent]="mediaData.caption" *ngIf="mediaData.caption" id="caption"></p>
-</div>
+              <!-- Caption -->
+              @if (mediaData.caption) {
+                <p [textContent]="mediaData.caption" id="caption"></p>
+              }
+            </div>

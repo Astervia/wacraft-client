@@ -1,87 +1,87 @@
 <div>
-    <!-- Filters Section -->
-    <div class="mb-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-9">
-            <!-- Filter by HTTP Response Code -->
-            <div class="col-span-2">
-                <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-response-code"
-                    >Response Code</label
-                >
-                <input
-                    type="number"
-                    id="webhook-response-code"
-                    [(ngModel)]="httpResponseCode"
-                    class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
-                    placeholder="e.g. 200"
-                />
-            </div>
-            <!-- Filter by Created Date (from) -->
-            <div class="col-span-2">
-                <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-created-after"
-                    >Created After</label
-                >
-                <input
-                    type="datetime-local"
-                    id="webhook-created-after"
-                    [(ngModel)]="createdAtGte"
-                    class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
-                />
-            </div>
-            <!-- Filter by Created Date (to) -->
-            <div class="col-span-2">
-                <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-created-before"
-                    >Created Before</label
-                >
-                <input
-                    type="datetime-local"
-                    id="webhook-created-before"
-                    [(ngModel)]="createdAtLte"
-                    class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
+  <!-- Filters Section -->
+  <div class="mb-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-9">
+      <!-- Filter by HTTP Response Code -->
+      <div class="col-span-2">
+        <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-response-code"
+          >Response Code</label
+          >
+          <input
+            type="number"
+            id="webhook-response-code"
+            [(ngModel)]="httpResponseCode"
+            class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
+            placeholder="e.g. 200"
+            />
+        </div>
+        <!-- Filter by Created Date (from) -->
+        <div class="col-span-2">
+          <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-created-after"
+            >Created After</label
+            >
+            <input
+              type="datetime-local"
+              id="webhook-created-after"
+              [(ngModel)]="createdAtGte"
+              class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
+              />
+          </div>
+          <!-- Filter by Created Date (to) -->
+          <div class="col-span-2">
+            <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-created-before"
+              >Created Before</label
+              >
+              <input
+                type="datetime-local"
+                id="webhook-created-before"
+                [(ngModel)]="createdAtLte"
+                class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
                 />
             </div>
             <!-- Order by Created Date -->
             <div class="col-span-2">
-                <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-created-order"
-                    >Created at order</label
+              <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-created-order"
+                >Created at order</label
                 >
                 <select
-                    id="webhook-created-order"
-                    [(ngModel)]="dateOrder"
-                    class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
-                >
-                    <option [value]="DateOrderEnum.desc">
-                        {{ DateOrderEnum.desc }}
-                    </option>
-                    <option [value]="DateOrderEnum.asc">
-                        {{ DateOrderEnum.asc }}
-                    </option>
+                  id="webhook-created-order"
+                  [(ngModel)]="dateOrder"
+                  class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
+                  >
+                  <option [value]="DateOrderEnum.desc">
+                    {{ DateOrderEnum.desc }}
+                  </option>
+                  <option [value]="DateOrderEnum.asc">
+                    {{ DateOrderEnum.asc }}
+                  </option>
                 </select>
-            </div>
+              </div>
 
-            <div class="col-span-1 flex items-center justify-center space-x-2">
+              <div class="col-span-1 flex items-center justify-center space-x-2">
                 <app-small-button (click)="clearFilters()" matIcon="clear_all"> </app-small-button>
                 <!-- Apply Button -->
 
                 <app-small-button (click)="applyFilters()" matIcon="search"> </app-small-button>
+              </div>
             </div>
-        </div>
-    </div>
+          </div>
 
-    <!-- Webhook Logs List -->
-    <div class="scrollable max-h-[100vh] overflow-y-auto px-2" (scroll)="onScroll($event)">
-        <div
-            *ngFor="let log of logs; let i = index"
-            class="mb-2 overflow-auto rounded-lg bg-gray-100 p-4 dark:bg-gray-800"
-        >
-            <div
-                class="flex cursor-pointer items-center justify-between"
-                (click)="toggleExpand(i)"
-                role="button"
-                tabindex="0"
-                (keyup.enter)="toggleExpand(i)"
-                (keyup.space)="toggleExpand(i)"
-            >
-                <div>
+          <!-- Webhook Logs List -->
+          <div class="scrollable max-h-[100vh] overflow-y-auto px-2" (scroll)="onScroll($event)">
+            @for (log of logs; track log; let i = $index) {
+              <div
+                class="mb-2 overflow-auto rounded-lg bg-gray-100 p-4 dark:bg-gray-800"
+                >
+                <div
+                  class="flex cursor-pointer items-center justify-between"
+                  (click)="toggleExpand(i)"
+                  role="button"
+                  tabindex="0"
+                  (keyup.enter)="toggleExpand(i)"
+                  (keyup.space)="toggleExpand(i)"
+                  >
+                  <div>
                     <!-- Main Log Info with Colored Status Codes -->
                     <p
                         [ngClass]="{
@@ -91,58 +91,64 @@
                                 log.http_response_code >= 300 && log.http_response_code < 400,
                             'text-red-600': log.http_response_code >= 400,
                         }"
-                        class="font-semibold"
-                    >
-                        HTTP Response Code: {{ log.http_response_code }}
+                      class="font-semibold"
+                      >
+                      HTTP Response Code: {{ log.http_response_code }}
                     </p>
                     <p class="text-sm text-gray-600 dark:text-gray-400">
-                        Created At: {{ log.created_at | date: "short" }}
+                      Created At: {{ log.created_at | date: "short" }}
                     </p>
-                </div>
-                <span class="text-gray-500 dark:text-gray-400" *ngIf="expandedLogIndex !== i"
-                    >+</span
-                >
-                <span class="text-gray-500 dark:text-gray-400" *ngIf="expandedLogIndex === i"
-                    >-</span
-                >
+                  </div>
+                  @if (expandedLogIndex !== i) {
+                    <span class="text-gray-500 dark:text-gray-400"
+                      >+</span
+                      >
+                    }
+                    @if (expandedLogIndex === i) {
+                      <span class="text-gray-500 dark:text-gray-400"
+                        >-</span
+                        >
+                      }
+                    </div>
+                    <!-- Expanded Details -->
+                    @if (expandedLogIndex === i) {
+                      <div
+                        class="mt-4 rounded-lg bg-gray-100 p-4 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+                        >
+                        <p class="mb-3 font-medium">Payload:</p>
+                        <ngx-json-viewer
+                          [json]="log.payload"
+                          [expanded]="true"
+                          [depth]="1"
+                        ></ngx-json-viewer>
+                        <p class="my-3 font-medium">Response Data:</p>
+                        <ngx-json-viewer
+                          [json]="log.response_data"
+                          [expanded]="true"
+                          [depth]="2"
+                        ></ngx-json-viewer>
+                      </div>
+                    }
+                  </div>
+                }
+
+                <!-- Loading Spinner -->
+                @if (isLoading) {
+                  <div class="mt-4 flex justify-center">
+                    <div
+                      class="spinner-border inline-block h-8 w-8 animate-spin rounded-full border-4"
+                      role="status"
+                    ></div>
+                  </div>
+                }
+
+                <!-- Infinite Scroll Trigger -->
+                <div #scrollAnchor></div>
+              </div>
             </div>
 
-            <!-- Expanded Details -->
-            <div
-                *ngIf="expandedLogIndex === i"
-                class="mt-4 rounded-lg bg-gray-100 p-4 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
-            >
-                <p class="mb-3 font-medium">Payload:</p>
-                <ngx-json-viewer
-                    [json]="log.payload"
-                    [expanded]="true"
-                    [depth]="1"
-                ></ngx-json-viewer>
-
-                <p class="my-3 font-medium">Response Data:</p>
-                <ngx-json-viewer
-                    [json]="log.response_data"
-                    [expanded]="true"
-                    [depth]="2"
-                ></ngx-json-viewer>
-            </div>
-        </div>
-
-        <!-- Loading Spinner -->
-        <div *ngIf="isLoading" class="mt-4 flex justify-center">
-            <div
-                class="spinner-border inline-block h-8 w-8 animate-spin rounded-full border-4"
-                role="status"
-            ></div>
-        </div>
-
-        <!-- Infinite Scroll Trigger -->
-        <div #scrollAnchor></div>
-    </div>
-</div>
-
-<app-timeout-error-modal
-    [message]="errorStr"
-    [data]="errorData"
-    #errorModal
-></app-timeout-error-modal>
+            <app-timeout-error-modal
+              [message]="errorStr"
+              [data]="errorData"
+              #errorModal
+            ></app-timeout-error-modal>

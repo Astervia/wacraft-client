@@ -1,6 +1,6 @@
 <div class="relative flex" #draggableContainer>
-    <div
-        class="flex h-screen flex-col overflow-auto overflow-x-hidden dark:bg-gray-800"
+  <div
+    class="flex h-screen flex-col overflow-auto overflow-x-hidden dark:bg-gray-800"
         [ngStyle]="{
             'width.px': queryParamsService.sidebarOpen ? sidebarWidth : 0,
         }"
@@ -8,127 +8,135 @@
             'transition-all duration-300': !isResizing,
         }"
     >
-        <div class="px-4 py-4">
-            <h2 class="flex justify-between text-lg font-semibold text-gray-600 dark:text-gray-200">
-                <p class="flex items-center">
-                    <span i18n>Chats</span>
-                    <span
-                        class="ml-2 rounded-md bg-gray-50 px-2 py-1 text-sm font-normal dark:bg-gray-700"
-                        *ngIf="
-                            !conversationStore.searchValue && !messagingProductContactIdFilter
-                                ? conversationStore.count
-                                : conversationStore.searchCount
-                        "
-                        >{{
-                            !conversationStore.searchValue && !messagingProductContactIdFilter
-                                ? conversationStore.count
-                                : conversationStore.searchCount
-                        }}</span
-                    >
-                </p>
-                <a
-                    [routerLink]="[]"
-                    [queryParams]="addChatQueryParams"
-                    queryParamsHandling="replace"
-                    [preserveFragment]="true"
-                >
-                    <app-small-button matSymbol="chat_add_on"> </app-small-button>
-                </a>
-            </h2>
-
-            <div class="relative mt-4 flex w-full flex-row gap-2">
-                <i class="fas fa-search absolute left-3 top-3 text-gray-500 dark:text-gray-400"></i>
-                <textarea
-                    class="w-full resize-none overflow-hidden rounded-md bg-gray-200 p-2 pl-10 text-gray-800 outline-none dark:bg-gray-700 dark:text-gray-200"
-                    rows="1"
-                    placeholder="Search"
-                    i18n-placeholder
-                    (input)="adjustHeight($event)"
-                    (keydown.control.enter)="conversationStore.getInitialSearchConcurrent()"
-                    [(ngModel)]="conversationStore.searchValue"
-                    (ngModelChange)="conversationStore.getInitialSearchConcurrent()"
-                    #searchTextarea
-                ></textarea>
-
-                <select
-                    class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                    [(ngModel)]="conversationStore.searchMode"
-                    (ngModelChange)="conversationStore.getInitialSearchConcurrent()"
-                >
-                    <option [value]="'contact'" i18n>Contact</option>
-                    <option [value]="'message'" i18n>Message</option>
-                </select>
-            </div>
-
-            <!-- Filters -->
-            <div
-                class="mt-2 w-full space-x-2 space-y-2"
-                *ngIf="
-                    conversationStore.searchFilters.length > 0 || messagingProductContactIdFilter
-                "
+    <div class="px-4 py-4">
+      <h2 class="flex justify-between text-lg font-semibold text-gray-600 dark:text-gray-200">
+        <p class="flex items-center">
+          <span i18n>Chats</span>
+          @if (
+            !conversationStore.searchValue && !messagingProductContactIdFilter
+            ? conversationStore.count
+            : conversationStore.searchCount
+            ) {
+            <span
+              class="ml-2 rounded-md bg-gray-50 px-2 py-1 text-sm font-normal dark:bg-gray-700"
+              >{{
+              !conversationStore.searchValue && !messagingProductContactIdFilter
+              ? conversationStore.count
+              : conversationStore.searchCount
+              }}</span
+              >
+            }
+          </p>
+          <a
+            [routerLink]="[]"
+            [queryParams]="addChatQueryParams"
+            queryParamsHandling="replace"
+            [preserveFragment]="true"
             >
-                <span
-                    class="inline-flex items-center rounded-md border border-blue-700 bg-blue-700/40 px-2 py-1 font-mono text-sm font-thin dark:text-gray-400"
-                    *ngFor="let filter of conversationStore.searchFilters"
-                >
-                    {{ filter.text }}
+            <app-small-button matSymbol="chat_add_on"> </app-small-button>
+          </a>
+        </h2>
 
-                    <button
-                        class="ml-1 flex aspect-square w-6 items-center justify-center rounded-full hover:bg-blue-600/40"
-                        (click)="conversationStore.removeFilter(filter)"
-                    >
-                        <mat-icon class="material-icons-outlined !h-5 !w-5">delete</mat-icon>
-                    </button>
-                </span>
-            </div>
+        <div class="relative mt-4 flex w-full flex-row gap-2">
+          <i class="fas fa-search absolute left-3 top-3 text-gray-500 dark:text-gray-400"></i>
+          <textarea
+            class="w-full resize-none overflow-hidden rounded-md bg-gray-200 p-2 pl-10 text-gray-800 outline-none dark:bg-gray-700 dark:text-gray-200"
+            rows="1"
+            placeholder="Search"
+            i18n-placeholder
+            (input)="adjustHeight($event)"
+            (keydown.control.enter)="conversationStore.getInitialSearchConcurrent()"
+            [(ngModel)]="conversationStore.searchValue"
+            (ngModelChange)="conversationStore.getInitialSearchConcurrent()"
+            #searchTextarea
+          ></textarea>
+
+          <select
+            class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            [(ngModel)]="conversationStore.searchMode"
+            (ngModelChange)="conversationStore.getInitialSearchConcurrent()"
+            >
+            <option [value]="'contact'" i18n>Contact</option>
+            <option [value]="'message'" i18n>Message</option>
+          </select>
         </div>
 
+        <!-- Filters -->
+        @if (
+          conversationStore.searchFilters.length > 0 || messagingProductContactIdFilter
+          ) {
+          <div
+            class="mt-2 w-full space-x-2 space-y-2"
+            >
+            @for (filter of conversationStore.searchFilters; track filter) {
+              <span
+                class="inline-flex items-center rounded-md border border-blue-700 bg-blue-700/40 px-2 py-1 font-mono text-sm font-thin dark:text-gray-400"
+                >
+                {{ filter.text }}
+                <button
+                  class="ml-1 flex aspect-square w-6 items-center justify-center rounded-full hover:bg-blue-600/40"
+                  (click)="conversationStore.removeFilter(filter)"
+                  >
+                  <mat-icon class="material-icons-outlined !h-5 !w-5">delete</mat-icon>
+                </button>
+              </span>
+            }
+          </div>
+        }
+      </div>
+
+      @if (!conversationStore.searchValue && !messagingProductContactIdFilter) {
         <ul
-            class="scrollable flex-1 overflow-y-auto"
-            (scroll)="onScroll($event)"
-            *ngIf="!conversationStore.searchValue && !messagingProductContactIdFilter"
-        >
-            <li *ngFor="let conversation of conversationStore.conversations">
-                <app-conversation-preview
-                    [lastMessage]="conversation.message"
+          class="scrollable flex-1 overflow-y-auto"
+          (scroll)="onScroll($event)"
+          >
+          @for (conversation of conversationStore.conversations; track conversation) {
+            <li>
+              <app-conversation-preview
+                [lastMessage]="conversation.message"
                     [messagingProductContact]="
                         conversation.message | messagingProductContactFromMessage
                     "
-                    [date]="conversation.message.created_at"
-                    [unread]="conversation.unread"
-                    (select)="selectMessagingProductContact.emit($event)"
-                ></app-conversation-preview>
+                [date]="conversation.message.created_at"
+                [unread]="conversation.unread"
+                (select)="selectMessagingProductContact.emit($event)"
+              ></app-conversation-preview>
             </li>
+          }
         </ul>
+      }
 
+      @if (conversationStore.searchValue || messagingProductContactIdFilter) {
         <ul
-            class="scrollable flex-1 overflow-y-auto"
-            (scroll)="onScroll($event)"
-            *ngIf="conversationStore.searchValue || messagingProductContactIdFilter"
-        >
-            <li *ngFor="let conversation of conversationStore.searchConversations">
-                <app-conversation-preview
-                    [lastMessage]="conversation"
-                    [messagingProductContact]="conversation | messagingProductContactFromMessage"
-                    [date]="conversation.created_at"
-                    [messageId]="conversation.id"
-                    (select)="selectMessagingProductContact.emit($event)"
-                ></app-conversation-preview>
+          class="scrollable flex-1 overflow-y-auto"
+          (scroll)="onScroll($event)"
+          >
+          @for (conversation of conversationStore.searchConversations; track conversation) {
+            <li>
+              <app-conversation-preview
+                [lastMessage]="conversation"
+                [messagingProductContact]="conversation | messagingProductContactFromMessage"
+                [date]="conversation.created_at"
+                [messageId]="conversation.id"
+                (select)="selectMessagingProductContact.emit($event)"
+              ></app-conversation-preview>
             </li>
+          }
         </ul>
+      }
     </div>
 
     <!-- Resize handle -->
     <div
-        class="absolute right-0 top-0 h-full cursor-col-resize border-r border-gray-200 bg-gray-300 dark:border-gray-700 dark:bg-gray-600"
-        (mousedown)="startResizing($event)"
-    >
-        <div
-            class="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 cursor-col-resize items-center justify-center rounded-full bg-gray-200 dark:bg-gray-600"
+      class="absolute right-0 top-0 h-full cursor-col-resize border-r border-gray-200 bg-gray-300 dark:border-gray-700 dark:bg-gray-600"
+      (mousedown)="startResizing($event)"
+      >
+      <div
+        class="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 cursor-col-resize items-center justify-center rounded-full bg-gray-200 dark:bg-gray-600"
         >
-            <span class="material-icons text-sm text-gray-500 opacity-50 dark:text-gray-300">
-                drag_indicator
-            </span>
-        </div>
+        <span class="material-icons text-sm text-gray-500 opacity-50 dark:text-gray-300">
+          drag_indicator
+        </span>
+      </div>
     </div>
-</div>
+  </div>

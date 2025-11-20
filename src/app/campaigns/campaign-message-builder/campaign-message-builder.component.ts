@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, ViewChild, OnInit, inject } from "@angular/core";
 import { CampaignMessageControllerService } from "../../../core/campaign/controller/campaign-message-controller.service";
 import { ActivatedRoute } from "@angular/router";
-import { CommonModule } from "@angular/common";
+
 import { FormsModule } from "@angular/forms";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import * as Papa from "papaparse";
@@ -14,12 +14,11 @@ import { SenderData } from "../../../core/message/model/sender-data.model";
 @Component({
     selector: "app-campaign-message-builder",
     imports: [
-        CommonModule,
-        FormsModule,
-        MatTooltipModule,
-        TimeoutErrorModalComponent,
-        FileUploadComponent,
-    ],
+    FormsModule,
+    MatTooltipModule,
+    TimeoutErrorModalComponent,
+    FileUploadComponent
+],
     templateUrl: "./campaign-message-builder.component.html",
     styleUrl: "./campaign-message-builder.component.scss",
     standalone: true,

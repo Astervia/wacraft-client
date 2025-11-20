@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { isMediaType, MessageType } from "../../../core/message/model/message-type.model";
 import { FileUploadComponent } from "../../common/file-upload/file-upload.component";
 
 @Component({
     selector: "app-media-message-file-upload",
-    imports: [FileUploadComponent, CommonModule],
+    imports: [FileUploadComponent],
     templateUrl: "./media-message-file-upload.component.html",
     styleUrl: "./media-message-file-upload.component.scss",
     standalone: true,

@@ -1,176 +1,185 @@
 <div class="main-shadow z-0 bg-gray-200 px-2 py-1 dark:bg-gray-700">
+  @if (replyToMessage) {
     <div
-        class="relative flex w-full max-w-full items-center py-2 pl-2 pr-14"
-        *ngIf="replyToMessage"
-    >
-        <app-message-reply-header
-            [replyToMessage]="replyToMessage"
-            [sent]="!!replyToMessage.sender_data"
-            [contactName]="contactName"
-            backgroundColor="gray"
-            class="w-full"
-        ></app-message-reply-header>
-
-        <div class="absolute bottom-0 right-0 top-0 flex items-center justify-center">
-            <app-small-button
-                (click)="closeReplyHeader()"
-                width="46.125px"
-                matIcon="close"
-            ></app-small-button>
-        </div>
-    </div>
-
-    <div class="flex w-full items-center">
+      class="relative flex w-full max-w-full items-center py-2 pl-2 pr-14"
+      >
+      <app-message-reply-header
+        [replyToMessage]="replyToMessage"
+        [sent]="!!replyToMessage.sender_data"
+        [contactName]="contactName"
+        backgroundColor="gray"
+        class="w-full"
+      ></app-message-reply-header>
+      <div class="absolute bottom-0 right-0 top-0 flex items-center justify-center">
         <app-small-button
-            [active]="messageTypeSelectorOpen"
+          (click)="closeReplyHeader()"
+          width="46.125px"
+          matIcon="close"
+        ></app-small-button>
+      </div>
+    </div>
+  }
+
+  <div class="flex w-full items-center">
+    <app-small-button
+      [active]="messageTypeSelectorOpen"
             [ngClass]="{
                 'rotate-135': messageTypeSelectorOpen,
                 'transition-transform-03': true,
             }"
-            (click)="messageTypeSelectorOpen = true"
-            matIcon="add"
-        ></app-small-button>
+      (click)="messageTypeSelectorOpen = true"
+      matIcon="add"
+    ></app-small-button>
 
-        <app-message-type-selector
-            class="absolute bottom-12 left-2"
-            *ngIf="messageTypeSelectorOpen"
-            [messageType]="messageType"
-            (selectedType)="messageType = $event"
-            (close)="messageTypeSelectorOpen = false"
-        ></app-message-type-selector>
+    @if (messageTypeSelectorOpen) {
+      <app-message-type-selector
+        class="absolute bottom-12 left-2"
+        [messageType]="messageType"
+        (selectedType)="messageType = $event"
+        (close)="messageTypeSelectorOpen = false"
+      ></app-message-type-selector>
+    }
 
-        <form
-            #messageForm="ngForm"
-            (ngSubmit)="send()"
-            class="flex h-auto w-full flex-row items-center"
-        >
-            <!-- Media Message -->
-            <div class="ml-2 w-full" *ngIf="isMediaType(messageType)">
-                <div class="grid grid-cols-12 gap-2">
-                    <select
-                        id="media-mode"
-                        class="col-span-4 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                        [(ngModel)]="mediaByUrl"
-                        (ngModelChange)="onMediaModeChange($event)"
-                        name="mediaMode"
-                    >
-                        <option [value]="false" i18n>📁 Upload file</option>
-                        <option [value]="true" i18n>🔗 Send link</option>
-                    </select>
-
-                    <!-- Media Link -->
-                    <textarea
-                        class="col-span-8 min-h-10 w-full resize-none rounded-lg bg-gray-600 px-3 py-2 text-white outline-none"
-                        placeholder="Media link"
-                        i18n-placeholder
-                        rows="1"
-                        [(ngModel)]="link"
-                        (ngModelChange)="onMessageChange()"
-                        (input)="adjustHeight(mediaLinkArea)"
-                        name="mediaLink"
-                        *ngIf="mediaByUrl"
-                        i18n-placeholder
-                        #mediaLinkArea
-                    ></textarea>
-
-                    <app-media-message-file-upload
-                        name="fileInput"
-                        id="file-input"
-                        class="col-span-8"
-                        (change)="onFileSelected($event)"
-                        [type]="messageType"
-                        *ngIf="!mediaByUrl"
-                    ></app-media-message-file-upload>
-
-                    <!-- Caption -->
-                    <textarea
-                        class="col-span-12 min-h-10 w-full resize-none rounded-lg bg-gray-300 px-3 py-2 outline-none dark:bg-gray-600 dark:text-white"
-                        placeholder="Caption (optional)"
-                        i18n-placeholder
-                        rows="1"
-                        [ngClass]="{ 'border border-red-500': errors['media'] }"
-                        [(ngModel)]="caption"
-                        (ngModelChange)="onMessageChange()"
-                        (input)="adjustHeight(mediaCaptionArea); handleTyping()"
-                        name="mediaCaption"
-                        #mediaCaptionArea
-                    ></textarea>
-                </div>
-                <div *ngIf="errors['media']" class="mt-1 text-sm text-red-500">
-                    <!-- prettier-ignore -->
-                    {{ errors['media'] }}
-                </div>
+    <form
+      #messageForm="ngForm"
+      (ngSubmit)="send()"
+      class="flex h-auto w-full flex-row items-center"
+      >
+      <!-- Media Message -->
+      @if (isMediaType(messageType)) {
+        <div class="ml-2 w-full">
+          <div class="grid grid-cols-12 gap-2">
+            <select
+              id="media-mode"
+              class="col-span-4 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              [(ngModel)]="mediaByUrl"
+              (ngModelChange)="onMediaModeChange($event)"
+              name="mediaMode"
+              >
+              <option [value]="false" i18n>📁 Upload file</option>
+              <option [value]="true" i18n>🔗 Send link</option>
+            </select>
+            <!-- Media Link -->
+            @if (mediaByUrl) {
+              <textarea
+                class="col-span-8 min-h-10 w-full resize-none rounded-lg bg-gray-600 px-3 py-2 text-white outline-none"
+                placeholder="Media link"
+                i18n-placeholder
+                rows="1"
+                [(ngModel)]="link"
+                (ngModelChange)="onMessageChange()"
+                (input)="adjustHeight(mediaLinkArea)"
+                name="mediaLink"
+                i18n-placeholder
+                #mediaLinkArea
+              ></textarea>
+            }
+            @if (!mediaByUrl) {
+              <app-media-message-file-upload
+                name="fileInput"
+                id="file-input"
+                class="col-span-8"
+                (change)="onFileSelected($event)"
+                [type]="messageType"
+              ></app-media-message-file-upload>
+            }
+            <!-- Caption -->
+            <textarea
+              class="col-span-12 min-h-10 w-full resize-none rounded-lg bg-gray-300 px-3 py-2 outline-none dark:bg-gray-600 dark:text-white"
+              placeholder="Caption (optional)"
+              i18n-placeholder
+              rows="1"
+              [ngClass]="{ 'border border-red-500': errors['media'] }"
+              [(ngModel)]="caption"
+              (ngModelChange)="onMessageChange()"
+              (input)="adjustHeight(mediaCaptionArea); handleTyping()"
+              name="mediaCaption"
+              #mediaCaptionArea
+            ></textarea>
+          </div>
+          @if (errors['media']) {
+            <div class="mt-1 text-sm text-red-500">
+              <!-- prettier-ignore -->
+              {{ errors['media'] }}
             </div>
+          }
+        </div>
+      }
 
-            <app-interactive-message-builder
-                (sent)="sent.emit($event)"
-                (typing)="handleTyping()"
-                [toId]="toIdInput"
-                [toPhoneNumber]="toPhoneNumberInput"
-                class="ml-2 mt-2 w-full"
-                *ngIf="messageType === MessageType.interactive"
-                #interactiveMessageBuilder
-            >
-            </app-interactive-message-builder>
+      @if (messageType === MessageType.interactive) {
+        <app-interactive-message-builder
+          (sent)="sent.emit($event)"
+          (typing)="handleTyping()"
+          [toId]="toIdInput"
+          [toPhoneNumber]="toPhoneNumberInput"
+          class="ml-2 mt-2 w-full"
+          #interactiveMessageBuilder
+          >
+        </app-interactive-message-builder>
+      }
 
-            <app-location-message-builder
-                (sent)="sent.emit($event)"
-                [toId]="toIdInput"
-                [toPhoneNumber]="toPhoneNumberInput"
-                class="ml-2 w-full"
-                *ngIf="messageType === MessageType.location"
-                #locationMessageBuilder
-            >
-            </app-location-message-builder>
+      @if (messageType === MessageType.location) {
+        <app-location-message-builder
+          (sent)="sent.emit($event)"
+          [toId]="toIdInput"
+          [toPhoneNumber]="toPhoneNumberInput"
+          class="ml-2 w-full"
+          #locationMessageBuilder
+          >
+        </app-location-message-builder>
+      }
 
-            <app-contacts-message-builder
-                (sent)="sent.emit($event)"
-                [toId]="toIdInput"
-                [toPhoneNumber]="toPhoneNumberInput"
-                class="ml-2 w-full"
-                *ngIf="messageType === MessageType.contacts"
-                #contactsMessageBuilder
-            ></app-contacts-message-builder>
+      @if (messageType === MessageType.contacts) {
+        <app-contacts-message-builder
+          (sent)="sent.emit($event)"
+          [toId]="toIdInput"
+          [toPhoneNumber]="toPhoneNumberInput"
+          class="ml-2 w-full"
+          #contactsMessageBuilder
+        ></app-contacts-message-builder>
+      }
 
-            <!-- Text Message -->
-            <div
-                class="ml-2 flex w-full items-center"
-                *ngIf="messageType === MessageType.text || messageType === 'raw'"
-            >
-                <textarea
-                    class="min-h-10 w-full resize-none rounded-lg bg-gray-300 px-3 py-2 outline-none dark:bg-gray-600 dark:text-white"
+      <!-- Text Message -->
+      @if (messageType === MessageType.text || messageType === 'raw') {
+        <div
+          class="ml-2 flex w-full items-center"
+          >
+          <textarea
+            class="min-h-10 w-full resize-none rounded-lg bg-gray-300 px-3 py-2 outline-none dark:bg-gray-600 dark:text-white"
                     [ngClass]="{
                         'border border-red-500': errors['text'] || errors['raw'],
                     }"
-                    placeholder="Type a message..."
-                    i18n-placeholder
-                    rows="1"
-                    [(ngModel)]="textBody"
-                    (ngModelChange)="onMessageChange()"
-                    (input)="adjustHeight(area)"
-                    (keydown.control.enter)="send()"
-                    name="textMessage"
-                    [maxlength]="messageType === MessageType.text ? '4096' : 'undefined'"
-                    required
-                    #area
-                ></textarea>
-            </div>
+            placeholder="Type a message..."
+            i18n-placeholder
+            rows="1"
+            [(ngModel)]="textBody"
+            (ngModelChange)="onMessageChange()"
+            (input)="adjustHeight(area)"
+            (keydown.control.enter)="send()"
+            name="textMessage"
+            [maxlength]="messageType === MessageType.text ? '4096' : 'undefined'"
+            required
+            #area
+          ></textarea>
+        </div>
+      }
 
-            <button
-                type="submit"
-                class="ml-2 flex aspect-square w-12 items-center justify-center rounded-full hover:bg-blue-400 dark:hover:bg-blue-600"
-                *ngIf="sendAvailable"
+      @if (sendAvailable) {
+        <button
+          type="submit"
+          class="ml-2 flex aspect-square w-12 items-center justify-center rounded-full hover:bg-blue-400 dark:hover:bg-blue-600"
+          >
+          <mat-icon class="!h-6 !w-6 brightness-50 dark:text-white dark:brightness-100"
+            >send</mat-icon
             >
-                <mat-icon class="!h-6 !w-6 brightness-50 dark:text-white dark:brightness-100"
-                    >send</mat-icon
-                >
-            </button>
-        </form>
+          </button>
+        }
+      </form>
     </div>
-</div>
+  </div>
 
-<app-timeout-error-modal
+  <app-timeout-error-modal
     [message]="errorStr"
     [data]="errorData"
     #errorModal
-></app-timeout-error-modal>
+  ></app-timeout-error-modal>

@@ -1,8 +1,9 @@
 <div class="h-screen w-full dark:bg-gray-800">
+  @for (params of messagingProductContacts; track params) {
     <app-conversation
-        *ngFor="let params of messagingProductContacts"
-        [ngClass]="{ hidden: currentMessagingProductContactId !== params.id }"
-        [messagingProductContact]="params"
-        (searchAtContactId)="searchAtContactId.next($event)"
+      [ngClass]="{ hidden: currentMessagingProductContactId !== params.id }"
+      [messagingProductContact]="params"
+      (searchAtContactId)="searchAtContactId.next($event)"
     ></app-conversation>
+  }
 </div>

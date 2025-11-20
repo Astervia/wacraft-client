@@ -1,146 +1,150 @@
 <div class="scrollable mx-auto h-full overflow-y-scroll p-6 dark:bg-gray-900 dark:text-gray-100">
-    <h3 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-200" i18n>User settings</h3>
+  <h3 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-200" i18n>User settings</h3>
 
+  @if (user) {
     <div
-        *ngIf="user"
-        class="mb-6 grid grid-cols-12 gap-4 rounded-lg bg-gray-100 p-6 dark:bg-gray-700"
-    >
-        <!-- URL Field with Copy Button -->
-        <div
-            class="relative col-span-10"
-            [ngClass]="{ 'md:col-span-5': !userId, 'md:col-span-10': userId }"
+      class="mb-6 grid grid-cols-12 gap-4 rounded-lg bg-gray-100 p-6 dark:bg-gray-700"
+      >
+      <!-- URL Field with Copy Button -->
+      <div
+        class="relative col-span-10"
+        [ngClass]="{ 'md:col-span-5': !userId, 'md:col-span-10': userId }"
         >
-            <label class="mb-2 block text-sm font-medium" i18n for="user-name">Name</label>
-            <div class="relative">
-                <input
-                    type="url"
-                    id="user-name"
-                    [(ngModel)]="user.name"
-                    [disabled]="!isEditing"
-                    class="w-full rounded bg-gray-200 p-2 outline-none dark:bg-gray-600 dark:text-white"
-                />
-            </div>
+        <label class="mb-2 block text-sm font-medium" i18n for="user-name">Name</label>
+        <div class="relative">
+          <input
+            type="url"
+            id="user-name"
+            [(ngModel)]="user.name"
+            [disabled]="!isEditing"
+            class="w-full rounded bg-gray-200 p-2 outline-none dark:bg-gray-600 dark:text-white"
+            />
         </div>
-
-        <!-- URL Field with Copy Button -->
-        <div class="relative col-span-12 md:col-span-5" *ngIf="isEditing && !userId">
-            <label class="mb-2 block text-sm font-medium" i18n for="user-password">Password</label>
-            <div class="relative">
-                <input
-                    [type]="showPassword ? 'text' : 'password'"
-                    id="user-password"
-                    [(ngModel)]="user.password"
-                    [disabled]="!isEditing"
-                    class="w-full rounded bg-gray-200 p-2 pr-10 text-white outline-none dark:bg-gray-600"
-                />
-            </div>
-            <!-- Toggle Button with Material Icon -->
-            <button
-                type="button"
-                class="absolute right-2 top-9 text-gray-600 focus:outline-none dark:text-gray-300"
-                (click)="togglePasswordVisibility()"
-                aria-label="Toggle password visibility"
+      </div>
+      <!-- URL Field with Copy Button -->
+      @if (isEditing && !userId) {
+        <div class="relative col-span-12 md:col-span-5">
+          <label class="mb-2 block text-sm font-medium" i18n for="user-password">Password</label>
+          <div class="relative">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="user-password"
+              [(ngModel)]="user.password"
+              [disabled]="!isEditing"
+              class="w-full rounded bg-gray-200 p-2 pr-10 text-white outline-none dark:bg-gray-600"
+              />
+          </div>
+          <!-- Toggle Button with Material Icon -->
+          <button
+            type="button"
+            class="absolute right-2 top-9 text-gray-600 focus:outline-none dark:text-gray-300"
+            (click)="togglePasswordVisibility()"
+            aria-label="Toggle password visibility"
             >
-                <span class="material-icons-outlined text-xl">
-                    {{ showPassword ? "visibility_off" : "visibility" }}
-                </span>
-            </button>
+            <span class="material-icons-outlined text-xl">
+              {{ showPassword ? "visibility_off" : "visibility" }}
+            </span>
+          </button>
         </div>
-
-        <div class="relative col-span-12 md:col-span-2">
-            <label class="mb-2 block text-sm font-medium" i18n for="user-role">Role</label>
-            <div class="relative">
-                <select
-                    id="user-role"
-                    class="block w-full rounded-lg border bg-gray-50 p-2.5 text-sm font-semibold outline-none focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500"
-                    [disabled]="!isEditing"
-                    [(ngModel)]="user.role"
+      }
+      <div class="relative col-span-12 md:col-span-2">
+        <label class="mb-2 block text-sm font-medium" i18n for="user-role">Role</label>
+        <div class="relative">
+          <select
+            id="user-role"
+            class="block w-full rounded-lg border bg-gray-50 p-2.5 text-sm font-semibold outline-none focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500"
+            [disabled]="!isEditing"
+            [(ngModel)]="user.role"
                     [ngClass]="{
                         'border-green-600 text-green-600': user.role === Role.user,
                         'border-blue-600 text-blue-600': user.role === Role.admin,
                         'border-yellow-600 text-yellow-600': user.role === Role.automation,
                         'border-cyan-600 text-cyan-600': user.role === Role.developer,
                     }"
-                >
-                    <option [value]="Role.user">{{ Role.user }}</option>
-                    <option [value]="Role.admin">{{ Role.admin }}</option>
-                    <option [value]="Role.automation">
-                        {{ Role.automation }}
-                    </option>
-                    <option [value]="Role.developer">
-                        {{ Role.developer }}
-                    </option>
-                </select>
-            </div>
+            >
+            <option [value]="Role.user">{{ Role.user }}</option>
+            <option [value]="Role.admin">{{ Role.admin }}</option>
+            <option [value]="Role.automation">
+              {{ Role.automation }}
+            </option>
+            <option [value]="Role.developer">
+              {{ Role.developer }}
+            </option>
+          </select>
         </div>
-
-        <!-- Authorization Field with Copy Button -->
-        <div class="relative col-span-12">
-            <label class="mb-2 block text-sm font-medium" for="user-email">Email</label>
-            <div class="relative">
-                <input
-                    id="user-email"
-                    [(ngModel)]="user.email"
-                    [disabled]="!isEditing"
-                    class="w-full rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
-                />
-                <button
-                    mat-icon-button
-                    class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                    (click)="copyToClipboard(user.email)"
-                    matTooltip="Copy email"
-                >
-                    <mat-icon class="material-icons-outlined">copy</mat-icon>
-                </button>
-            </div>
+      </div>
+      <!-- Authorization Field with Copy Button -->
+      <div class="relative col-span-12">
+        <label class="mb-2 block text-sm font-medium" for="user-email">Email</label>
+        <div class="relative">
+          <input
+            id="user-email"
+            [(ngModel)]="user.email"
+            [disabled]="!isEditing"
+            class="w-full rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
+            />
+          <button
+            mat-icon-button
+            class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
+            (click)="copyToClipboard(user.email)"
+            matTooltip="Copy email"
+            >
+            <mat-icon class="material-icons-outlined">copy</mat-icon>
+          </button>
         </div>
-
-        <!-- Button section -->
-        <div class="col-span-6 flex flex-col items-center" *ngIf="!isEditing">
-            <button
-                (click)="toggleEdit()"
-                class="w-full rounded bg-green-600 py-2 font-bold text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
-                i18n
+      </div>
+      <!-- Button section -->
+      @if (!isEditing) {
+        <div class="col-span-6 flex flex-col items-center">
+          <button
+            (click)="toggleEdit()"
+            class="w-full rounded bg-green-600 py-2 font-bold text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
+            i18n
             >
                 Edit
             </button>
         </div>
-
-        <div class="col-span-6 flex flex-col items-center" *ngIf="!isEditing && userId">
-            <button
-                (click)="delete()"
-                class="w-full rounded bg-red-600 py-2 font-bold text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
-                i18n
+      }
+      @if (!isEditing && userId) {
+        <div class="col-span-6 flex flex-col items-center">
+          <button
+            (click)="delete()"
+            class="w-full rounded bg-red-600 py-2 font-bold text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
+            i18n
             >
                 Delete
             </button>
         </div>
-
-        <!-- When editing, show Cancel and Save buttons -->
-        <div class="col-span-6 flex flex-col items-center" *ngIf="isEditing">
-            <button
-                (click)="cancelEdit()"
-                class="w-full rounded bg-red-600 py-2 font-bold text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
-                i18n
+      }
+      <!-- When editing, show Cancel and Save buttons -->
+      @if (isEditing) {
+        <div class="col-span-6 flex flex-col items-center">
+          <button
+            (click)="cancelEdit()"
+            class="w-full rounded bg-red-600 py-2 font-bold text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
+            i18n
             >
                 Cancel
             </button>
         </div>
-
-        <div class="col-span-6 flex flex-col items-center" *ngIf="isEditing">
-            <button
-                (click)="saveChanges()"
-                class="w-full rounded bg-blue-600 py-2 font-bold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-                i18n
+      }
+      @if (isEditing) {
+        <div class="col-span-6 flex flex-col items-center">
+          <button
+            (click)="saveChanges()"
+            class="w-full rounded bg-blue-600 py-2 font-bold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+            i18n
             >
                 Save
             </button>
         </div>
+      }
     </div>
+  }
 </div>
 
 <app-timeout-error-modal
-    [message]="errorStr"
-    [data]="errorData"
-    #errorModal
+  [message]="errorStr"
+  [data]="errorData"
+  #errorModal
 ></app-timeout-error-modal>

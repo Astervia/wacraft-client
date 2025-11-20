@@ -1,13 +1,13 @@
 import { Component, OnInit, inject } from "@angular/core";
 import { environment } from "../../environments/environment";
-import { CommonModule } from "@angular/common";
+
 import { SafeUrlPipe } from "../../core/common/pipe/safe-url.pipe";
 import { UrlWithHttpPipe } from "../../core/common/pipe/url-with-http.pipe";
 import { AuthService } from "../../core/auth/service/auth.service";
 
 @Component({
     selector: "app-node-red",
-    imports: [CommonModule, SafeUrlPipe, UrlWithHttpPipe],
+    imports: [SafeUrlPipe, UrlWithHttpPipe],
     templateUrl: "./node-red.component.html",
     styleUrl: "./node-red.component.scss",
     standalone: true,

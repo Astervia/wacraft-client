@@ -1,61 +1,64 @@
 <div class="flex h-screen w-full items-center justify-center dark:bg-gray-800">
-    <div class="w-80 rounded bg-white p-8 shadow-md dark:bg-gray-700">
-        <div class="mb-8 flex w-full items-center">
-            <h2 class="grow-1 w-full text-2xl font-bold text-gray-800 dark:text-white">Login</h2>
-            <div
-                class="aspect-square h-4 w-4 grow-0 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"
-                *ngIf="isLoading"
-            ></div>
-        </div>
-        <div class="mb-5">
-            <label for="username" class="mb-2 block text-sm text-gray-600 dark:text-gray-300" i18n
-                >Username</label
-            >
-            <input
-                type="text"
-                name="username"
-                class="w-full rounded-md border px-3 py-2 text-gray-600 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-300"
-                required
-                (keydown.control.enter)="login()"
-                #username
+  <div class="w-80 rounded bg-white p-8 shadow-md dark:bg-gray-700">
+    <div class="mb-8 flex w-full items-center">
+      <h2 class="grow-1 w-full text-2xl font-bold text-gray-800 dark:text-white">Login</h2>
+      @if (isLoading) {
+        <div
+          class="aspect-square h-4 w-4 grow-0 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"
+        ></div>
+      }
+    </div>
+    <div class="mb-5">
+      <label for="username" class="mb-2 block text-sm text-gray-600 dark:text-gray-300" i18n
+        >Username</label
+        >
+        <input
+          type="text"
+          name="username"
+          class="w-full rounded-md border px-3 py-2 text-gray-600 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-300"
+          required
+          (keydown.control.enter)="login()"
+          #username
+          />
+      </div>
+      <div class="relative mb-5">
+        <label for="password" class="mb-2 block text-sm text-gray-600 dark:text-gray-300" i18n
+          >Password</label
+          >
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            name="password"
+            class="w-full rounded-md border px-3 py-2 pr-10 text-gray-600 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-300"
+            required
+            (keydown.enter)="login()"
+            #password
             />
-        </div>
-        <div class="relative mb-5">
-            <label for="password" class="mb-2 block text-sm text-gray-600 dark:text-gray-300" i18n
-                >Password</label
+          <!-- Toggle Button with Material Icon -->
+          <button
+            type="button"
+            class="absolute right-2 top-9 text-gray-600 focus:outline-none dark:text-gray-300"
+            (click)="togglePasswordVisibility()"
+            aria-label="Toggle password visibility"
             >
-            <input
-                [type]="showPassword ? 'text' : 'password'"
-                name="password"
-                class="w-full rounded-md border px-3 py-2 pr-10 text-gray-600 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-300"
-                required
-                (keydown.enter)="login()"
-                #password
-            />
-            <!-- Toggle Button with Material Icon -->
-            <button
-                type="button"
-                class="absolute right-2 top-9 text-gray-600 focus:outline-none dark:text-gray-300"
-                (click)="togglePasswordVisibility()"
-                aria-label="Toggle password visibility"
-            >
-                <span class="material-icons-outlined text-xl">
-                    {{ showPassword ? "visibility_off" : "visibility" }}
-                </span>
-            </button>
+            <span class="material-icons-outlined text-xl">
+              {{ showPassword ? "visibility_off" : "visibility" }}
+            </span>
+          </button>
         </div>
 
-        <div class="mb-5" *ngIf="errorMessage">
+        @if (errorMessage) {
+          <div class="mb-5">
             <span class="text-red-600">{{ errorMessage }}</span>
-        </div>
+          </div>
+        }
 
         <button
-            class="w-full rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400"
-            (click)="login()"
-            [disabled]="isLoading"
-            i18n
-        >
+          class="w-full rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400"
+          (click)="login()"
+          [disabled]="isLoading"
+          i18n
+          >
             Submit
         </button>
+      </div>
     </div>
-</div>

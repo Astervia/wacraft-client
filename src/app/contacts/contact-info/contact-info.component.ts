@@ -3,7 +3,7 @@ import {
     Conversation,
     ConversationMessagingProductContact,
 } from "../../../core/message/model/conversation.model";
-import { CommonModule } from "@angular/common";
+
 import { FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ContactControllerService } from "../../../core/contact/controller/contact-controller.service";
 import { MessagingProductContactControllerService } from "../../../core/messaging-product/controller/messaging-product-contact-controller.service";
@@ -25,18 +25,17 @@ import { isHttpError } from "../../../core/common/model/http-error-shape.model";
 @Component({
     selector: "app-contact-info",
     imports: [
-        CommonModule,
-        FormsModule,
-        SmallButtonComponent,
-        MediaPreviewComponent,
-        TimeoutErrorModalComponent,
-        MatIconModule,
-        RouterModule,
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        NgxIntlTelInputModule,
-    ],
+    FormsModule,
+    SmallButtonComponent,
+    MediaPreviewComponent,
+    TimeoutErrorModalComponent,
+    MatIconModule,
+    RouterModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    NgxIntlTelInputModule
+],
     templateUrl: "./contact-info.component.html",
     styleUrls: ["./contact-info.component.scss"],
     // encapsulation: ViewEncapsulation.None,

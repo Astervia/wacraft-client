@@ -1,113 +1,115 @@
-<div
+@if ((message | messageData).type === MessageType.interactive && messageSent.interactive) {
+  <div
     class="max-w-82"
-    *ngIf="(message | messageData).type === MessageType.interactive && messageSent.interactive"
->
+    >
     <!-- Sender data -->
-    <div *ngIf="isSent">
+    @if (isSent) {
+      <div>
         <div
-            id="content"
+          id="content"
             [ngClass]="{
                 'rounded-md': true,
                 'bg-blue-300 dark:bg-blue-800': isSent,
                 'bg-gray-100 dark:bg-gray-700': !isSent,
             }"
-        >
+          >
+          @if (
+            message.receiver_data?.context &&
+            (message.receiver_data?.context?.forwarded ||
+            message.receiver_data?.context?.frequently_forwarded)
+            ) {
             <div
-                class="px-1 pt-1"
-                *ngIf="
-                    message.receiver_data?.context &&
-                    (message.receiver_data?.context?.forwarded ||
-                        message.receiver_data?.context?.frequently_forwarded)
-                "
-            >
-                <app-message-forwarded-header
-                    [context]="message.receiver_data?.context"
-                ></app-message-forwarded-header>
+              class="px-1 pt-1"
+              >
+              <app-message-forwarded-header
+                [context]="message.receiver_data?.context"
+              ></app-message-forwarded-header>
             </div>
-
+          }
+          @if (
+            message.sender_data?.context?.message_id || message.receiver_data?.context?.id
+            ) {
             <div
-                class="w-full px-1 pt-1"
-                *ngIf="
-                    message.sender_data?.context?.message_id || message.receiver_data?.context?.id
-                "
-            >
-                <app-message-reply-header
-                    [message]="message"
-                    [sent]="!!message.sender_data"
-                    [backgroundColor]="!!message.sender_data ? 'blue' : 'gray'"
-                    [contactName]="contactName"
-                ></app-message-reply-header>
+              class="w-full px-1 pt-1"
+              >
+              <app-message-reply-header
+                [message]="message"
+                [sent]="!!message.sender_data"
+                [backgroundColor]="!!message.sender_data ? 'blue' : 'gray'"
+                [contactName]="contactName"
+              ></app-message-reply-header>
             </div>
-
-            <div class="px-1 pb-1 pt-1">
-                <!-- Header -->
-                <div
-                    [class]="'text-base' + (messageSent.interactive.header?.text && 'mb-2')"
-                    id="header"
-                    *ngIf="
-                        messageSent.interactive?.header &&
-                        (messageSent.interactive?.header?.text || useMediaData)
-                    "
+          }
+          <div class="px-1 pb-1 pt-1">
+            <!-- Header -->
+            @if (
+              messageSent.interactive?.header &&
+              (messageSent.interactive?.header?.text || useMediaData)
+              ) {
+              <div
+                [class]="'text-base' + (messageSent.interactive.header?.text && 'mb-2')"
+                id="header"
                 >
-                    <p
-                        class=""
-                        *ngIf="
-                            messageSent.interactive?.header?.type === HeaderType.text &&
-                            messageSent.interactive?.header?.text
-                        "
-                        [textContent]="messageSent.interactive.header?.text"
-                    ></p>
-
-                    <app-message-media-content
-                        *ngIf="
-                            messageSent.interactive?.header?.type !== HeaderType.text &&
-                            useMediaData
-                        "
-                        [isSent]="isSent"
-                        [mediaData]="useMediaData"
-                        [messageType]="headerTypeAsMessageType"
-                    ></app-message-media-content>
-                </div>
-
-                <!-- Body -->
-                <p
-                    id="body"
-                    *ngIf="messageSent.interactive?.body?.text"
-                    [textContent]="messageSent.interactive.body?.text"
-                ></p>
-
-                <!-- Footer -->
-                <p
-                    class="mt-2 text-xs font-light text-gray-600 dark:text-gray-200"
-                    id="footer"
-                    *ngIf="messageSent.interactive?.footer?.text"
-                    [textContent]="messageSent.interactive.footer?.text"
-                ></p>
-
-                <app-message-info class="pb-1" [sent]="sent" [message]="message"></app-message-info>
-            </div>
-
-            <!-- Action -->
-            <!-- List -->
+                @if (
+                  messageSent.interactive?.header?.type === HeaderType.text &&
+                  messageSent.interactive?.header?.text
+                  ) {
+                  <p
+                    class=""
+                    [textContent]="messageSent.interactive.header?.text"
+                  ></p>
+                }
+                @if (
+                  messageSent.interactive?.header?.type !== HeaderType.text &&
+                  useMediaData
+                  ) {
+                  <app-message-media-content
+                    [isSent]="isSent"
+                    [mediaData]="useMediaData"
+                    [messageType]="headerTypeAsMessageType"
+                  ></app-message-media-content>
+                }
+              </div>
+            }
+            <!-- Body -->
+            @if (messageSent.interactive?.body?.text) {
+              <p
+                id="body"
+                [textContent]="messageSent.interactive.body?.text"
+              ></p>
+            }
+            <!-- Footer -->
+            @if (messageSent.interactive?.footer?.text) {
+              <p
+                class="mt-2 text-xs font-light text-gray-600 dark:text-gray-200"
+                id="footer"
+                [textContent]="messageSent.interactive.footer?.text"
+              ></p>
+            }
+            <app-message-info class="pb-1" [sent]="sent" [message]="message"></app-message-info>
+          </div>
+          <!-- Action -->
+          <!-- List -->
+          @if (messageSent.interactive?.action?.button) {
             <button
-                type="button"
+              type="button"
                 [ngClass]="{
                     'relative flex h-10 w-full items-center justify-center rounded-b-md border-t border-t-gray-500 opacity-100': true,
                 }"
-                (click)="openListOptionsModal()"
-                *ngIf="messageSent.interactive?.action?.button"
-            >
-                {{ messageSent.interactive.action?.button }}
+              (click)="openListOptionsModal()"
+              >
+              {{ messageSent.interactive.action?.button }}
             </button>
+          }
         </div>
-
         <!-- Action -->
         <!-- Buttons -->
-        <div
+        @if (messageSent.interactive?.action?.buttons) {
+          <div
             class="mt-1 flex flex-col gap-1 rounded-md"
-            *ngIf="messageSent.interactive?.action?.buttons"
-        >
-            <button
+            >
+            @for (button of messageSent.interactive?.action?.buttons; track button) {
+              <button
                 type="button"
                 [ngClass]="{
                     'relative flex h-10 w-full items-center justify-center rounded-md opacity-100': true,
@@ -115,81 +117,87 @@
                     'dark:bg-gray-700': !isSent,
                 }"
                 (click)="copyText(button.reply.id)"
-                *ngFor="let button of messageSent.interactive?.action?.buttons"
-            >
+                >
                 {{ button.reply.title }}
-            </button>
-        </div>
-    </div>
-
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
     <!-- Receiver data -->
-    <div
-        *ngIf="!isSent"
+    @if (!isSent) {
+      <div
         [ngClass]="{
             'rounded-md': true,
             'bg-blue-300 dark:bg-blue-800': isSent,
             'bg-gray-100 dark:bg-gray-700': !isSent,
         }"
-    >
+        >
         <!-- Button reply -->
         <div id="button-reply-content">
+          @if (
+            messageReceived.interactive?.type === ReceivedInteractiveType.buttonReply &&
+            messageReceived.interactive?.button_reply
+            ) {
             <div
-                class="px-1 pb-1 pt-1"
-                *ngIf="
-                    messageReceived.interactive?.type === ReceivedInteractiveType.buttonReply &&
-                    messageReceived.interactive?.button_reply
-                "
-            >
+              class="px-1 pb-1 pt-1"
+              >
+              <p
+                class=""
+                id="button-reply-body"
+                [textContent]="messageReceived.interactive?.button_reply?.title"
+              ></p>
+              @if (messageReceived.interactive?.button_reply?.id) {
                 <p
-                    class=""
-                    id="button-reply-body"
-                    [textContent]="messageReceived.interactive?.button_reply?.title"
+                  class="mt-2 text-xs font-light text-gray-400 dark:text-gray-200"
+                  id="button-reply-footer"
+                  [textContent]="messageReceived.interactive?.button_reply?.id"
                 ></p>
-                <p
-                    class="mt-2 text-xs font-light text-gray-400 dark:text-gray-200"
-                    id="button-reply-footer"
-                    *ngIf="messageReceived.interactive?.button_reply?.id"
-                    [textContent]="messageReceived.interactive?.button_reply?.id"
-                ></p>
+              }
             </div>
+          }
         </div>
-
         <!-- List reply -->
         <div id="list-reply-content">
+          @if (
+            messageReceived.interactive?.type === ReceivedInteractiveType.listReply &&
+            messageReceived.interactive?.list_reply
+            ) {
             <div
-                class="px-1 pb-1 pt-1"
-                *ngIf="
-                    messageReceived.interactive?.type === ReceivedInteractiveType.listReply &&
-                    messageReceived.interactive?.list_reply
-                "
-            >
+              class="px-1 pb-1 pt-1"
+              >
+              <p
+                class="mb-2 text-base"
+                id="list-reply-header"
+                [textContent]="messageReceived.interactive?.list_reply?.title"
+              ></p>
+              <p
+                class="mb-2"
+                id="list-reply-body"
+                [textContent]="messageReceived.interactive?.list_reply?.description"
+              ></p>
+              @if (messageReceived.interactive?.list_reply?.id) {
                 <p
-                    class="mb-2 text-base"
-                    id="list-reply-header"
-                    [textContent]="messageReceived.interactive?.list_reply?.title"
+                  class="mt-2 text-xs font-light text-gray-200"
+                  id="list-reply-footer"
+                  [textContent]="messageReceived.interactive?.list_reply?.id"
                 ></p>
-                <p
-                    class="mb-2"
-                    id="list-reply-body"
-                    [textContent]="messageReceived.interactive?.list_reply?.description"
-                ></p>
-                <p
-                    class="mt-2 text-xs font-light text-gray-200"
-                    id="list-reply-footer"
-                    *ngIf="messageReceived.interactive?.list_reply?.id"
-                    [textContent]="messageReceived.interactive?.list_reply?.id"
-                ></p>
+              }
             </div>
+          }
         </div>
-
         <app-message-info class="pb-1" [message]="message"></app-message-info>
-    </div>
-</div>
+      </div>
+    }
+  </div>
+}
 
-<app-list-options-modal
-    *ngIf="messageSent.interactive?.type === InteractiveType.list && listOptionsModalOpen"
+@if (messageSent.interactive?.type === InteractiveType.list && listOptionsModalOpen) {
+  <app-list-options-modal
     (close)="closeListOptionsModal()"
     [sections]="messageSent.interactive?.action?.sections || []"
     [listName]="messageSent.interactive?.action?.button || ''"
->
-</app-list-options-modal>
+    >
+  </app-list-options-modal>
+}

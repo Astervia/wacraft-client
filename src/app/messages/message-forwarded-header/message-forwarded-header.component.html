@@ -1,21 +1,25 @@
-<p
+@if (context && (context.forwarded || context.frequently_forwarded)) {
+  <p
     class="text-xm w-full text-gray-400"
-    *ngIf="context && (context.forwarded || context.frequently_forwarded)"
->
-    <span *ngIf="context.forwarded" class="flex flex-row items-center">
+    >
+    @if (context.forwarded) {
+      <span class="flex flex-row items-center">
         <mat-icon
-            style="transform: scaleX(-1)"
-            class="material-icons-outlined text-md mr-1 !flex !h-4 !w-4 !items-center !justify-center brightness-75"
-            >reply</mat-icon
-        >
-        <span i18n>Forwarded</span>
-    </span>
-
-    <span *ngIf="context.frequently_forwarded" class="flex flex-row items-center">
-        <mat-icon
+          style="transform: scaleX(-1)"
+          class="material-icons-outlined text-md mr-1 !flex !h-4 !w-4 !items-center !justify-center brightness-75"
+          >reply</mat-icon
+          >
+          <span i18n>Forwarded</span>
+        </span>
+      }
+      @if (context.frequently_forwarded) {
+        <span class="flex flex-row items-center">
+          <mat-icon
             class="material-symbols-outlined text-md mr-1 !flex !h-4 !w-6 !items-center !justify-center brightness-75"
             >forward</mat-icon
-        >
-        <span i18n>Frequetly forwarded</span>
-    </span>
-</p>
+            >
+            <span i18n>Frequetly forwarded</span>
+          </span>
+        }
+      </p>
+    }

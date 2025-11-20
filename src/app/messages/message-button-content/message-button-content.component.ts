@@ -1,10 +1,10 @@
 import { Component, Input } from "@angular/core";
 import { ButtonData } from "../../../core/message/model/button-data.model";
-import { CommonModule } from "@angular/common";
+
 
 @Component({
     selector: "app-message-button-content",
-    imports: [CommonModule],
+    imports: [],
     templateUrl: "./message-button-content.component.html",
     styleUrl: "./message-button-content.component.scss",
     standalone: true,

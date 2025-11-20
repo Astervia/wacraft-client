@@ -1,7 +1,7 @@
 import { Component, HostListener, inject } from "@angular/core";
 import { QueryParamsService } from "../../core/navigation/service/query-params.service";
 import { SidebarComponent } from "../common/sidebar/sidebar.component";
-import { CommonModule } from "@angular/common";
+
 import { RoutePath } from "../app.routes";
 import { WebhookSidebarComponent } from "./webhook-sidebar/webhook-sidebar.component";
 import { WebhookDetailsComponent } from "./webhook-details/webhook-details.component";
@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
     selector: "app-webhooks",
-    imports: [CommonModule, SidebarComponent, WebhookSidebarComponent, WebhookDetailsComponent],
+    imports: [SidebarComponent, WebhookSidebarComponent, WebhookDetailsComponent],
     templateUrl: "./webhooks.component.html",
     styleUrl: "./webhooks.component.scss",
     standalone: true,

@@ -1,62 +1,59 @@
 <div
-    class="scrollable mx-auto h-full overflow-y-auto p-6 dark:bg-gray-900 dark:text-gray-100"
-    id="webhook-details"
->
-    <h3 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-200">Webhook settings</h3>
+  class="scrollable mx-auto h-full overflow-y-auto p-6 dark:bg-gray-900 dark:text-gray-100"
+  id="webhook-details"
+  >
+  <h3 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-200">Webhook settings</h3>
 
+  @if (webhook) {
     <div
-        *ngIf="webhook"
-        class="mb-6 grid grid-cols-12 gap-4 rounded-lg bg-gray-100 p-6 dark:bg-gray-700"
-    >
-        <!-- URL Field with Copy Button -->
-        <div class="relative col-span-12 sm:col-span-4 md:col-span-8">
-            <label class="mb-2 block text-sm font-medium" for="webhook-url">URL</label>
-            <div class="relative">
-                <input
-                    type="url"
-                    id="webhook-url"
-                    [(ngModel)]="webhook.url"
-                    [disabled]="!isEditing"
-                    class="w-full rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
-                />
-
-                <button
-                    mat-icon-button
-                    class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                    (click)="copyToClipboard(webhook.url)"
-                    matTooltip="Copy URL"
-                >
-                    <mat-icon class="material-icons-outlined">copy</mat-icon>
-                </button>
-            </div>
-        </div>
-
-        <!-- Event Select Field -->
-        <div class="col-span-12 sm:col-span-4 md:col-span-2">
-            <label class="mb-2 block text-sm font-medium" for="webhook-event">Event</label>
-            <select
-                id="webhook-event"
-                class="col-span-4 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 font-mono text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                [disabled]="!isEditing"
-                [(ngModel)]="webhook.event"
+      class="mb-6 grid grid-cols-12 gap-4 rounded-lg bg-gray-100 p-6 dark:bg-gray-700"
+      >
+      <!-- URL Field with Copy Button -->
+      <div class="relative col-span-12 sm:col-span-4 md:col-span-8">
+        <label class="mb-2 block text-sm font-medium" for="webhook-url">URL</label>
+        <div class="relative">
+          <input
+            type="url"
+            id="webhook-url"
+            [(ngModel)]="webhook.url"
+            [disabled]="!isEditing"
+            class="w-full rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
+            />
+          <button
+            mat-icon-button
+            class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
+            (click)="copyToClipboard(webhook.url)"
+            matTooltip="Copy URL"
             >
-                <option [value]="Event.ReceiveWhatsAppMessage">
-                    {{ Event.ReceiveWhatsAppMessage }}
-                </option>
-                <option [value]="Event.SendWhatsAppMessage">
-                    {{ Event.SendWhatsAppMessage }}
-                </option>
-            </select>
+            <mat-icon class="material-icons-outlined">copy</mat-icon>
+          </button>
         </div>
-
-        <!-- Method Field with Color-Coded Options -->
-        <div class="col-span-12 sm:col-span-4 md:col-span-2">
-            <label class="mb-2 block text-sm font-medium" for="webhook-method">Method</label>
-            <select
-                id="webhook-method"
-                class="col-span-4 block w-full rounded-lg border bg-gray-50 p-2.5 text-sm font-semibold outline-none focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500"
-                [(ngModel)]="webhook.http_method"
-                [disabled]="!isEditing"
+      </div>
+      <!-- Event Select Field -->
+      <div class="col-span-12 sm:col-span-4 md:col-span-2">
+        <label class="mb-2 block text-sm font-medium" for="webhook-event">Event</label>
+        <select
+          id="webhook-event"
+          class="col-span-4 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 font-mono text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          [disabled]="!isEditing"
+          [(ngModel)]="webhook.event"
+          >
+          <option [value]="Event.ReceiveWhatsAppMessage">
+            {{ Event.ReceiveWhatsAppMessage }}
+          </option>
+          <option [value]="Event.SendWhatsAppMessage">
+            {{ Event.SendWhatsAppMessage }}
+          </option>
+        </select>
+      </div>
+      <!-- Method Field with Color-Coded Options -->
+      <div class="col-span-12 sm:col-span-4 md:col-span-2">
+        <label class="mb-2 block text-sm font-medium" for="webhook-method">Method</label>
+        <select
+          id="webhook-method"
+          class="col-span-4 block w-full rounded-lg border bg-gray-50 p-2.5 text-sm font-semibold outline-none focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500"
+          [(ngModel)]="webhook.http_method"
+          [disabled]="!isEditing"
                 [ngClass]="{
                     'border-green-600 text-green-600': webhook.http_method === HttpMethod.GET,
                     'border-blue-600 text-blue-600': webhook.http_method === HttpMethod.POST,
@@ -65,113 +62,115 @@
                     'border-red-600 text-red-600': webhook.http_method === HttpMethod.DELETE,
                     'border-gray-600 text-gray-600': webhook.http_method === HttpMethod.OPTIONS,
                 }"
-            >
-                <option [ngValue]="HttpMethod.POST">
-                    {{ HttpMethod.POST }}
-                </option>
-                <option [ngValue]="HttpMethod.GET">{{ HttpMethod.GET }}</option>
-                <option [ngValue]="HttpMethod.PUT">{{ HttpMethod.PUT }}</option>
-                <option [ngValue]="HttpMethod.PATCH">
-                    {{ HttpMethod.PATCH }}
-                </option>
-                <option [ngValue]="HttpMethod.DELETE">
-                    {{ HttpMethod.DELETE }}
-                </option>
-                <option [ngValue]="HttpMethod.OPTIONS">
-                    {{ HttpMethod.OPTIONS }}
-                </option>
-            </select>
-        </div>
-
-        <!-- Authorization Field with Copy Button -->
-        <div class="relative col-span-12 sm:col-span-9 md:col-span-10">
-            <label class="mb-2 block text-sm font-medium" for="webhook-authorization"
-                >Authorization header</label
-            >
-            <div class="relative">
-                <input
-                    id="webhook-authorization"
-                    [(ngModel)]="webhook.authorization"
-                    [disabled]="!isEditing"
-                    class="w-full rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
-                />
-
-                <button
-                    mat-icon-button
-                    class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                    (click)="copyToClipboard(webhook.authorization)"
-                    matTooltip="Copy authorization"
-                >
-                    <mat-icon class="material-icons-outlined">copy</mat-icon>
-                </button>
-            </div>
-        </div>
-
-        <div class="relative col-span-12 sm:col-span-3 md:col-span-2">
-            <label class="mb-2 block text-sm font-medium" for="webhook-timeout"
-                >Timeout in seconds</label
-            >
-            <div class="relative">
-                <input
-                    id="webhook-timeout"
-                    [(ngModel)]="webhook.timeout"
-                    [disabled]="!isEditing"
-                    type="number"
-                    min="1"
-                    max="60"
-                    class="w-full rounded bg-gray-200 p-2 outline-none dark:bg-gray-600 dark:text-white"
-                />
-            </div>
-        </div>
-
-        <!-- Button section -->
-        <div class="col-span-6 flex flex-col items-center" *ngIf="!isEditing">
+          >
+          <option [ngValue]="HttpMethod.POST">
+            {{ HttpMethod.POST }}
+          </option>
+          <option [ngValue]="HttpMethod.GET">{{ HttpMethod.GET }}</option>
+          <option [ngValue]="HttpMethod.PUT">{{ HttpMethod.PUT }}</option>
+          <option [ngValue]="HttpMethod.PATCH">
+            {{ HttpMethod.PATCH }}
+          </option>
+          <option [ngValue]="HttpMethod.DELETE">
+            {{ HttpMethod.DELETE }}
+          </option>
+          <option [ngValue]="HttpMethod.OPTIONS">
+            {{ HttpMethod.OPTIONS }}
+          </option>
+        </select>
+      </div>
+      <!-- Authorization Field with Copy Button -->
+      <div class="relative col-span-12 sm:col-span-9 md:col-span-10">
+        <label class="mb-2 block text-sm font-medium" for="webhook-authorization"
+          >Authorization header</label
+          >
+          <div class="relative">
+            <input
+              id="webhook-authorization"
+              [(ngModel)]="webhook.authorization"
+              [disabled]="!isEditing"
+              class="w-full rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
+              />
             <button
+              mat-icon-button
+              class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
+              (click)="copyToClipboard(webhook.authorization)"
+              matTooltip="Copy authorization"
+              >
+              <mat-icon class="material-icons-outlined">copy</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="relative col-span-12 sm:col-span-3 md:col-span-2">
+          <label class="mb-2 block text-sm font-medium" for="webhook-timeout"
+            >Timeout in seconds</label
+            >
+            <div class="relative">
+              <input
+                id="webhook-timeout"
+                [(ngModel)]="webhook.timeout"
+                [disabled]="!isEditing"
+                type="number"
+                min="1"
+                max="60"
+                class="w-full rounded bg-gray-200 p-2 outline-none dark:bg-gray-600 dark:text-white"
+                />
+            </div>
+          </div>
+          <!-- Button section -->
+          @if (!isEditing) {
+            <div class="col-span-6 flex flex-col items-center">
+              <button
                 (click)="toggleEdit()"
                 class="w-full rounded bg-green-600 py-2 font-bold text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
-            >
+                >
                 Edit
-            </button>
-        </div>
-
-        <div class="col-span-6 flex flex-col items-center" *ngIf="!isEditing && webhookId">
-            <button
+              </button>
+            </div>
+          }
+          @if (!isEditing && webhookId) {
+            <div class="col-span-6 flex flex-col items-center">
+              <button
                 (click)="delete()"
                 class="w-full rounded bg-red-600 py-2 font-bold text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
-            >
+                >
                 Delete
-            </button>
-        </div>
-
-        <!-- When editing, show Cancel and Save buttons -->
-        <div class="col-span-6 flex flex-col items-center" *ngIf="isEditing">
-            <button
+              </button>
+            </div>
+          }
+          <!-- When editing, show Cancel and Save buttons -->
+          @if (isEditing) {
+            <div class="col-span-6 flex flex-col items-center">
+              <button
                 (click)="cancelEdit()"
                 class="w-full rounded bg-red-600 py-2 font-bold text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
-            >
+                >
                 Cancel
-            </button>
-        </div>
-
-        <div class="col-span-6 flex flex-col items-center" *ngIf="isEditing">
-            <button
+              </button>
+            </div>
+          }
+          @if (isEditing) {
+            <div class="col-span-6 flex flex-col items-center">
+              <button
                 (click)="saveChanges()"
                 class="w-full rounded bg-blue-600 py-2 font-bold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-            >
+                >
                 Save
-            </button>
+              </button>
+            </div>
+          }
         </div>
-    </div>
+      }
 
-    <div>
+      <div>
         <h3 class="mb-4 text-xl font-semibold">Logs</h3>
 
         <app-webhook-logs class="grid-cols-12 rounded-lg" #webhookLogs></app-webhook-logs>
+      </div>
     </div>
-</div>
 
-<app-timeout-error-modal
-    [message]="errorStr"
-    [data]="errorData"
-    #errorModal
-></app-timeout-error-modal>
+    <app-timeout-error-modal
+      [message]="errorStr"
+      [data]="errorData"
+      #errorModal
+    ></app-timeout-error-modal>

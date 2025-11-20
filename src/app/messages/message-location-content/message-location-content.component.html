@@ -1,14 +1,19 @@
 <div id="content">
-    <div class="mb-2">
-        <google-map height="250px" id="map" [options]="options" *ngIf="options">
-            <map-marker [position]="markerPosition" *ngIf="markerPosition"></map-marker>
-        </google-map>
-    </div>
+  <div class="mb-2">
+    @if (options) {
+      <google-map height="250px" id="map" [options]="options">
+        @if (markerPosition) {
+          <map-marker [position]="markerPosition"></map-marker>
+        }
+      </google-map>
+    }
+  </div>
 
-    <!-- Header with Google Maps link -->
-    <div class="text-base" id="header" *ngIf="(message | messageData)?.location?.name">
-        <p class="">
-            <a
+  <!-- Header with Google Maps link -->
+  @if ((message | messageData)?.location?.name) {
+    <div class="text-base" id="header">
+      <p class="">
+        <a
                 [href]="
                     'https://maps.google.com/maps/search/' +
                     (message | messageData)?.location?.name +
@@ -17,16 +22,19 @@
                     ',' +
                     (message | messageData)?.location?.longitude
                 "
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                {{ (message | messageData)?.location?.name }}
-            </a>
-        </p>
+          target="_blank"
+          rel="noopener noreferrer"
+          >
+          {{ (message | messageData)?.location?.name }}
+        </a>
+      </p>
     </div>
+  }
 
-    <!-- Body -->
-    <p class="" id="body" *ngIf="(message | messageData)?.location?.address">
-        {{ (message | messageData)?.location?.address }}
+  <!-- Body -->
+  @if ((message | messageData)?.location?.address) {
+    <p class="" id="body">
+      {{ (message | messageData)?.location?.address }}
     </p>
+  }
 </div>

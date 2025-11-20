@@ -4,32 +4,35 @@
         'bg-gray-300 dark:bg-gray-500': active,
         'hover:bg-gray-400 dark:hover:bg-gray-600': !active,
     }"
-    [style]="'width: ' + width"
-    #button
->
-    <!-- Custom Content -->
-    <ng-container *ngIf="customContent">
-        <ng-container *ngTemplateOutlet="customContent"></ng-container>
-    </ng-container>
+  [style]="'width: ' + width"
+  #button
+  >
+  <!-- Custom Content -->
+  @if (customContent) {
+    <ng-container *ngTemplateOutlet="customContent"></ng-container>
+  }
 
-    <!-- Image -->
+  <!-- Image -->
+  @if (!customContent && src) {
     <img
-        [src]="src"
-        class="aspect-square brightness-50 dark:brightness-100"
-        *ngIf="!customContent && src"
-        [attr.alt]="alt || ''"
-    />
+      [src]="src"
+      class="aspect-square brightness-50 dark:brightness-100"
+      [attr.alt]="alt || ''"
+      />
+  }
 
-    <!-- Material Icon -->
+  <!-- Material Icon -->
+  @if (!customContent && matIcon) {
     <mat-icon
-        [fontIcon]="matIcon"
-        *ngIf="!customContent && matIcon"
-        class="material-icons-outlined aspect-square text-gray-500 dark:text-white"
+      [fontIcon]="matIcon"
+      class="material-icons-outlined aspect-square text-gray-500 dark:text-white"
     ></mat-icon>
+  }
 
+  @if (!customContent && matSymbol) {
     <mat-icon
-        [fontIcon]="matSymbol"
-        *ngIf="!customContent && matSymbol"
-        class="material-symbols-outlined aspect-square text-gray-500 dark:text-white"
+      [fontIcon]="matSymbol"
+      class="material-symbols-outlined aspect-square text-gray-500 dark:text-white"
     ></mat-icon>
+  }
 </button>

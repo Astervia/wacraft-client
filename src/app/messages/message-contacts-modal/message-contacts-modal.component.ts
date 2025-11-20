@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import {
     Component,
     ElementRef,
@@ -15,7 +15,7 @@ import { QueryParamsService } from "../../../core/navigation/service/query-param
 
 @Component({
     selector: "app-message-contacts-modal",
-    imports: [CommonModule, MatIconModule, RouterModule],
+    imports: [MatIconModule, RouterModule],
     templateUrl: "./message-contacts-modal.component.html",
     styleUrl: "./message-contacts-modal.component.scss",
     standalone: true,

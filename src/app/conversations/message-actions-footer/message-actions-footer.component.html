@@ -1,29 +1,30 @@
 <div
-    class="main-shadow z-0 flex items-center justify-between bg-gray-200 px-2 py-1 dark:bg-gray-700"
->
-    <div id="right-buttons" class="rotate-135">
-        <app-small-button class="" (click)="clear.emit()" matIcon="add"></app-small-button>
-    </div>
+  class="main-shadow z-0 flex items-center justify-between bg-gray-200 px-2 py-1 dark:bg-gray-700"
+  >
+  <div id="right-buttons" class="rotate-135">
+    <app-small-button class="" (click)="clear.emit()" matIcon="add"></app-small-button>
+  </div>
 
-    <div class="left-buttons flex items-center">
-        <button class="flex items-center" (click)="isForwardModalOpen = true">
-            <mat-icon class="material-symbols-outlined text-md dark:text-white">forward</mat-icon>
-        </button>
-    </div>
+  <div class="left-buttons flex items-center">
+    <button class="flex items-center" (click)="isForwardModalOpen = true">
+      <mat-icon class="material-symbols-outlined text-md dark:text-white">forward</mat-icon>
+    </button>
+  </div>
 </div>
 
-<app-contacts-modal
-    *ngIf="isForwardModalOpen"
+@if (isForwardModalOpen) {
+  <app-contacts-modal
     bottomText="Forward"
     i18n-bottomText
     headerText="Select contacts"
     i18n-headerText
     (close)="closeModal()"
     (send)="sendMessagesToContacts($event)"
-></app-contacts-modal>
+  ></app-contacts-modal>
+}
 
 <app-timeout-error-modal
-    [message]="errorStr"
-    [data]="errorData"
-    #errorModal
+  [message]="errorStr"
+  [data]="errorData"
+  #errorModal
 ></app-timeout-error-modal>

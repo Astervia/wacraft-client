@@ -1,344 +1,369 @@
 <div>
-    <div class="space-y-4">
-        <!-- Interactive Type Selection -->
-        <div>
-            <label class="block dark:text-gray-300">
-                <span class="mb-1 block" i18n>Interactive Type</span>
-                <select
-                    class="w-full rounded-lg border bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                    [(ngModel)]="interactiveType"
-                    (ngModelChange)="selectInteractive()"
-                    name="interactiveType"
-                >
-                    <option value="button" i18n>Button</option>
-                    <option value="list" i18n>List</option>
-                </select>
-            </label>
-        </div>
+  <div class="space-y-4">
+    <!-- Interactive Type Selection -->
+    <div>
+      <label class="block dark:text-gray-300">
+        <span class="mb-1 block" i18n>Interactive Type</span>
+        <select
+          class="w-full rounded-lg border bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+          [(ngModel)]="interactiveType"
+          (ngModelChange)="selectInteractive()"
+          name="interactiveType"
+          >
+          <option value="button" i18n>Button</option>
+          <option value="list" i18n>List</option>
+        </select>
+      </label>
+    </div>
 
-        <!-- Header (optional) -->
-        <div>
-            <label class="block dark:text-gray-300">
-                <span class="mb-1 block" i18n>Header Type</span>
-                <select
-                    class="w-full rounded-lg border bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                    [(ngModel)]="interactiveHeaderType"
-                    name="interactiveHeaderType"
-                >
-                    <option [value]="HeaderType.text" i18n>Text</option>
-                    <option
-                        [value]="HeaderType.image"
-                        *ngIf="interactiveType === InteractiveType.button"
-                        i18n
-                    >
+    <!-- Header (optional) -->
+    <div>
+      <label class="block dark:text-gray-300">
+        <span class="mb-1 block" i18n>Header Type</span>
+        <select
+          class="w-full rounded-lg border bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+          [(ngModel)]="interactiveHeaderType"
+          name="interactiveHeaderType"
+          >
+          <option [value]="HeaderType.text" i18n>Text</option>
+          @if (interactiveType === InteractiveType.button) {
+            <option
+              [value]="HeaderType.image"
+              i18n
+              >
                         Image
                     </option>
-                    <option
-                        [value]="HeaderType.video"
-                        *ngIf="interactiveType === InteractiveType.button"
-                        i18n
-                    >
+          }
+          @if (interactiveType === InteractiveType.button) {
+            <option
+              [value]="HeaderType.video"
+              i18n
+              >
                         Video
                     </option>
-                    <option
-                        [value]="HeaderType.audio"
-                        *ngIf="interactiveType === InteractiveType.button"
-                        i18n
-                    >
+          }
+          @if (interactiveType === InteractiveType.button) {
+            <option
+              [value]="HeaderType.audio"
+              i18n
+              >
                         Audio
                     </option>
-                    <option
-                        [value]="HeaderType.document"
-                        *ngIf="interactiveType === InteractiveType.button"
-                        i18n
-                    >
+          }
+          @if (interactiveType === InteractiveType.button) {
+            <option
+              [value]="HeaderType.document"
+              i18n
+              >
                         Document
                     </option>
-                </select>
-            </label>
-        </div>
+          }
+        </select>
+      </label>
+    </div>
 
-        <div *ngIf="interactiveHeaderType === HeaderType.text">
-            <label class="block dark:text-gray-300">
-                <span class="mb-1 block" i18n>Header</span>
-                <textarea
-                    class="w-full resize-none rounded-lg bg-gray-300 p-2 outline-none dark:bg-gray-600 dark:text-white"
-                    placeholder="Interactive message header..."
-                    i18n-placeholder
-                    rows="1"
-                    maxlength="60"
-                    [(ngModel)]="interactiveHeaderString"
-                    (input)="onTyping()"
-                    required
-                ></textarea>
-            </label>
-            <div *ngIf="errors['interactiveHeaderString']" class="mt-1 text-sm text-red-500">
-                <!-- prettier-ignore -->
-                {{ errors['interactiveHeaderString'] }}
-            </div>
-        </div>
+    @if (interactiveHeaderType === HeaderType.text) {
+      <div>
+        <label class="block dark:text-gray-300">
+          <span class="mb-1 block" i18n>Header</span>
+          <textarea
+            class="w-full resize-none rounded-lg bg-gray-300 p-2 outline-none dark:bg-gray-600 dark:text-white"
+            placeholder="Interactive message header..."
+            i18n-placeholder
+            rows="1"
+            maxlength="60"
+            [(ngModel)]="interactiveHeaderString"
+            (input)="onTyping()"
+            required
+          ></textarea>
+        </label>
+        @if (errors['interactiveHeaderString']) {
+          <div class="mt-1 text-sm text-red-500">
+            <!-- prettier-ignore -->
+            {{ errors['interactiveHeaderString'] }}
+          </div>
+        }
+      </div>
+    }
 
-        <div class="ml-2 w-full" *ngIf="interactiveHeaderType !== HeaderType.text">
-            <p class="mb-1 block dark:text-gray-300">Header</p>
-            <div class="grid grid-cols-12 gap-2">
-                <select
-                    id="media-mode"
-                    class="col-span-4 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                    [(ngModel)]="mediaByUrl"
-                    name="mediaMode"
-                    (ngModelChange)="onMediaModeChange($event)"
-                >
-                    <option [value]="false" i18n>Upload file</option>
-                    <option [value]="true" i18n>Send link</option>
-                </select>
-
-                <!-- Media Link -->
-                <textarea
-                    class="col-span-8 min-h-10 w-full resize-none rounded-lg bg-gray-300 px-3 py-2 outline-none dark:bg-gray-600 dark:text-white"
-                    placeholder="Media link"
-                    i18n-placeholder
-                    rows="1"
-                    [(ngModel)]="link"
-                    (input)="adjustHeight(headerMediaLinkArea)"
-                    name="mediaLink"
-                    *ngIf="mediaByUrl"
-                    #headerMediaLinkArea
-                ></textarea>
-
-                <!-- File Upload -->
-                <app-file-upload
-                    name="fileInput"
-                    id="file-input"
-                    class="col-span-8"
-                    (change)="onFileSelected($event)"
-                    *ngIf="!mediaByUrl"
-                ></app-file-upload>
-
-                <!-- Caption -->
-                <textarea
-                    class="col-span-12 min-h-10 w-full resize-none rounded-lg bg-gray-300 px-3 py-2 outline-none dark:bg-gray-600 dark:text-white"
-                    placeholder="Caption (optional)"
-                    rows="1"
-                    [(ngModel)]="caption"
+    @if (interactiveHeaderType !== HeaderType.text) {
+      <div class="ml-2 w-full">
+        <p class="mb-1 block dark:text-gray-300">Header</p>
+        <div class="grid grid-cols-12 gap-2">
+          <select
+            id="media-mode"
+            class="col-span-4 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            [(ngModel)]="mediaByUrl"
+            name="mediaMode"
+            (ngModelChange)="onMediaModeChange($event)"
+            >
+            <option [value]="false" i18n>Upload file</option>
+            <option [value]="true" i18n>Send link</option>
+          </select>
+          <!-- Media Link -->
+          @if (mediaByUrl) {
+            <textarea
+              class="col-span-8 min-h-10 w-full resize-none rounded-lg bg-gray-300 px-3 py-2 outline-none dark:bg-gray-600 dark:text-white"
+              placeholder="Media link"
+              i18n-placeholder
+              rows="1"
+              [(ngModel)]="link"
+              (input)="adjustHeight(headerMediaLinkArea)"
+              name="mediaLink"
+              #headerMediaLinkArea
+            ></textarea>
+          }
+          <!-- File Upload -->
+          @if (!mediaByUrl) {
+            <app-file-upload
+              name="fileInput"
+              id="file-input"
+              class="col-span-8"
+              (change)="onFileSelected($event)"
+            ></app-file-upload>
+          }
+          <!-- Caption -->
+          <textarea
+            class="col-span-12 min-h-10 w-full resize-none rounded-lg bg-gray-300 px-3 py-2 outline-none dark:bg-gray-600 dark:text-white"
+            placeholder="Caption (optional)"
+            rows="1"
+            [(ngModel)]="caption"
                     [ngClass]="{
                         'border border-red-500': errors['headerMedia'],
                     }"
-                    (input)="adjustHeight(headerMediaCaptionArea)"
-                    name="mediaCaption"
-                    #headerMediaCaptionArea
-                ></textarea>
-            </div>
-            <div *ngIf="errors['headerMedia']" class="mt-1 text-sm text-red-500">
-                <!-- prettier-ignore -->
-                {{ errors['headerMedia'] }}
-                jflkda
-            </div>
+            (input)="adjustHeight(headerMediaCaptionArea)"
+            name="mediaCaption"
+            #headerMediaCaptionArea
+          ></textarea>
         </div>
+        @if (errors['headerMedia']) {
+          <div class="mt-1 text-sm text-red-500">
+            <!-- prettier-ignore -->
+            {{ errors['headerMedia'] }}
+            jflkda
+          </div>
+        }
+      </div>
+    }
 
-        <!-- Body -->
-        <div>
-            <label class="block dark:text-gray-300">
-                <span class="mb-1 block" i18n>Body</span>
-                <textarea
-                    class="w-full resize-none rounded-lg bg-gray-300 p-2 outline-none dark:bg-gray-600 dark:text-white"
+    <!-- Body -->
+    <div>
+      <label class="block dark:text-gray-300">
+        <span class="mb-1 block" i18n>Body</span>
+        <textarea
+          class="w-full resize-none rounded-lg bg-gray-300 p-2 outline-none dark:bg-gray-600 dark:text-white"
                     [ngClass]="{
                         'border border-red-500': !interactiveBody,
                     }"
-                    placeholder="Interactive message body..."
-                    i18n-placeholder
-                    rows="2"
-                    [(ngModel)]="interactiveBody"
-                    (input)="adjustHeight(interactiveBodyArea); onTyping()"
-                    name="interactiveBody"
-                    maxlength="1024"
-                    required
-                    #interactiveBodyArea
-                ></textarea>
-            </label>
-        </div>
+          placeholder="Interactive message body..."
+          i18n-placeholder
+          rows="2"
+          [(ngModel)]="interactiveBody"
+          (input)="adjustHeight(interactiveBodyArea); onTyping()"
+          name="interactiveBody"
+          maxlength="1024"
+          required
+          #interactiveBodyArea
+        ></textarea>
+      </label>
+    </div>
 
-        <!-- Footer (optional) -->
-        <div>
-            <label class="block dark:text-gray-300">
-                <span class="mb-1 block" i18n>Footer</span>
-                <textarea
-                    class="w-full resize-none rounded-lg bg-gray-300 p-2 outline-none dark:bg-gray-600 dark:text-white"
-                    placeholder="Footer text..."
-                    i18n-placeholder
-                    rows="1"
-                    maxlength="60"
-                    [(ngModel)]="interactiveFooter"
-                    (input)="onTyping()"
-                    name="interactiveFooter"
-                ></textarea>
-            </label>
-        </div>
+    <!-- Footer (optional) -->
+    <div>
+      <label class="block dark:text-gray-300">
+        <span class="mb-1 block" i18n>Footer</span>
+        <textarea
+          class="w-full resize-none rounded-lg bg-gray-300 p-2 outline-none dark:bg-gray-600 dark:text-white"
+          placeholder="Footer text..."
+          i18n-placeholder
+          rows="1"
+          maxlength="60"
+          [(ngModel)]="interactiveFooter"
+          (input)="onTyping()"
+          name="interactiveFooter"
+        ></textarea>
+      </label>
+    </div>
 
-        <div *ngIf="interactiveType === InteractiveType.list">
-            <label class="block dark:text-gray-300">
-                <span class="mb-1 block" i18n>Button</span>
-                <div class="space-y-2">
-                    <div class="space-y-2">
-                        <div class="flex w-full items-center">
-                            <input
-                                type="text"
+    @if (interactiveType === InteractiveType.list) {
+      <div>
+        <label class="block dark:text-gray-300">
+          <span class="mb-1 block" i18n>Button</span>
+          <div class="space-y-2">
+            <div class="space-y-2">
+              <div class="flex w-full items-center">
+                <input
+                  type="text"
                                 [ngClass]="{
                                     'border border-red-500': !singleButtonText,
                                 }"
-                                class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                                placeholder="Button"
-                                i18n-placeholder
-                                maxlength="20"
-                                [(ngModel)]="singleButtonText"
-                                required
-                            />
-                        </div>
-                    </div>
-                </div>
-            </label>
-
-            <div class="mt-4 block dark:text-gray-300">
-                <span class="mb-1 block" i18n>List sections</span>
-                <div class="space-y-2">
-                    <div
-                        *ngFor="let section of interactiveSections; let i = index"
-                        class="space-y-2"
-                    >
-                        <div class="flex w-full items-center">
-                            <input
-                                type="text"
-                                class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                                placeholder="Section {{ i }}"
+                  class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                  placeholder="Button"
+                  i18n-placeholder
+                  maxlength="20"
+                  [(ngModel)]="singleButtonText"
+                  required
+                  />
+              </div>
+            </div>
+          </div>
+        </label>
+        <div class="mt-4 block dark:text-gray-300">
+          <span class="mb-1 block" i18n>List sections</span>
+          <div class="space-y-2">
+            @for (section of interactiveSections; track section; let i = $index) {
+              <div
+                class="space-y-2"
+                >
+                <div class="flex w-full items-center">
+                  <input
+                    type="text"
+                    class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                    placeholder="Section {{ i }}"
                                 [ngClass]="{
                                     'border border-red-500':
                                         interactiveSections.length > 1 && !section.title,
                                 }"
-                                [(ngModel)]="section.title"
-                                maxlength="24"
-                                name="buttonText{{ i }}"
-                                required
-                            />
-                            <button
-                                type="button"
-                                class="text-red-500"
-                                *ngIf="i !== 0"
-                                (click)="removeSection(i)"
-                            >
-                                <mat-icon
-                                    class="material-icons-outlined brightness-50 dark:brightness-100"
-                                    >delete</mat-icon
-                                >
-                            </button>
-                        </div>
-                        <div
-                            class="flex w-full items-center pl-10"
-                            *ngFor="let row of section.rows; let j = index"
+                    [(ngModel)]="section.title"
+                    maxlength="24"
+                    name="buttonText{{ i }}"
+                    required
+                    />
+                  @if (i !== 0) {
+                    <button
+                      type="button"
+                      class="text-red-500"
+                      (click)="removeSection(i)"
+                      >
+                      <mat-icon
+                        class="material-icons-outlined brightness-50 dark:brightness-100"
+                        >delete</mat-icon
                         >
-                            <div class="flex w-full flex-col">
-                                <input
-                                    type="text"
-                                    class="w-full rounded-t-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                      </button>
+                    }
+                  </div>
+                  @for (row of section.rows; track row; let j = $index) {
+                    <div
+                      class="flex w-full items-center pl-10"
+                      >
+                      <div class="flex w-full flex-col">
+                        <input
+                          type="text"
+                          class="w-full rounded-t-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
                                     [ngClass]="{
                                         'border border-red-500': !section.rows[j].title,
                                     }"
-                                    placeholder="Row {{ j }} title"
-                                    maxlength="24"
-                                    [(ngModel)]="section.rows[j].title"
-                                    required
-                                />
-                                <input
-                                    type="text"
-                                    class="w-full rounded-b-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                                    placeholder="Row {{ j }} description"
-                                    maxlength="72"
-                                    [(ngModel)]="section.rows[j].description"
-                                    required
-                                />
-                            </div>
-                            <button type="button" class="text-red-500" (click)="removeRow(i, j)">
-                                <mat-icon
-                                    class="material-icons-outlined brightness-50 dark:brightness-100"
-                                    >delete</mat-icon
-                                >
-                            </button>
-                        </div>
-                        <button
-                            type="button"
-                            class="flex items-center pl-10 text-blue-500"
-                            *ngIf="totalRows < 10"
-                            (click)="addRow(i)"
-                        >
-                            <mat-icon
-                                class="material-icons-outlined brightness-50 dark:brightness-100"
-                                >add</mat-icon
-                            >
-                            <span i18n>Add row</span>
+                          placeholder="Row {{ j }} title"
+                          maxlength="24"
+                          [(ngModel)]="section.rows[j].title"
+                          required
+                          />
+                        <input
+                          type="text"
+                          class="w-full rounded-b-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                          placeholder="Row {{ j }} description"
+                          maxlength="72"
+                          [(ngModel)]="section.rows[j].description"
+                          required
+                          />
+                      </div>
+                      <button type="button" class="text-red-500" (click)="removeRow(i, j)">
+                        <mat-icon
+                          class="material-icons-outlined brightness-50 dark:brightness-100"
+                          >delete</mat-icon
+                          >
                         </button>
-                    </div>
-                    <button
+                      </div>
+                    }
+                    @if (totalRows < 10) {
+                      <button
                         type="button"
-                        class="mb-4 flex items-center text-blue-500"
-                        *ngIf="interactiveSections.length < 10"
-                        (click)="addSection()"
-                    >
-                        <mat-icon class="material-icons-outlined brightness-50 dark:brightness-100"
-                            >add</mat-icon
+                        class="flex items-center pl-10 text-blue-500"
+                        (click)="addRow(i)"
+                        >
+                        <mat-icon
+                          class="material-icons-outlined brightness-50 dark:brightness-100"
+                          >add</mat-icon
+                          >
+                          <span i18n>Add row</span>
+                        </button>
+                      }
+                    </div>
+                  }
+                  @if (interactiveSections.length < 10) {
+                    <button
+                      type="button"
+                      class="mb-4 flex items-center text-blue-500"
+                      (click)="addSection()"
+                      >
+                      <mat-icon class="material-icons-outlined brightness-50 dark:brightness-100"
+                        >add</mat-icon
                         >
                         <span i18n>Add section</span>
-                    </button>
+                      </button>
+                    }
+                  </div>
                 </div>
-            </div>
-            <div *ngIf="errors['interactiveSections']" class="mt-1 text-sm text-red-500">
-                {{ errors["interactiveSections"] }}
-            </div>
-        </div>
+                @if (errors['interactiveSections']) {
+                  <div class="mt-1 text-sm text-red-500">
+                    {{ errors["interactiveSections"] }}
+                  </div>
+                }
+              </div>
+            }
 
-        <!-- Buttons -->
-        <div *ngIf="interactiveType === InteractiveType.button">
-            <div class="block dark:text-gray-300">
-                <span class="mb-1 block" i18n>Buttons</span>
-                <div class="space-y-2">
-                    <div *ngFor="let button of interactiveButtons; let i = index" class="space-y-2">
+            <!-- Buttons -->
+            @if (interactiveType === InteractiveType.button) {
+              <div>
+                <div class="block dark:text-gray-300">
+                  <span class="mb-1 block" i18n>Buttons</span>
+                  <div class="space-y-2">
+                    @for (button of interactiveButtons; track button; let i = $index) {
+                      <div class="space-y-2">
                         <div class="flex w-full items-center">
-                            <input
-                                type="text"
-                                class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                                placeholder="Button {{ i }}"
-                                i18n-placeholder
-                                [(ngModel)]="interactiveButtons[i].title"
+                          <input
+                            type="text"
+                            class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                            placeholder="Button {{ i }}"
+                            i18n-placeholder
+                            [(ngModel)]="interactiveButtons[i].title"
                                 [ngClass]="{
                                     'border border-red-500': !interactiveButtons[i].title,
                                 }"
-                                name="buttonText{{ i }}"
-                                maxlength="20"
-                                required
+                            name="buttonText{{ i }}"
+                            maxlength="20"
+                            required
                             />
+                          @if (i !== 0) {
                             <button
-                                type="button"
-                                class="text-red-500"
-                                *ngIf="i !== 0"
-                                (click)="removeButton(i)"
-                            >
-                                <mat-icon
-                                    class="material-icons-outlined brightness-50 dark:brightness-100"
-                                    >delete</mat-icon
+                              type="button"
+                              class="text-red-500"
+                              (click)="removeButton(i)"
+                              >
+                              <mat-icon
+                                class="material-icons-outlined brightness-50 dark:brightness-100"
+                                >delete</mat-icon
                                 >
-                            </button>
+                              </button>
+                            }
+                          </div>
                         </div>
-                    </div>
-                    <button
-                        type="button"
-                        class="mb-4 flex items-center text-blue-500"
-                        *ngIf="interactiveButtons.length < 3"
-                        (click)="addButton()"
-                    >
-                        <mat-icon class="material-icons-outlined brightness-50 dark:brightness-100"
+                      }
+                      @if (interactiveButtons.length < 3) {
+                        <button
+                          type="button"
+                          class="mb-4 flex items-center text-blue-500"
+                          (click)="addButton()"
+                          >
+                          <mat-icon class="material-icons-outlined brightness-50 dark:brightness-100"
                             >add</mat-icon
-                        >
-                        <span i18n>Add option</span>
-                    </button>
-                </div>
+                            >
+                            <span i18n>Add option</span>
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
             </div>
-        </div>
-    </div>
-</div>

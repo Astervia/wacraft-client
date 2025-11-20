@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { SmallButtonComponent } from "../../common/small-button/small-button.component";
 import { ConversationMessagingProductContact } from "../../../core/message/model/conversation.model";
@@ -8,7 +8,7 @@ import { contactDetailsQueryParams } from "./constant/query-params.constant";
 
 @Component({
     selector: "app-conversation-header",
-    imports: [CommonModule, SmallButtonComponent, RouterModule, OptionsComponent],
+    imports: [SmallButtonComponent, RouterModule, OptionsComponent],
     templateUrl: "./conversation-header.component.html",
     styleUrl: "./conversation-header.component.scss",
     standalone: true,

@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, HostListener, inject } from "@angular/core";
 import { SidebarComponent } from "../common/sidebar/sidebar.component";
 import { RoutePath } from "../app.routes";
@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
     selector: "app-users",
-    imports: [CommonModule, SidebarComponent, UserSidebarComponent, UserDetailsComponent],
+    imports: [SidebarComponent, UserSidebarComponent, UserDetailsComponent],
     templateUrl: "./users.component.html",
     styleUrl: "./users.component.scss",
     standalone: true,

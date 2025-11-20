@@ -1,6 +1,6 @@
 <div class="relative flex" #draggableContainer>
-    <div
-        class="flex h-screen flex-col overflow-auto overflow-x-hidden dark:bg-gray-800"
+  <div
+    class="flex h-screen flex-col overflow-auto overflow-x-hidden dark:bg-gray-800"
         [ngStyle]="{
             'width.px': queryParamsService.sidebarOpen ? sidebarWidth : 0,
         }"
@@ -8,140 +8,143 @@
             'transition-all duration-300': !isResizing,
         }"
     >
-        <div class="px-4 py-4">
-            <h2 class="flex justify-between text-lg font-semibold text-gray-600 dark:text-gray-200">
-                <span class="flex items-center"> Templates </span>
-                <!-- <app-small-button -->
-                <!--     (click)="resetTemplateId()" -->
-                <!-- > -->
-                <!-- </app-small-button> -->
-            </h2>
+    <div class="px-4 py-4">
+      <h2 class="flex justify-between text-lg font-semibold text-gray-600 dark:text-gray-200">
+        <span class="flex items-center"> Templates </span>
+        <!-- <app-small-button -->
+        <!--     (click)="resetTemplateId()" -->
+        <!-- > -->
+      <!-- </app-small-button> -->
+    </h2>
 
-            <div class="relative mt-4 flex w-full flex-row gap-2">
-                <i class="fas fa-search absolute left-3 top-3 text-gray-500 dark:text-gray-400"></i>
-                <textarea
-                    class="w-full resize-none overflow-hidden rounded-md bg-gray-200 p-2 pl-10 text-gray-800 outline-none dark:bg-gray-700 dark:text-gray-200"
-                    rows="1"
-                    placeholder="Search"
-                    i18n-placeholder
-                    (input)="adjustHeight($event)"
-                    (keydown.control.enter)="templateStore.getInitialSearchTemplatesConcurrent()"
-                    [(ngModel)]="templateStore.searchValue"
-                    (ngModelChange)="templateStore.getInitialSearchTemplatesConcurrent()"
-                    #searchTextarea
-                ></textarea>
+    <div class="relative mt-4 flex w-full flex-row gap-2">
+      <i class="fas fa-search absolute left-3 top-3 text-gray-500 dark:text-gray-400"></i>
+      <textarea
+        class="w-full resize-none overflow-hidden rounded-md bg-gray-200 p-2 pl-10 text-gray-800 outline-none dark:bg-gray-700 dark:text-gray-200"
+        rows="1"
+        placeholder="Search"
+        i18n-placeholder
+        (input)="adjustHeight($event)"
+        (keydown.control.enter)="templateStore.getInitialSearchTemplatesConcurrent()"
+        [(ngModel)]="templateStore.searchValue"
+        (ngModelChange)="templateStore.getInitialSearchTemplatesConcurrent()"
+        #searchTextarea
+      ></textarea>
 
-                <select
-                    class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                    [(ngModel)]="templateStore.searchMode"
-                    (ngModelChange)="templateStore.getInitialSearchTemplatesConcurrent()"
-                >
-                    <option [value]="'name'" i18n>name</option>
-                    <option [value]="'content'" i18n>content</option>
-                    <option [value]="'language'" i18n>language</option>
-                </select>
+      <select
+        class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+        [(ngModel)]="templateStore.searchMode"
+        (ngModelChange)="templateStore.getInitialSearchTemplatesConcurrent()"
+        >
+        <option [value]="'name'" i18n>name</option>
+        <option [value]="'content'" i18n>content</option>
+        <option [value]="'language'" i18n>language</option>
+      </select>
+    </div>
+
+    <!-- Advanced Filters Toggle Button -->
+    <div class="mt-4">
+      <button
+        class="flex w-full items-center justify-between rounded-lg bg-gray-100 p-2.5 transition-colors hover:bg-gray-200 dark:bg-gray-700/50 dark:hover:bg-gray-700"
+        (click)="showAdvancedFilters = !showAdvancedFilters"
+        >
+        <div class="flex items-center gap-2">
+          <mat-icon class="material-icons-outlined text-gray-600 dark:text-gray-400"
+            >filter_list</mat-icon
+            >
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300" i18n
+              >Advanced Filters</span
+              >
+              @if (getActiveFilterCount() > 0) {
+                <span
+                  class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
+                  >
+                  {{ getActiveFilterCount() }}
+                </span>
+              }
             </div>
+            <mat-icon
+              class="material-icons-outlined text-gray-600 transition-transform dark:text-gray-400"
+              [class.rotate-180]="showAdvancedFilters"
+              >
+              expand_more
+            </mat-icon>
+          </button>
+        </div>
 
-            <!-- Advanced Filters Toggle Button -->
-            <div class="mt-4">
-                <button
-                    class="flex w-full items-center justify-between rounded-lg bg-gray-100 p-2.5 transition-colors hover:bg-gray-200 dark:bg-gray-700/50 dark:hover:bg-gray-700"
-                    (click)="showAdvancedFilters = !showAdvancedFilters"
+        <!-- Advanced Filters Section -->
+        <div
+          class="advanced-filters-container overflow-hidden transition-all duration-300"
+          [class.max-h-0]="!showAdvancedFilters"
+          [class.max-h-[800px]]="showAdvancedFilters"
+          >
+          <div class="mt-2 space-y-2">
+            <!-- Clear Filters Button -->
+            @if (templateStore.hasActiveFilters()) {
+              <div
+                class="flex items-center justify-between px-1"
                 >
-                    <div class="flex items-center gap-2">
-                        <mat-icon class="material-icons-outlined text-gray-600 dark:text-gray-400"
-                            >filter_list</mat-icon
-                        >
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300" i18n
-                            >Advanced Filters</span
-                        >
+                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  <span
+                    class="mr-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
+                    >
+                    {{ getActiveFilterCount() }}
+                  </span>
+                  Active Filters
+                </span>
+                <button
+                  class="text-xs font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                  (click)="templateStore.clearAllFilters()"
+                  >
+                  Clear All
+                </button>
+              </div>
+            }
+
+            <!-- Status Filter -->
+            <div
+              class="filter-section overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700/50"
+              >
+              <button
+                class="flex w-full items-center justify-between p-3 text-left transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
+                (click)="toggleFilterSection('status')"
+                >
+                <div class="flex items-center gap-2">
+                  <mat-icon
+                    class="material-icons-outlined text-gray-600 dark:text-gray-400"
+                    >check_circle</mat-icon
+                    >
+                    <span
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                      i18n
+                      >Status</span
+                      >
+                      @if (templateStore.selectedStatuses.size > 0) {
                         <span
-                            *ngIf="getActiveFilterCount() > 0"
-                            class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
-                        >
-                            {{ getActiveFilterCount() }}
+                          class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
+                          >
+                          {{ templateStore.selectedStatuses.size }}
                         </span>
+                      }
                     </div>
                     <mat-icon
-                        class="material-icons-outlined text-gray-600 transition-transform dark:text-gray-400"
-                        [class.rotate-180]="showAdvancedFilters"
-                    >
-                        expand_more
+                      class="material-icons-outlined text-gray-600 transition-transform dark:text-gray-400"
+                      [class.rotate-180]="filtersExpanded.status"
+                      >
+                      expand_more
                     </mat-icon>
-                </button>
-            </div>
-
-            <!-- Advanced Filters Section -->
-            <div
-                class="advanced-filters-container overflow-hidden transition-all duration-300"
-                [class.max-h-0]="!showAdvancedFilters"
-                [class.max-h-[800px]]="showAdvancedFilters"
-            >
-                <div class="mt-2 space-y-2">
-                    <!-- Clear Filters Button -->
-                    <div
-                        class="flex items-center justify-between px-1"
-                        *ngIf="templateStore.hasActiveFilters()"
+                  </button>
+                  <div
+                    class="filter-options overflow-hidden transition-all duration-300"
+                    [class.max-h-0]="!filtersExpanded.status"
+                    [class.max-h-96]="filtersExpanded.status"
                     >
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">
-                            <span
-                                class="mr-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
-                            >
-                                {{ getActiveFilterCount() }}
-                            </span>
-                            Active Filters
-                        </span>
+                    <div class="flex flex-wrap gap-2 p-3">
+                      @for (status of statusOptions; track status) {
                         <button
-                            class="text-xs font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                            (click)="templateStore.clearAllFilters()"
-                        >
-                            Clear All
-                        </button>
-                    </div>
-
-                    <!-- Status Filter -->
-                    <div
-                        class="filter-section overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700/50"
-                    >
-                        <button
-                            class="flex w-full items-center justify-between p-3 text-left transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
-                            (click)="toggleFilterSection('status')"
-                        >
-                            <div class="flex items-center gap-2">
-                                <mat-icon
-                                    class="material-icons-outlined text-gray-600 dark:text-gray-400"
-                                    >check_circle</mat-icon
-                                >
-                                <span
-                                    class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                                    i18n
-                                    >Status</span
-                                >
-                                <span
-                                    *ngIf="templateStore.selectedStatuses.size > 0"
-                                    class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
-                                >
-                                    {{ templateStore.selectedStatuses.size }}
-                                </span>
-                            </div>
-                            <mat-icon
-                                class="material-icons-outlined text-gray-600 transition-transform dark:text-gray-400"
-                                [class.rotate-180]="filtersExpanded.status"
-                            >
-                                expand_more
-                            </mat-icon>
-                        </button>
-                        <div
-                            class="filter-options overflow-hidden transition-all duration-300"
-                            [class.max-h-0]="!filtersExpanded.status"
-                            [class.max-h-96]="filtersExpanded.status"
-                        >
-                            <div class="flex flex-wrap gap-2 p-3">
-                                <button
-                                    *ngFor="let status of statusOptions"
-                                    class="rounded-full border px-3 py-1.5 text-xs font-medium transition-all"
-                                    [class.bg-blue-600]="templateStore.selectedStatuses.has(status)"
-                                    [class.text-white]="templateStore.selectedStatuses.has(status)"
+                          class="rounded-full border px-3 py-1.5 text-xs font-medium transition-all"
+                          [class.bg-blue-600]="templateStore.selectedStatuses.has(status)"
+                          [class.text-white]="templateStore.selectedStatuses.has(status)"
                                     [class.border-blue-600]="
                                         templateStore.selectedStatuses.has(status)
                                     "
@@ -169,55 +172,57 @@
                                     [class.dark:hover:bg-gray-500]="
                                         !templateStore.selectedStatuses.has(status)
                                     "
-                                    (click)="templateStore.toggleStatus(status)"
-                                >
-                                    {{ formatEnumValue(status) }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Category Filter -->
-                    <div
-                        class="filter-section overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700/50"
-                    >
-                        <button
-                            class="flex w-full items-center justify-between p-3 text-left transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
-                            (click)="toggleFilterSection('category')"
-                        >
-                            <div class="flex items-center gap-2">
-                                <mat-icon
-                                    class="material-icons-outlined text-gray-600 dark:text-gray-400"
-                                    >category</mat-icon
-                                >
-                                <span
-                                    class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                                    i18n
-                                    >Category</span
-                                >
-                                <span
-                                    *ngIf="templateStore.selectedCategories.size > 0"
-                                    class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
-                                >
-                                    {{ templateStore.selectedCategories.size }}
-                                </span>
-                            </div>
-                            <mat-icon
-                                class="material-icons-outlined text-gray-600 transition-transform dark:text-gray-400"
-                                [class.rotate-180]="filtersExpanded.category"
-                            >
-                                expand_more
-                            </mat-icon>
+                          (click)="templateStore.toggleStatus(status)"
+                          >
+                          {{ formatEnumValue(status) }}
                         </button>
-                        <div
-                            class="filter-options overflow-hidden transition-all duration-300"
-                            [class.max-h-0]="!filtersExpanded.category"
-                            [class.max-h-96]="filtersExpanded.category"
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Category Filter -->
+                <div
+                  class="filter-section overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700/50"
+                  >
+                  <button
+                    class="flex w-full items-center justify-between p-3 text-left transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
+                    (click)="toggleFilterSection('category')"
+                    >
+                    <div class="flex items-center gap-2">
+                      <mat-icon
+                        class="material-icons-outlined text-gray-600 dark:text-gray-400"
+                        >category</mat-icon
                         >
-                            <div class="flex max-h-64 flex-wrap gap-2 overflow-y-auto p-3">
-                                <button
-                                    *ngFor="let category of categoryOptions"
-                                    class="rounded-full border px-3 py-1.5 text-xs font-medium transition-all"
+                        <span
+                          class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                          i18n
+                          >Category</span
+                          >
+                          @if (templateStore.selectedCategories.size > 0) {
+                            <span
+                              class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
+                              >
+                              {{ templateStore.selectedCategories.size }}
+                            </span>
+                          }
+                        </div>
+                        <mat-icon
+                          class="material-icons-outlined text-gray-600 transition-transform dark:text-gray-400"
+                          [class.rotate-180]="filtersExpanded.category"
+                          >
+                          expand_more
+                        </mat-icon>
+                      </button>
+                      <div
+                        class="filter-options overflow-hidden transition-all duration-300"
+                        [class.max-h-0]="!filtersExpanded.category"
+                        [class.max-h-96]="filtersExpanded.category"
+                        >
+                        <div class="flex max-h-64 flex-wrap gap-2 overflow-y-auto p-3">
+                          @for (category of categoryOptions; track category) {
+                            <button
+                              class="rounded-full border px-3 py-1.5 text-xs font-medium transition-all"
                                     [class.bg-blue-600]="
                                         templateStore.selectedCategories.has(category)
                                     "
@@ -251,55 +256,57 @@
                                     [class.dark:hover:bg-gray-500]="
                                         !templateStore.selectedCategories.has(category)
                                     "
-                                    (click)="templateStore.toggleCategory(category)"
-                                >
-                                    {{ formatEnumValue(category) }}
-                                </button>
-                            </div>
+                              (click)="templateStore.toggleCategory(category)"
+                              >
+                              {{ formatEnumValue(category) }}
+                            </button>
+                          }
                         </div>
+                      </div>
                     </div>
 
                     <!-- Quality Score Filter -->
                     <div
-                        class="filter-section overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700/50"
-                    >
-                        <button
-                            class="flex w-full items-center justify-between p-3 text-left transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
-                            (click)="toggleFilterSection('qualityScore')"
+                      class="filter-section overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700/50"
+                      >
+                      <button
+                        class="flex w-full items-center justify-between p-3 text-left transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
+                        (click)="toggleFilterSection('qualityScore')"
                         >
-                            <div class="flex items-center gap-2">
-                                <mat-icon
-                                    class="material-icons-outlined text-gray-600 dark:text-gray-400"
-                                    >star</mat-icon
-                                >
+                        <div class="flex items-center gap-2">
+                          <mat-icon
+                            class="material-icons-outlined text-gray-600 dark:text-gray-400"
+                            >star</mat-icon
+                            >
+                            <span
+                              class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                              i18n
+                              >Quality Score</span
+                              >
+                              @if (templateStore.selectedQualityScores.size > 0) {
                                 <span
-                                    class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                                    i18n
-                                    >Quality Score</span
-                                >
-                                <span
-                                    *ngIf="templateStore.selectedQualityScores.size > 0"
-                                    class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
-                                >
-                                    {{ templateStore.selectedQualityScores.size }}
+                                  class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
+                                  >
+                                  {{ templateStore.selectedQualityScores.size }}
                                 </span>
+                              }
                             </div>
                             <mat-icon
-                                class="material-icons-outlined text-gray-600 transition-transform dark:text-gray-400"
-                                [class.rotate-180]="filtersExpanded.qualityScore"
-                            >
-                                expand_more
+                              class="material-icons-outlined text-gray-600 transition-transform dark:text-gray-400"
+                              [class.rotate-180]="filtersExpanded.qualityScore"
+                              >
+                              expand_more
                             </mat-icon>
-                        </button>
-                        <div
+                          </button>
+                          <div
                             class="filter-options overflow-hidden transition-all duration-300"
                             [class.max-h-0]="!filtersExpanded.qualityScore"
                             [class.max-h-96]="filtersExpanded.qualityScore"
-                        >
+                            >
                             <div class="flex flex-wrap gap-2 p-3">
+                              @for (score of qualityScoreOptions; track score) {
                                 <button
-                                    *ngFor="let score of qualityScoreOptions"
-                                    class="rounded-full border px-3 py-1.5 text-xs font-medium transition-all"
+                                  class="rounded-full border px-3 py-1.5 text-xs font-medium transition-all"
                                     [class.bg-blue-600]="
                                         templateStore.selectedQualityScores.has(score)
                                     "
@@ -333,75 +340,83 @@
                                     [class.dark:hover:bg-gray-500]="
                                         !templateStore.selectedQualityScores.has(score)
                                     "
-                                    (click)="templateStore.toggleQualityScore(score)"
-                                >
-                                    {{ formatEnumValue(score) }}
+                                  (click)="templateStore.toggleQualityScore(score)"
+                                  >
+                                  {{ formatEnumValue(score) }}
                                 </button>
+                              }
                             </div>
+                          </div>
                         </div>
+                      </div>
                     </div>
+
+                    <!-- Filters -->
+                    @if (templateStore.searchFilters.length > 0) {
+                      <div
+                        class="mt-2 w-full space-x-2 space-y-2"
+                        >
+                        @for (filter of templateStore.searchFilters; track filter) {
+                          <span
+                            class="inline-flex items-center rounded-md border border-blue-700 bg-blue-700/40 px-2 py-1 font-mono text-sm font-thin text-gray-400"
+                            >
+                            {{ filter.text }}
+                            <button
+                              class="ml-1 flex aspect-square w-6 items-center justify-center rounded-full hover:bg-blue-600/40"
+                              (click)="templateStore.removeFilter(filter)"
+                              >
+                              <mat-icon class="material-icons-outlined !h-5 !w-5">delete</mat-icon>
+                            </button>
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+
+                  @if (!isSearchMode()) {
+                    <ul
+                      class="scrollable flex-1 overflow-y-auto"
+                      (scroll)="onScroll($event)"
+                      >
+                      @for (template of templateStore.templates; track template) {
+                        <li>
+                          <app-template-preview [template]="template"></app-template-preview>
+                        </li>
+                      }
+                    </ul>
+                  }
+
+                  @if (isSearchMode()) {
+                    <ul
+                      class="scrollable flex-1 overflow-y-auto"
+                      (scroll)="onScroll($event)"
+                      >
+                      @for (template of templateStore.searchTemplates; track template) {
+                        <li>
+                          <app-template-preview [template]="template"></app-template-preview>
+                        </li>
+                      }
+                    </ul>
+                  }
                 </div>
-            </div>
 
-            <!-- Filters -->
-            <div
-                class="mt-2 w-full space-x-2 space-y-2"
-                *ngIf="templateStore.searchFilters.length > 0"
-            >
-                <span
-                    class="inline-flex items-center rounded-md border border-blue-700 bg-blue-700/40 px-2 py-1 font-mono text-sm font-thin text-gray-400"
-                    *ngFor="let filter of templateStore.searchFilters"
-                >
-                    {{ filter.text }}
-
-                    <button
-                        class="ml-1 flex aspect-square w-6 items-center justify-center rounded-full hover:bg-blue-600/40"
-                        (click)="templateStore.removeFilter(filter)"
+                <!-- Resize handle -->
+                <div
+                  class="absolute right-0 top-0 h-full cursor-col-resize border-r border-gray-200 bg-gray-300 dark:border-gray-700 dark:bg-gray-600"
+                  (mousedown)="startResizing($event)"
+                  >
+                  <div
+                    class="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 cursor-col-resize items-center justify-center rounded-full bg-gray-200 dark:bg-gray-600"
                     >
-                        <mat-icon class="material-icons-outlined !h-5 !w-5">delete</mat-icon>
-                    </button>
-                </span>
-            </div>
-        </div>
+                    <span class="material-icons text-sm text-gray-500 opacity-50 dark:text-gray-300">
+                      drag_indicator
+                    </span>
+                  </div>
+                </div>
+              </div>
 
-        <ul
-            class="scrollable flex-1 overflow-y-auto"
-            (scroll)="onScroll($event)"
-            *ngIf="!isSearchMode()"
-        >
-            <li *ngFor="let template of templateStore.templates">
-                <app-template-preview [template]="template"></app-template-preview>
-            </li>
-        </ul>
-
-        <ul
-            class="scrollable flex-1 overflow-y-auto"
-            (scroll)="onScroll($event)"
-            *ngIf="isSearchMode()"
-        >
-            <li *ngFor="let template of templateStore.searchTemplates">
-                <app-template-preview [template]="template"></app-template-preview>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Resize handle -->
-    <div
-        class="absolute right-0 top-0 h-full cursor-col-resize border-r border-gray-200 bg-gray-300 dark:border-gray-700 dark:bg-gray-600"
-        (mousedown)="startResizing($event)"
-    >
-        <div
-            class="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 cursor-col-resize items-center justify-center rounded-full bg-gray-200 dark:bg-gray-600"
-        >
-            <span class="material-icons text-sm text-gray-500 opacity-50 dark:text-gray-300">
-                drag_indicator
-            </span>
-        </div>
-    </div>
-</div>
-
-<app-timeout-error-modal
-    [message]="errorStr"
-    [data]="errorData"
-    #errorModal
-></app-timeout-error-modal>
+              <app-timeout-error-modal
+                [message]="errorStr"
+                [data]="errorData"
+                #errorModal
+              ></app-timeout-error-modal>

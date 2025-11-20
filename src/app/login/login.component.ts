@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, ElementRef, ViewChild, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "../../core/auth/service/auth.service";
@@ -8,7 +8,7 @@ import { isHttpError } from "../../core/common/model/http-error-shape.model";
 
 @Component({
     selector: "app-login",
-    imports: [CommonModule, AuthModule, UserModule],
+    imports: [AuthModule, UserModule],
     templateUrl: "./login.component.html",
     styleUrl: "./login.component.scss",
     standalone: true,

@@ -1,67 +1,62 @@
 <div class="scrollable mx-auto h-full overflow-y-scroll p-6 dark:bg-gray-900 dark:text-gray-100">
-    <div *ngIf="template">
-        <h3 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-200" i18n>
+  @if (template) {
+    <div>
+      <h3 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-200" i18n>
             Template details
         </h3>
-
-        <div class="mb-6 grid grid-cols-12 gap-4 rounded-lg bg-gray-100 p-6 dark:bg-gray-700">
-            <div class="relative col-span-6">
-                <p class="mb-2 block text-sm font-medium" i18n>Name</p>
-                <div class="relative">
-                    <div
-                        type="url"
-                        class="w-full truncate rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
-                    >
-                        {{ template.name }}
-                    </div>
-
-                    <button
-                        mat-icon-button
-                        class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                        (click)="copyToClipboard(template.name)"
-                        matTooltip="Copy template name"
-                    >
-                        <mat-icon class="material-icons-outlined">copy</mat-icon>
-                    </button>
-                </div>
+      <div class="mb-6 grid grid-cols-12 gap-4 rounded-lg bg-gray-100 p-6 dark:bg-gray-700">
+        <div class="relative col-span-6">
+          <p class="mb-2 block text-sm font-medium" i18n>Name</p>
+          <div class="relative">
+            <div
+              type="url"
+              class="w-full truncate rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
+              >
+              {{ template.name }}
             </div>
-
-            <div class="relative col-span-6">
-                <p class="mb-2 block text-sm font-medium" i18n>Language</p>
-                <div class="relative">
-                    <div
-                        class="w-full truncate rounded bg-gray-200 p-2 outline-none dark:bg-gray-600 dark:text-white"
-                    >
-                        {{ template.language }}
-                    </div>
-                </div>
+            <button
+              mat-icon-button
+              class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
+              (click)="copyToClipboard(template.name)"
+              matTooltip="Copy template name"
+              >
+              <mat-icon class="material-icons-outlined">copy</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="relative col-span-6">
+          <p class="mb-2 block text-sm font-medium" i18n>Language</p>
+          <div class="relative">
+            <div
+              class="w-full truncate rounded bg-gray-200 p-2 outline-none dark:bg-gray-600 dark:text-white"
+              >
+              {{ template.language }}
             </div>
-
-            <div class="relative col-span-12 sm:col-span-4">
-                <p class="mb-2 block text-sm font-medium">ID</p>
-                <div class="relative">
-                    <div
-                        class="w-full truncate rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
-                    >
-                        {{ template.id }}
-                    </div>
-
-                    <button
-                        mat-icon-button
-                        class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                        (click)="copyToClipboard(template.id)"
-                        matTooltip="Copy template id"
-                    >
-                        <mat-icon class="material-icons-outlined">copy</mat-icon>
-                    </button>
-                </div>
+          </div>
+        </div>
+        <div class="relative col-span-12 sm:col-span-4">
+          <p class="mb-2 block text-sm font-medium">ID</p>
+          <div class="relative">
+            <div
+              class="w-full truncate rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
+              >
+              {{ template.id }}
             </div>
-
-            <div class="relative col-span-12 sm:col-span-4">
-                <p class="mb-2 block text-sm font-medium" i18n>Category</p>
-                <div class="relative">
-                    <div
-                        class="block w-full truncate rounded-lg border bg-gray-50 p-2.5 text-sm outline-none focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500"
+            <button
+              mat-icon-button
+              class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
+              (click)="copyToClipboard(template.id)"
+              matTooltip="Copy template id"
+              >
+              <mat-icon class="material-icons-outlined">copy</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="relative col-span-12 sm:col-span-4">
+          <p class="mb-2 block text-sm font-medium" i18n>Category</p>
+          <div class="relative">
+            <div
+              class="block w-full truncate rounded-lg border bg-gray-50 p-2.5 text-sm outline-none focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500"
                         [ngClass]="{
                             'border-yellow-600 text-yellow-600': template.category === 'MARKETING',
                             'border-blue-600 text-blue-600': template.category === 'UTILITY',
@@ -69,17 +64,16 @@
                                 template.category !== 'UTILITY' &&
                                 template.category !== 'MARKETING',
                         }"
-                    >
-                        {{ template.category }}
-                    </div>
-                </div>
+              >
+              {{ template.category }}
             </div>
-
-            <div class="relative col-span-12 sm:col-span-4">
-                <p class="mb-2 block text-sm font-medium" i18n>Status</p>
-                <div class="relative">
-                    <div
-                        class="block w-full truncate rounded-lg border bg-gray-50 p-2.5 text-sm outline-none focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500"
+          </div>
+        </div>
+        <div class="relative col-span-12 sm:col-span-4">
+          <p class="mb-2 block text-sm font-medium" i18n>Status</p>
+          <div class="relative">
+            <div
+              class="block w-full truncate rounded-lg border bg-gray-50 p-2.5 text-sm outline-none focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500"
                         [ngClass]="{
                             'border-red-600 text-red-600': template.status === 'REJECTED',
                             'border-yellow-600 text-yellow-600': template.status === 'PENDING',
@@ -87,25 +81,24 @@
                             'border-gray-500 text-gray-500 dark:border-gray-400 dark:text-gray-400':
                                 template.status !== 'APPROVED' && template.status !== 'PENDING',
                         }"
-                    >
-                        {{ template.status }}
-                    </div>
-                </div>
+              >
+              {{ template.status }}
             </div>
+          </div>
         </div>
-
-        <div>
-            <h3 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-200" i18n>
+      </div>
+      <div>
+        <h3 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-200" i18n>
                 Message builder
             </h3>
-
-            <app-template-message-builder [template]="template"></app-template-message-builder>
-        </div>
+        <app-template-message-builder [template]="template"></app-template-message-builder>
+      </div>
     </div>
+  }
 </div>
 
 <app-timeout-error-modal
-    [message]="errorStr"
-    [data]="errorData"
-    #errorModal
+  [message]="errorStr"
+  [data]="errorData"
+  #errorModal
 ></app-timeout-error-modal>

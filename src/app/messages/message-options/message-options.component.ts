@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import {
     Component,
     ElementRef,
@@ -34,13 +34,12 @@ interface EmojiSelectEvent {
 @Component({
     selector: "app-message-options",
     imports: [
-        CommonModule,
-        MessageInfoDataComponent,
-        MatIconModule,
-        PickerModule,
-        TimeoutErrorModalComponent,
-        MessageDataPipe,
-    ],
+    MessageInfoDataComponent,
+    MatIconModule,
+    PickerModule,
+    TimeoutErrorModalComponent,
+    MessageDataPipe
+],
     templateUrl: "./message-options.component.html",
     styleUrl: "./message-options.component.scss",
     standalone: true,

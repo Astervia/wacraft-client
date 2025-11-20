@@ -1,248 +1,254 @@
 <div class="space-y-4">
-    <div *ngFor="let contact of contacts; let i = index">
-        <div class="mb-2 flex items-center justify-between">
-            <h3 class="font-bold dark:text-white" i18n>Contact {{ i + 1 }}</h3>
-            <button
-                type="button"
-                *ngIf="contacts.length > 1"
-                class="text-red-500"
-                (click)="removeContact(i)"
+  @for (contact of contacts; track contact; let i = $index) {
+    <div>
+      <div class="mb-2 flex items-center justify-between">
+        <h3 class="font-bold dark:text-white" i18n>Contact {{ i + 1 }}</h3>
+        @if (contacts.length > 1) {
+          <button
+            type="button"
+            class="text-red-500"
+            (click)="removeContact(i)"
             >
-                <mat-icon>delete</mat-icon>
-            </button>
-        </div>
-
-        <!-- Name -->
-        <div class="space-y-2">
-            <label class="block dark:text-gray-300" i18n [attr.for]="'contact-first-name-' + i"
-                >First Name</label
+            <mat-icon>delete</mat-icon>
+          </button>
+        }
+      </div>
+      <!-- Name -->
+      <div class="space-y-2">
+        <label class="block dark:text-gray-300" i18n [attr.for]="'contact-first-name-' + i"
+          >First Name</label
+          >
+          <input
+            class="w-full rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+            [(ngModel)]="contact.name.first_name"
+            (ngModelChange)="updateFormattedName(contact)"
+            name="first_name{{ i }}"
+            [attr.id]="'contact-first-name-' + i"
+            />
+          <label class="block dark:text-gray-300" i18n [attr.for]="'contact-last-name-' + i"
+            >Last Name</label
             >
             <input
-                class="w-full rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                [(ngModel)]="contact.name.first_name"
-                (ngModelChange)="updateFormattedName(contact)"
-                name="first_name{{ i }}"
-                [attr.id]="'contact-first-name-' + i"
-            />
-
-            <label class="block dark:text-gray-300" i18n [attr.for]="'contact-last-name-' + i"
-                >Last Name</label
-            >
-            <input
-                class="w-full rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                [(ngModel)]="contact.name.last_name"
-                (ngModelChange)="updateFormattedName(contact)"
-                name="last_name{{ i }}"
-                [attr.id]="'contact-last-name-' + i"
-            />
-        </div>
-
-        <!-- Formatted Name (collapsible) -->
-        <div class="mt-4">
+              class="w-full rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+              [(ngModel)]="contact.name.last_name"
+              (ngModelChange)="updateFormattedName(contact)"
+              name="last_name{{ i }}"
+              [attr.id]="'contact-last-name-' + i"
+              />
+          </div>
+          <!-- Formatted Name (collapsible) -->
+          <div class="mt-4">
             <button
-                type="button"
-                class="flex w-full items-center justify-between rounded bg-gray-200 px-2 py-1 text-left dark:bg-gray-700 dark:text-white"
-                (click)="contact.manualFormattedName = !contact.manualFormattedName"
-            >
-                <span i18n>Formatted Name</span>
-                <mat-icon class="material-symbols-outlined ml-2">
-                    {{ contact.manualFormattedName ? "stat_1" : "stat_minus_1" }}
-                </mat-icon>
+              type="button"
+              class="flex w-full items-center justify-between rounded bg-gray-200 px-2 py-1 text-left dark:bg-gray-700 dark:text-white"
+              (click)="contact.manualFormattedName = !contact.manualFormattedName"
+              >
+              <span i18n>Formatted Name</span>
+              <mat-icon class="material-symbols-outlined ml-2">
+                {{ contact.manualFormattedName ? "stat_1" : "stat_minus_1" }}
+              </mat-icon>
             </button>
-            <div *ngIf="contact.manualFormattedName" class="mt-2">
+            @if (contact.manualFormattedName) {
+              <div class="mt-2">
                 <input
-                    class="w-full rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                    [(ngModel)]="contact.name.formatted_name"
-                    (input)="markFormattedNameAsManual(contact)"
-                    name="formatted_name{{ i }}"
-                    required
-                />
-            </div>
-        </div>
-
-        <!-- Phones -->
-        <div class="mt-4 space-y-2">
+                  class="w-full rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                  [(ngModel)]="contact.name.formatted_name"
+                  (input)="markFormattedNameAsManual(contact)"
+                  name="formatted_name{{ i }}"
+                  required
+                  />
+              </div>
+            }
+          </div>
+          <!-- Phones -->
+          <div class="mt-4 space-y-2">
             <p class="block dark:text-gray-300" i18n>Phones</p>
-            <div
-                *ngFor="let phone of contact.phones; let j = index"
+            @for (phone of contact.phones; track phone; let j = $index) {
+              <div
                 class="flex items-center space-x-2"
-            >
+                >
                 <input
-                    class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                    placeholder="Phone"
-                    [(ngModel)]="phone.phone"
-                    name="phone{{ i }}_{{ j }}"
-                />
+                  class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                  placeholder="Phone"
+                  [(ngModel)]="phone.phone"
+                  name="phone{{ i }}_{{ j }}"
+                  />
                 <input
-                    class="w-20 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                    placeholder="Type"
-                    [(ngModel)]="phone.type"
-                    name="type{{ i }}_{{ j }}"
-                />
+                  class="w-20 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                  placeholder="Type"
+                  [(ngModel)]="phone.type"
+                  name="type{{ i }}_{{ j }}"
+                  />
                 <span class="text-sm dark:text-white" i18n>WA</span>
                 <button
-                    role="switch"
-                    type="button"
-                    [attr.aria-checked]="phone.is_wa"
-                    class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300"
-                    (click)="toggleWaPhone(i, j)"
+                  role="switch"
+                  type="button"
+                  [attr.aria-checked]="phone.is_wa"
+                  class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300"
+                  (click)="toggleWaPhone(i, j)"
                     [ngClass]="{
                         'bg-gray-300 dark:bg-gray-600': !phone.is_wa,
                         'bg-blue-600 dark:bg-blue-500': phone.is_wa,
                     }"
-                >
-                    <span
-                        class="inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-300 ease-in-out"
+                  >
+                  <span
+                    class="inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-300 ease-in-out"
                         [ngClass]="{
                             'translate-x-5': phone.is_wa,
                             'translate-x-1': !phone.is_wa,
                         }"
-                    ></span>
+                  ></span>
                 </button>
-                <button
+                @if (contact.phones.length > 1) {
+                  <button
                     type="button"
-                    *ngIf="contact.phones.length > 1"
                     class="text-red-500"
                     (click)="removePhone(i, j)"
-                >
+                    >
                     <mat-icon>delete</mat-icon>
-                </button>
-            </div>
+                  </button>
+                }
+              </div>
+            }
             <button type="button" class="flex items-center text-blue-500" (click)="addPhone(i)">
-                <mat-icon>add</mat-icon>
-                <span i18n>Add Phone</span>
+              <mat-icon>add</mat-icon>
+              <span i18n>Add Phone</span>
             </button>
-        </div>
-
-        <!-- Emails (collapsible) -->
-        <div class="mt-4">
+          </div>
+          <!-- Emails (collapsible) -->
+          <div class="mt-4">
             <button
-                type="button"
-                class="flex w-full items-center justify-between rounded bg-gray-200 px-2 py-1 text-left dark:bg-gray-700 dark:text-white"
-                (click)="contact.showEmails = !contact.showEmails"
-            >
-                <span i18n>Emails</span>
-                <mat-icon class="material-symbols-outlined ml-2">
-                    {{ contact.showEmails ? "stat_1" : "stat_minus_1" }}
-                </mat-icon>
+              type="button"
+              class="flex w-full items-center justify-between rounded bg-gray-200 px-2 py-1 text-left dark:bg-gray-700 dark:text-white"
+              (click)="contact.showEmails = !contact.showEmails"
+              >
+              <span i18n>Emails</span>
+              <mat-icon class="material-symbols-outlined ml-2">
+                {{ contact.showEmails ? "stat_1" : "stat_minus_1" }}
+              </mat-icon>
             </button>
-            <div *ngIf="contact.showEmails" class="mt-2 space-y-2">
-                <div
-                    *ngFor="let email of contact.emails; let j = index"
+            @if (contact.showEmails) {
+              <div class="mt-2 space-y-2">
+                @for (email of contact.emails; track email; let j = $index) {
+                  <div
                     class="flex items-center space-x-2"
-                >
+                    >
                     <input
-                        class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                        placeholder="Email"
-                        [(ngModel)]="email.email"
-                        name="email{{ i }}_{{ j }}"
-                    />
+                      class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                      placeholder="Email"
+                      [(ngModel)]="email.email"
+                      name="email{{ i }}_{{ j }}"
+                      />
                     <input
-                        class="w-24 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                        placeholder="Type"
-                        [(ngModel)]="email.type"
-                        name="emailType{{ i }}_{{ j }}"
-                    />
+                      class="w-24 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                      placeholder="Type"
+                      [(ngModel)]="email.type"
+                      name="emailType{{ i }}_{{ j }}"
+                      />
                     <button type="button" class="text-red-500" (click)="removeEmail(i, j)">
-                        <mat-icon>delete</mat-icon>
+                      <mat-icon>delete</mat-icon>
                     </button>
-                </div>
+                  </div>
+                }
                 <button type="button" class="flex items-center text-blue-500" (click)="addEmail(i)">
-                    <mat-icon>add</mat-icon>
-                    <span i18n>Add Email</span>
+                  <mat-icon>add</mat-icon>
+                  <span i18n>Add Email</span>
                 </button>
-            </div>
-        </div>
-
-        <!-- Organization (collapsible) -->
-        <div class="mt-4">
+              </div>
+            }
+          </div>
+          <!-- Organization (collapsible) -->
+          <div class="mt-4">
             <button
-                type="button"
-                class="flex w-full items-center justify-between rounded bg-gray-200 px-2 py-1 text-left dark:bg-gray-700 dark:text-white"
-                (click)="contact.showOrg = !contact.showOrg"
-            >
-                <span i18n>Organization</span>
-                <mat-icon class="material-symbols-outlined ml-2">
-                    {{ contact.showOrg ? "stat_1" : "stat_minus_1" }}
-                </mat-icon>
+              type="button"
+              class="flex w-full items-center justify-between rounded bg-gray-200 px-2 py-1 text-left dark:bg-gray-700 dark:text-white"
+              (click)="contact.showOrg = !contact.showOrg"
+              >
+              <span i18n>Organization</span>
+              <mat-icon class="material-symbols-outlined ml-2">
+                {{ contact.showOrg ? "stat_1" : "stat_minus_1" }}
+              </mat-icon>
             </button>
-            <div *ngIf="contact.showOrg" class="mt-2 space-y-2">
+            @if (contact.showOrg) {
+              <div class="mt-2 space-y-2">
                 <label class="block dark:text-gray-300" i18n [attr.for]="'contact-company-' + i"
-                    >Company</label
-                >
-                <input
+                  >Company</label
+                  >
+                  <input
                     class="w-full rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
                     [(ngModel)]="contact.org.company"
                     name="company{{ i }}"
                     [attr.id]="'contact-company-' + i"
-                />
-
-                <label class="block dark:text-gray-300" i18n [attr.for]="'contact-department-' + i"
+                    />
+                  <label class="block dark:text-gray-300" i18n [attr.for]="'contact-department-' + i"
                     >Department</label
-                >
-                <input
-                    class="w-full rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                    [(ngModel)]="contact.org.department"
-                    name="department{{ i }}"
-                    [attr.id]="'contact-department-' + i"
-                />
-
-                <label class="block dark:text-gray-300" i18n [attr.for]="'contact-title-' + i"
-                    >Title</label
-                >
-                <input
-                    class="w-full rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                    [(ngModel)]="contact.org.title"
-                    name="title{{ i }}"
-                    [attr.id]="'contact-title-' + i"
-                />
-            </div>
-        </div>
-
-        <!-- URLs (collapsible) -->
-        <div class="mt-4">
-            <button
-                type="button"
-                class="flex w-full items-center justify-between rounded bg-gray-200 px-2 py-1 text-left dark:bg-gray-700 dark:text-white"
-                (click)="contact.showUrls = !contact.showUrls"
-            >
-                <span i18n>URLs</span>
-                <mat-icon class="material-symbols-outlined ml-2">
-                    {{ contact.showUrls ? "stat_1" : "stat_minus_1" }}
-                </mat-icon>
-            </button>
-            <div *ngIf="contact.showUrls" class="mt-2 space-y-2">
-                <div
-                    *ngFor="let url of contact.urls; let j = index"
-                    class="flex items-center space-x-2"
-                >
+                    >
                     <input
-                        class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                        placeholder="URL"
-                        [(ngModel)]="url.url"
-                        name="url{{ i }}_{{ j }}"
-                    />
-                    <input
-                        class="w-24 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
-                        placeholder="Type"
-                        [(ngModel)]="url.type"
-                        name="urlType{{ i }}_{{ j }}"
-                    />
-                    <button type="button" class="text-red-500" (click)="removeUrl(i, j)">
-                        <mat-icon>delete</mat-icon>
-                    </button>
+                      class="w-full rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                      [(ngModel)]="contact.org.department"
+                      name="department{{ i }}"
+                      [attr.id]="'contact-department-' + i"
+                      />
+                    <label class="block dark:text-gray-300" i18n [attr.for]="'contact-title-' + i"
+                      >Title</label
+                      >
+                      <input
+                        class="w-full rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                        [(ngModel)]="contact.org.title"
+                        name="title{{ i }}"
+                        [attr.id]="'contact-title-' + i"
+                        />
+                    </div>
+                  }
                 </div>
-                <button type="button" class="flex items-center text-blue-500" (click)="addUrl(i)">
-                    <mat-icon>add</mat-icon>
-                    <span i18n>Add URL</span>
-                </button>
-            </div>
-        </div>
-    </div>
+                <!-- URLs (collapsible) -->
+                <div class="mt-4">
+                  <button
+                    type="button"
+                    class="flex w-full items-center justify-between rounded bg-gray-200 px-2 py-1 text-left dark:bg-gray-700 dark:text-white"
+                    (click)="contact.showUrls = !contact.showUrls"
+                    >
+                    <span i18n>URLs</span>
+                    <mat-icon class="material-symbols-outlined ml-2">
+                      {{ contact.showUrls ? "stat_1" : "stat_minus_1" }}
+                    </mat-icon>
+                  </button>
+                  @if (contact.showUrls) {
+                    <div class="mt-2 space-y-2">
+                      @for (url of contact.urls; track url; let j = $index) {
+                        <div
+                          class="flex items-center space-x-2"
+                          >
+                          <input
+                            class="flex-1 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                            placeholder="URL"
+                            [(ngModel)]="url.url"
+                            name="url{{ i }}_{{ j }}"
+                            />
+                          <input
+                            class="w-24 rounded-lg bg-gray-300 p-2 dark:bg-gray-600 dark:text-white"
+                            placeholder="Type"
+                            [(ngModel)]="url.type"
+                            name="urlType{{ i }}_{{ j }}"
+                            />
+                          <button type="button" class="text-red-500" (click)="removeUrl(i, j)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </div>
+                      }
+                      <button type="button" class="flex items-center text-blue-500" (click)="addUrl(i)">
+                        <mat-icon>add</mat-icon>
+                        <span i18n>Add URL</span>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
 
-    <!-- Add another contact -->
-    <button type="button" class="mt-6 flex items-center text-green-600" (click)="addContact()">
-        <mat-icon>add</mat-icon>
-        <span i18n>Add Contact</span>
-    </button>
-</div>
+            <!-- Add another contact -->
+            <button type="button" class="mt-6 flex items-center text-green-600" (click)="addContact()">
+              <mat-icon>add</mat-icon>
+              <span i18n>Add Contact</span>
+            </button>
+          </div>
