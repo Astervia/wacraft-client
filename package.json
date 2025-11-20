@@ -41,6 +41,7 @@
     "intl-tel-input": "^19.5.7",
     "libphonenumber-js": "^1.12.8",
     "ng-apexcharts": "^2.0.3",
+    "ngx-bootstrap": "^20.0.2",
     "ngx-cookie-service": "^19.0.0",
     "ngx-intl-tel-input": "^17.0.0",
     "ngx-json-viewer": "^3.2.1",
