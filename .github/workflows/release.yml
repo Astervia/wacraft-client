@@ -21,7 +21,7 @@ jobs:
               run: |
                   TAG="${GITHUB_REF#refs/tags/}"
                   echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-            
+
             - name: Install Cosign
               uses: sigstore/cosign-installer@v3.7.0
 
@@ -48,7 +48,7 @@ jobs:
                   COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
                   COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
               run: |
-                # tag version signing
-                  cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}"
-                # latest version signing
-                  cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ env.IMAGE_NAME }}:latest"
+                  # tag version signing
+                    cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}"
+                  # latest version signing
+                    cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ env.IMAGE_NAME }}:latest"
