@@ -67,3 +67,15 @@ jobs:
             - run: npm ci
             - name: Build (production)
               run: npm run build
+    policy-check:
+        name: Policy as Code (Conftest)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Run Conftest (OPA)
+              uses: instrumenta/conftest-action@master
+              with:
+                  files: Dockerfile
+                  policy: policy/
