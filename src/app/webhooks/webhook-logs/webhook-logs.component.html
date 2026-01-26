@@ -1,134 +1,164 @@
-<div>
+<div class="min-w-0">
     <!-- Filters Section -->
-    <div class="mb-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-9">
+    <div class="mb-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-9">
             <!-- Filter by HTTP Response Code -->
-            <div class="col-span-2">
-                <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-response-code"
+            <div class="lg:col-span-2">
+                <label
+                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    for="webhook-response-code"
                     >Response Code</label
                 >
                 <input
                     type="number"
                     id="webhook-response-code"
                     [(ngModel)]="httpResponseCode"
-                    class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
+                    class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
                     placeholder="e.g. 200"
                 />
             </div>
             <!-- Filter by Created Date (from) -->
-            <div class="col-span-2">
-                <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-created-after"
+            <div class="lg:col-span-2">
+                <label
+                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    for="webhook-created-after"
                     >Created After</label
                 >
                 <input
                     type="datetime-local"
                     id="webhook-created-after"
                     [(ngModel)]="createdAtGte"
-                    class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
+                    class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
                 />
             </div>
             <!-- Filter by Created Date (to) -->
-            <div class="col-span-2">
-                <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-created-before"
+            <div class="lg:col-span-2">
+                <label
+                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    for="webhook-created-before"
                     >Created Before</label
                 >
                 <input
                     type="datetime-local"
                     id="webhook-created-before"
                     [(ngModel)]="createdAtLte"
-                    class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
+                    class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
                 />
             </div>
             <!-- Order by Created Date -->
-            <div class="col-span-2">
-                <label class="text-sm text-gray-700 dark:text-gray-300" for="webhook-created-order"
-                    >Created at order</label
+            <div class="lg:col-span-2">
+                <label
+                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    for="webhook-created-order"
+                    >Sort Order</label
                 >
                 <select
                     id="webhook-created-order"
                     [(ngModel)]="dateOrder"
-                    class="w-full rounded-md border bg-white p-2 dark:bg-gray-700 dark:text-white"
+                    class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
                 >
-                    <option [value]="DateOrderEnum.desc">
-                        {{ DateOrderEnum.desc }}
-                    </option>
-                    <option [value]="DateOrderEnum.asc">
-                        {{ DateOrderEnum.asc }}
-                    </option>
+                    <option [value]="DateOrderEnum.desc">Newest first</option>
+                    <option [value]="DateOrderEnum.asc">Oldest first</option>
                 </select>
             </div>
 
-            <div class="col-span-1 flex items-center justify-center space-x-2">
-                <app-small-button (click)="clearFilters()" matIcon="clear_all"> </app-small-button>
-                <!-- Apply Button -->
-
-                <app-small-button (click)="applyFilters()" matIcon="search"> </app-small-button>
+            <div class="flex items-end justify-start gap-2 lg:col-span-1 lg:justify-center">
+                <app-small-button (click)="clearFilters()" matIcon="clear_all"></app-small-button>
+                <app-small-button (click)="applyFilters()" matIcon="search"></app-small-button>
             </div>
         </div>
     </div>
 
     <!-- Webhook Logs List -->
-    <div class="scrollable max-h-[100vh] overflow-y-auto px-2" (scroll)="onScroll($event)">
+    <div class="scrollable max-h-[70vh] overflow-y-auto" (scroll)="onScroll($event)">
         @for (log of logs; track log; let i = $index) {
-            <div class="mb-2 overflow-auto rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <div
+                class="mb-3 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+            >
+                <!-- Log Header -->
                 <div
-                    class="flex cursor-pointer items-center justify-between"
+                    class="flex cursor-pointer items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
                     (click)="toggleExpand(i)"
                     role="button"
                     tabindex="0"
                     (keyup.enter)="toggleExpand(i)"
                     (keyup.space)="toggleExpand(i)"
                 >
-                    <div>
-                        <!-- Main Log Info with Colored Status Codes -->
-                        <p
+                    <div class="flex min-w-0 flex-1 items-center gap-4">
+                        <!-- Status Code Badge -->
+                        <span
                             [ngClass]="{
-                                'text-green-600':
+                                'shrink-0 rounded-lg px-3 py-1.5 text-sm font-bold tabular-nums': true,
+                                'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400':
                                     log.http_response_code >= 200 && log.http_response_code < 300,
-                                'text-yellow-600':
+                                'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400':
                                     log.http_response_code >= 300 && log.http_response_code < 400,
-                                'text-red-600': log.http_response_code >= 400,
+                                'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400':
+                                    log.http_response_code >= 400,
                             }"
-                            class="font-semibold"
                         >
-                            HTTP Response Code: {{ log.http_response_code }}
-                        </p>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            Created At: {{ log.created_at | date: "short" }}
-                        </p>
+                            {{ log.http_response_code }}
+                        </span>
+                        <span class="text-sm text-gray-600 dark:text-gray-400">
+                            {{ log.created_at | date: "medium" }}
+                        </span>
                     </div>
-                    @if (expandedLogIndex !== i) {
-                        <span class="text-gray-500 dark:text-gray-400">+</span>
-                    }
-                    @if (expandedLogIndex === i) {
-                        <span class="text-gray-500 dark:text-gray-400">-</span>
-                    }
+                    <!-- Expand/Collapse Icon -->
+                    <mat-icon
+                        class="shrink-0 text-gray-400 transition-transform dark:text-gray-500"
+                        [ngClass]="{ 'rotate-180': expandedLogIndex === i }"
+                        >expand_more</mat-icon
+                    >
                 </div>
+
                 <!-- Expanded Details -->
                 @if (expandedLogIndex === i) {
-                    <div
-                        class="mt-4 rounded-lg bg-gray-100 p-4 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
-                    >
-                        <p class="mb-3 font-medium">Payload:</p>
-                        <ngx-json-viewer
-                            [json]="log.payload"
-                            [expanded]="true"
-                            [depth]="1"
-                        ></ngx-json-viewer>
-                        <p class="my-3 font-medium">Response Data:</p>
-                        <ngx-json-viewer
-                            [json]="log.response_data"
-                            [expanded]="true"
-                            [depth]="2"
-                        ></ngx-json-viewer>
+                    <div class="border-t border-gray-200 dark:border-gray-700">
+                        <!-- Payload Section -->
+                        <div class="border-b border-gray-100 p-4 dark:border-gray-700">
+                            <h4 class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                <mat-icon class="text-base text-gray-400">upload</mat-icon>
+                                Payload
+                            </h4>
+                            <div class="max-w-full overflow-x-auto rounded-lg bg-gray-50 p-3 dark:bg-gray-900">
+                                <ngx-json-viewer
+                                    [json]="log.payload"
+                                    [expanded]="true"
+                                    [depth]="1"
+                                ></ngx-json-viewer>
+                            </div>
+                        </div>
+
+                        <!-- Response Data Section -->
+                        <div class="p-4">
+                            <h4 class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                <mat-icon class="text-base text-gray-400">download</mat-icon>
+                                Response Data
+                            </h4>
+                            <div class="max-w-full overflow-x-auto rounded-lg bg-gray-50 p-3 dark:bg-gray-900">
+                                <ngx-json-viewer
+                                    [json]="log.response_data"
+                                    [expanded]="true"
+                                    [depth]="2"
+                                ></ngx-json-viewer>
+                            </div>
+                        </div>
                     </div>
                 }
             </div>
         }
 
+        <!-- Empty State -->
+        @if (!isLoading && logs.length === 0) {
+            <div class="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 py-12 dark:border-gray-600">
+                <mat-icon class="mb-3 text-4xl text-gray-400 dark:text-gray-500">inbox</mat-icon>
+                <p class="text-sm text-gray-500 dark:text-gray-400">No logs found</p>
+            </div>
+        }
+
         <!-- Loading Spinner -->
         @if (isLoading) {
-            <div class="mt-4 flex justify-center">
+            <div class="flex justify-center py-6">
                 <div
                     class="spinner-border inline-block h-8 w-8 animate-spin rounded-full border-4"
                     role="status"

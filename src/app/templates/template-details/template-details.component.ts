@@ -9,6 +9,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
 import { NGXLogger } from "ngx-logger";
 import { isHttpError } from "../../../core/common/model/http-error-shape.model";
+import { TemplateStatusBadgeComponent } from "../template-status-badge/template-status-badge.component";
+import { TemplateCategoryBadgeComponent } from "../template-category-badge/template-category-badge.component";
 
 @Component({
     selector: "app-template-details",
@@ -18,6 +20,8 @@ import { isHttpError } from "../../../core/common/model/http-error-shape.model";
         TemplateMessageBuilderComponent,
         MatIconModule,
         TimeoutErrorModalComponent,
+        TemplateStatusBadgeComponent,
+        TemplateCategoryBadgeComponent,
     ],
     templateUrl: "./template-details.component.html",
     styleUrl: "./template-details.component.scss",

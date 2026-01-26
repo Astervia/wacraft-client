@@ -1,8 +1,8 @@
 <a
     [ngClass]="{
-        'flex w-full items-center border-b border-gray-200 px-4 py-4 dark:border-gray-700': true,
-        'bg-gray-200 dark:bg-gray-600': isSelected,
-        'hover:bg-gray-300 dark:hover:bg-gray-700': !isSelected,
+        'group flex w-full items-center border-b border-gray-200 px-4 py-3.5 transition-colors dark:border-gray-700': true,
+        'bg-blue-50 border-l-2 border-l-blue-500 dark:bg-blue-900/30 dark:border-l-blue-400': isSelected,
+        'hover:bg-gray-50 dark:hover:bg-gray-800/50': !isSelected,
     }"
     [routerLink]="[]"
     [preserveFragment]="true"
@@ -10,40 +10,26 @@
     [queryParams]="{ 'template.name': template.name }"
     #rootAnchor
 >
-    <div class="ml-3 flex-1 truncate">
-        <div class="mb-2 flex items-center justify-between">
+    <div class="min-w-0 flex-1">
+        <div class="mb-1.5 flex items-center justify-between gap-3">
             <span
-                class="truncate font-medium text-gray-800 dark:text-gray-200"
+                class="truncate text-sm font-medium text-gray-900 dark:text-gray-100"
                 [textContent]="template.name"
             ></span>
-            <span
-                [ngClass]="{
-                    'text-sm': true,
-                    'text-red-600': template.status === 'REJECTED',
-                    'text-yellow-600': template.status === 'PENDING',
-                    'text-green-600': template.status === 'APPROVED',
-                    'text-gray-500 dark:text-gray-400':
-                        template.status !== 'APPROVED' && template.status !== 'PENDING',
-                }"
-                [textContent]="template.status"
-            ></span>
+            <app-template-status-badge
+                class="shrink-0"
+                [status]="template.status"
+            ></app-template-status-badge>
         </div>
-        <div class="flex w-full flex-row items-end justify-between">
+        <div class="flex w-full items-center justify-between gap-3">
             <span
-                class="truncate text-left text-sm text-gray-600 dark:text-gray-400"
+                class="truncate font-mono text-xs text-gray-500 dark:text-gray-400"
                 [textContent]="template.id"
             ></span>
-            <span
-                class=""
-                [ngClass]="{
-                    'font-normal': true,
-                    'text-yellow-600': template.category === 'MARKETING',
-                    'text-blue-600': template.category === 'UTILITY',
-                    'text-white':
-                        template.category !== 'UTILITY' && template.category !== 'MARKETING',
-                }"
-                [textContent]="template.category"
-            ></span>
+            <app-template-category-badge
+                class="shrink-0"
+                [category]="template.category"
+            ></app-template-category-badge>
         </div>
     </div>
 </a>

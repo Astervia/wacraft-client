@@ -1,39 +1,39 @@
 <a
     [ngClass]="{
-        'flex w-full items-center border-b border-gray-200 px-4 py-4 dark:border-gray-700': true,
-        'bg-gray-200 dark:bg-gray-600': isSelected,
-        'hover:bg-gray-300 dark:hover:bg-gray-700': !isSelected,
+        'group flex w-full items-center border-b border-gray-200 px-4 py-3.5 transition-colors dark:border-gray-700': true,
+        'bg-blue-50 border-l-2 border-l-blue-500 dark:bg-blue-900/30 dark:border-l-blue-400': isSelected,
+        'hover:bg-gray-50 dark:hover:bg-gray-800/50': !isSelected,
     }"
     [routerLink]="[]"
     [queryParams]="{ 'webhook.id': webhook.id }"
     preserveFragment
     #rootAnchor
 >
-    <div class="ml-3 flex-1 truncate">
-        <div class="mb-2 flex items-center justify-between">
+    <div class="min-w-0 flex-1">
+        <div class="mb-1.5 flex items-center justify-between gap-3">
             <span
-                class="truncate font-medium text-gray-800 dark:text-gray-200"
+                class="truncate text-sm font-medium text-gray-900 dark:text-gray-100"
                 [textContent]="webhook.url"
             ></span>
             <span
-                class="text-sm text-gray-500 dark:text-gray-400"
+                class="shrink-0 text-xs text-gray-500 dark:text-gray-400"
                 [textContent]="webhook.created_at | date: 'short'"
             ></span>
         </div>
-        <div class="flex w-full flex-row items-end justify-between">
+        <div class="flex w-full items-center justify-between gap-3">
             <span
                 [ngClass]="{
-                    'text-green-600': webhook.http_method === 'GET',
-                    'text-blue-600': webhook.http_method === 'POST',
-                    'text-yellow-600': webhook.http_method === 'PUT',
-                    'text-red-600': webhook.http_method === 'DELETE',
-                    'text-orange-600': webhook.http_method === 'PATCH',
+                    'shrink-0 rounded px-1.5 py-0.5 text-xs font-semibold uppercase': true,
+                    'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400': webhook.http_method === 'GET',
+                    'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400': webhook.http_method === 'POST',
+                    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400': webhook.http_method === 'PUT',
+                    'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400': webhook.http_method === 'DELETE',
+                    'bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-400': webhook.http_method === 'PATCH',
                 }"
-                class="text-md truncate text-left font-semibold"
                 [textContent]="webhook.http_method"
             ></span>
             <code
-                class="flex-shrink-0 text-sm dark:text-gray-500"
+                class="shrink-0 rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-400"
                 [textContent]="webhook.event"
             ></code>
         </div>

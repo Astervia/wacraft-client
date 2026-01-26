@@ -12,10 +12,12 @@ import { Template } from "../../../core/template/model/template.model";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { TemplateStatusBadgeComponent } from "../template-status-badge/template-status-badge.component";
+import { TemplateCategoryBadgeComponent } from "../template-category-badge/template-category-badge.component";
 
 @Component({
     selector: "app-template-preview",
-    imports: [CommonModule, FormsModule, RouterModule],
+    imports: [CommonModule, FormsModule, RouterModule, TemplateStatusBadgeComponent, TemplateCategoryBadgeComponent],
     templateUrl: "./template-preview.component.html",
     styleUrl: "./template-preview.component.scss",
     standalone: true,

@@ -1,95 +1,89 @@
 <div class="scrollable mx-auto h-full overflow-y-scroll p-6 dark:bg-gray-900 dark:text-gray-100">
     @if (template) {
         <div>
-            <h3 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-200" i18n>
-                Template details
-            </h3>
-            <div class="mb-6 grid grid-cols-12 gap-4 rounded-lg bg-gray-100 p-6 dark:bg-gray-700">
-                <div class="relative col-span-6">
-                    <p class="mb-2 block text-sm font-medium" i18n>Name</p>
-                    <div class="relative">
-                        <div
-                            type="url"
-                            class="w-full truncate rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
-                        >
-                            {{ template.name }}
-                        </div>
-                        <button
-                            mat-icon-button
-                            class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                            (click)="copyToClipboard(template.name)"
-                            matTooltip="Copy template name"
-                        >
-                            <mat-icon class="material-icons-outlined">copy</mat-icon>
-                        </button>
-                    </div>
+            <!-- Header with title and badges -->
+            <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+                <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100" i18n>
+                    Template details
+                </h3>
+                <div class="flex items-center gap-2">
+                    <app-template-category-badge
+                        [category]="template.category"
+                        size="md"
+                    ></app-template-category-badge>
+                    <app-template-status-badge
+                        [status]="template.status"
+                        size="md"
+                    ></app-template-status-badge>
                 </div>
-                <div class="relative col-span-6">
-                    <p class="mb-2 block text-sm font-medium" i18n>Language</p>
-                    <div class="relative">
+            </div>
+
+            <!-- Details card -->
+            <div class="mb-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                <div class="grid grid-cols-12 gap-5">
+                    <!-- Name -->
+                    <div class="col-span-12 sm:col-span-6">
+                        <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400" i18n>
+                            Name
+                        </label>
+                        <div class="group relative">
+                            <div
+                                class="w-full truncate rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 pr-10 text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            >
+                                {{ template.name }}
+                            </div>
+                            <button
+                                mat-icon-button
+                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-gray-400 opacity-0 transition-all hover:bg-gray-200 hover:text-gray-700 group-hover:opacity-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                (click)="copyToClipboard(template.name)"
+                                matTooltip="Copy template name"
+                                i18n-matTooltip
+                            >
+                                <mat-icon class="!h-4 !w-4 !text-base">content_copy</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Language -->
+                    <div class="col-span-12 sm:col-span-6">
+                        <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400" i18n>
+                            Language
+                        </label>
                         <div
-                            class="w-full truncate rounded bg-gray-200 p-2 outline-none dark:bg-gray-600 dark:text-white"
+                            class="w-full truncate rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                         >
                             {{ template.language }}
                         </div>
                     </div>
-                </div>
-                <div class="relative col-span-12 sm:col-span-4">
-                    <p class="mb-2 block text-sm font-medium">ID</p>
-                    <div class="relative">
-                        <div
-                            class="w-full truncate rounded bg-gray-200 p-2 pr-10 outline-none dark:bg-gray-600 dark:text-white"
-                        >
-                            {{ template.id }}
-                        </div>
-                        <button
-                            mat-icon-button
-                            class="absolute right-2 top-2 text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                            (click)="copyToClipboard(template.id)"
-                            matTooltip="Copy template id"
-                        >
-                            <mat-icon class="material-icons-outlined">copy</mat-icon>
-                        </button>
-                    </div>
-                </div>
-                <div class="relative col-span-12 sm:col-span-4">
-                    <p class="mb-2 block text-sm font-medium" i18n>Category</p>
-                    <div class="relative">
-                        <div
-                            class="block w-full truncate rounded-lg border bg-gray-50 p-2.5 text-sm outline-none focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500"
-                            [ngClass]="{
-                                'border-yellow-600 text-yellow-600':
-                                    template.category === 'MARKETING',
-                                'border-blue-600 text-blue-600': template.category === 'UTILITY',
-                                'text-white':
-                                    template.category !== 'UTILITY' &&
-                                    template.category !== 'MARKETING',
-                            }"
-                        >
-                            {{ template.category }}
-                        </div>
-                    </div>
-                </div>
-                <div class="relative col-span-12 sm:col-span-4">
-                    <p class="mb-2 block text-sm font-medium" i18n>Status</p>
-                    <div class="relative">
-                        <div
-                            class="block w-full truncate rounded-lg border bg-gray-50 p-2.5 text-sm outline-none focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500"
-                            [ngClass]="{
-                                'border-red-600 text-red-600': template.status === 'REJECTED',
-                                'border-yellow-600 text-yellow-600': template.status === 'PENDING',
-                                'border-green-600 text-green-600': template.status === 'APPROVED',
-                                'border-gray-500 text-gray-500 dark:border-gray-400 dark:text-gray-400':
-                                    template.status !== 'APPROVED' && template.status !== 'PENDING',
-                            }"
-                        >
-                            {{ template.status }}
+
+                    <!-- ID -->
+                    <div class="col-span-12">
+                        <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                            ID
+                        </label>
+                        <div class="group relative">
+                            <div
+                                class="w-full truncate rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 pr-10 font-mono text-sm text-gray-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                            >
+                                {{ template.id }}
+                            </div>
+                            <button
+                                mat-icon-button
+                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-gray-400 opacity-0 transition-all hover:bg-gray-200 hover:text-gray-700 group-hover:opacity-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                (click)="copyToClipboard(template.id)"
+                                matTooltip="Copy template ID"
+                                i18n-matTooltip
+                            >
+                                <mat-icon class="!h-4 !w-4 !text-base">content_copy</mat-icon>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Message builder section -->
             <div>
-                <h3 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-200" i18n>
+                <h3 class="mb-4 text-xl font-semibold text-gray-800 dark:text-gray-100" i18n>
                     Message builder
                 </h3>
                 <app-template-message-builder [template]="template"></app-template-message-builder>

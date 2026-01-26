@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild, inject } from "@angular/core"
 import { CommonModule } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
 import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
 import { SmallButtonComponent } from "../../common/small-button/small-button.component";
 import { WebhookLogFields } from "../../../core/webhook/entity/webhook-log.entity";
 import { DateOrder, DateOrderEnum } from "../../../core/common/model/date-order.model";
@@ -18,6 +19,7 @@ import { isHttpError } from "../../../core/common/model/http-error-shape.model";
     imports: [
         CommonModule,
         FormsModule,
+        MatIconModule,
         SmallButtonComponent,
         NgxJsonViewerModule,
         TimeoutErrorModalComponent,
