@@ -44,7 +44,6 @@
         "ngx-bootstrap": "^20.0.2",
         "ngx-cookie-service": "^20.1.1",
         "ngx-intl-tel-input": "^17.0.0",
-        "ngx-json-viewer": "^3.2.1",
         "ngx-logger": "^5.0.12",
         "papaparse": "^5.4.1",
         "rxjs": "~7.8.0",
