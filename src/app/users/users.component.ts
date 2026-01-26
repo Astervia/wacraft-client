@@ -1,5 +1,5 @@
 import { Component, HostListener, inject } from "@angular/core";
-import { SidebarComponent } from "../common/sidebar/sidebar.component";
+import { SidebarLayoutComponent } from "../common/sidebar-layout/sidebar-layout.component";
 import { RoutePath } from "../app.routes";
 import { QueryParamsService } from "../../core/navigation/service/query-params.service";
 import { UserSidebarComponent } from "./user-sidebar/user-sidebar.component";
@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
     selector: "app-users",
-    imports: [SidebarComponent, UserSidebarComponent, UserDetailsComponent],
+    imports: [SidebarLayoutComponent, UserSidebarComponent, UserDetailsComponent],
     templateUrl: "./users.component.html",
     styleUrl: "./users.component.scss",
     standalone: true,

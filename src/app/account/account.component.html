@@ -1,6 +1,4 @@
-<div class="relative flex h-screen w-full max-w-full justify-center">
-    <app-sidebar class="grow-0" [activePage]="RoutePath.account" #sidebar></app-sidebar>
-
+<app-sidebar-layout [activePage]="RoutePath.account">
     <div
         class="grow-1 scrollable mx-auto h-full w-full overflow-y-scroll p-4 dark:bg-gray-900 dark:text-gray-100 sm:p-6"
     >
@@ -458,7 +456,7 @@
             </div>
         </div>
     </div>
-</div>
+</app-sidebar-layout>
 
 <app-timeout-error-modal
     [message]="errorStr"

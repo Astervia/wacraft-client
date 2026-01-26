@@ -1,6 +1,4 @@
-<div class="flex h-screen w-screen justify-center">
-    <app-sidebar class="" [activePage]="currentFragment"></app-sidebar>
-
+<app-sidebar-layout [activePage]="currentFragment">
     <app-chats-sidebar
         [ngClass]="{
             hidden: currentFragment !== HomeFragment.chats,
@@ -52,4 +50,4 @@
     @if (currentFragment === HomeFragment.campaigns && !environment.isLite) {
         <app-campaign-details class="w-full dark:bg-gray-800"></app-campaign-details>
     }
-</div>
+</app-sidebar-layout>

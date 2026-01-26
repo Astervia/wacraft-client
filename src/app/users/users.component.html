@@ -1,7 +1,4 @@
-<div class="flex h-screen w-full max-w-full justify-center">
-    <app-sidebar class="grow-0" [activePage]="RoutePath.users"></app-sidebar>
-
+<app-sidebar-layout [activePage]="RoutePath.users">
     <app-user-sidebar></app-user-sidebar>
-
     <app-user-details class="grow-1 w-full dark:bg-gray-800"></app-user-details>
-</div>
+</app-sidebar-layout>

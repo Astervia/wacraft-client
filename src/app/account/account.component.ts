@@ -9,7 +9,7 @@ import { UserStoreService } from "../../core/user/store/user-store.service";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
 import { ThemeMode } from "../../core/common/model/theme-modes.model";
-import { SidebarComponent } from "../common/sidebar/sidebar.component";
+import { SidebarLayoutComponent } from "../common/sidebar-layout/sidebar-layout.component";
 import { RoutePath } from "../app.routes";
 import { NGXLogger } from "ngx-logger";
 import { TimeoutErrorModalComponent } from "../common/timeout-error-modal/timeout-error-modal.component";
@@ -22,7 +22,7 @@ import { isHttpError } from "../../core/common/model/http-error-shape.model";
         FormsModule,
         MatTooltipModule,
         MatIconModule,
-        SidebarComponent,
+        SidebarLayoutComponent,
         TimeoutErrorModalComponent,
     ],
     templateUrl: "./account.component.html",
