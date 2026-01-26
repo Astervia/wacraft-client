@@ -27,6 +27,7 @@ import { MessageReplyHeaderComponent } from "../message-reply-header/message-rep
     ],
     templateUrl: "./message-template-content.component.html",
     styleUrl: "./message-template-content.component.scss",
+    preserveWhitespaces: false,
     standalone: true,
 })
 export class MessageTemplateContentComponent {

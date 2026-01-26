@@ -130,7 +130,9 @@
             }
 
             @if (messageType !== MessageType.interactive && messageType !== MessageType.template) {
-                <app-message-info [message]="message" [sent]="sent"></app-message-info>
+                <div class="px-1">
+                    <app-message-info [message]="message" [sent]="sent"></app-message-info>
+                </div>
             }
 
             <!-- Open options modal -->

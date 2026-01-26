@@ -38,9 +38,7 @@
                 @if (headerText || headerUseMedia.link || headerUseMedia.id) {
                     <div class="mb-2 text-base" id="header">
                         @if (headerText) {
-                            <p class="">
-                                {{ headerText }}
-                            </p>
+                            <p class="" [textContent]="headerText"></p>
                         }
                         @if (headerType !== "text") {
                             <app-message-media-content
@@ -53,15 +51,15 @@
                 }
                 <!-- Body -->
                 @if (bodyText) {
-                    <p id="body">
-                        {{ bodyText }}
-                    </p>
+                    <p id="body" [textContent]="bodyText"></p>
                 }
                 <!-- Footer -->
                 @if (footerText) {
-                    <p class="mt-2 text-xs font-light text-gray-600 dark:text-gray-200" id="footer">
-                        {{ footerText }}
-                    </p>
+                    <p
+                        class="mt-2 text-xs font-light text-gray-600 dark:text-gray-200"
+                        id="footer"
+                        [textContent]="footerText"
+                    ></p>
                 }
                 <app-message-info class="pb-1" [sent]="sent" [message]="message"></app-message-info>
             </div>
