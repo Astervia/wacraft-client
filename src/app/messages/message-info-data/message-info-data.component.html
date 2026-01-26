@@ -11,24 +11,6 @@
         >
             <h2 class="text-xl font-medium" i18n>Message details</h2>
             <div class="flex gap-2">
-                <div
-                    class="flex aspect-square w-10 items-center justify-center rounded-full outline-none active:bg-gray-200 dark:active:bg-gray-600"
-                    role="button"
-                    [ngClass]="{
-                        'bg-gray-300 dark:bg-gray-500': copied,
-                        'hover:bg-gray-400 dark:hover:bg-gray-600': !copied,
-                    }"
-                    (click)="copyToClipboard()"
-                    tabindex="0"
-                    (keyup.enter)="copyToClipboard()"
-                    (keyup.space)="copyToClipboard()"
-                >
-                    <!-- Material Icon -->
-                    <mat-icon class="material-icons-outlined aspect-square text-white"
-                        >content_copy</mat-icon
-                    >
-                </div>
-
                 <button
                     class="flex aspect-square w-10 items-center justify-center rounded-full outline-none active:bg-gray-200 dark:active:bg-gray-600"
                     [ngClass]="{
@@ -48,7 +30,7 @@
         <div
             class="flex-grow-1 scrollable h-auto max-h-full w-full overflow-y-auto bg-white p-4 dark:bg-gray-900"
         >
-            <ngx-json-viewer [json]="message" [expanded]="true" [depth]="2"></ngx-json-viewer>
+            <app-json-viewer [json]="message" [initialDepth]="2"></app-json-viewer>
         </div>
     </div>
 </div>

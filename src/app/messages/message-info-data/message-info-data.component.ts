@@ -9,14 +9,14 @@ import {
 } from "@angular/core";
 import { NGXLogger } from "ngx-logger";
 import { JsonPipe } from "../../../core/common/pipe/json.pipe";
-import { NgxJsonViewerModule } from "ngx-json-viewer";
+import { JsonViewerComponent } from "../../common/json-viewer/json-viewer.component";
 import { CommonModule as AngularCommonModule } from "@angular/common";
 import { CommonModule } from "../../../core/common/common.module";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
     selector: "app-message-info-data",
-    imports: [AngularCommonModule, CommonModule, NgxJsonViewerModule, MatIconModule],
+    imports: [AngularCommonModule, CommonModule, JsonViewerComponent, MatIconModule],
     templateUrl: "./message-info-data.component.html",
     styleUrl: "./message-info-data.component.scss",
     standalone: true,

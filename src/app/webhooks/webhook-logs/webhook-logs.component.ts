@@ -10,7 +10,7 @@ import { WebhookLogsControllerService } from "../../../core/webhook/controller/w
 import { Paginate } from "../../../core/common/model/paginate.model";
 import { WhereDate } from "../../../core/common/model/where-date.model";
 import { NGXLogger } from "ngx-logger";
-import { NgxJsonViewerModule } from "ngx-json-viewer";
+import { JsonViewerComponent } from "../../common/json-viewer/json-viewer.component";
 import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
 import { isHttpError } from "../../../core/common/model/http-error-shape.model";
 
@@ -21,7 +21,7 @@ import { isHttpError } from "../../../core/common/model/http-error-shape.model";
         FormsModule,
         MatIconModule,
         SmallButtonComponent,
-        NgxJsonViewerModule,
+        JsonViewerComponent,
         TimeoutErrorModalComponent,
     ],
     templateUrl: "./webhook-logs.component.html",

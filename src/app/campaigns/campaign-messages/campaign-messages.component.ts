@@ -12,7 +12,7 @@ import { WhereDate } from "../../../core/common/model/where-date.model";
 import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
 import { CampaignMessageSendError } from "../../../core/campaign/entity/campaign-message-send-error.model";
 import { NGXLogger } from "ngx-logger";
-import { NgxJsonViewerModule } from "ngx-json-viewer";
+import { JsonViewerComponent } from "../../common/json-viewer/json-viewer.component";
 import { isHttpError } from "../../../core/common/model/http-error-shape.model";
 
 @Component({
@@ -22,7 +22,7 @@ import { isHttpError } from "../../../core/common/model/http-error-shape.model";
         FormsModule,
         SmallButtonComponent,
         TimeoutErrorModalComponent,
-        NgxJsonViewerModule,
+        JsonViewerComponent,
     ],
     templateUrl: "./campaign-messages.component.html",
     styleUrl: "./campaign-messages.component.scss",

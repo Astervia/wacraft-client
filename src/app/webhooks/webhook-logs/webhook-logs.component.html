@@ -121,11 +121,10 @@
                                 Payload
                             </h4>
                             <div class="max-w-full overflow-x-auto rounded-lg bg-gray-50 p-3 dark:bg-gray-900">
-                                <ngx-json-viewer
+                                <app-json-viewer
                                     [json]="log.payload"
-                                    [expanded]="true"
-                                    [depth]="1"
-                                ></ngx-json-viewer>
+                                    [initialDepth]="1"
+                                ></app-json-viewer>
                             </div>
                         </div>
 
@@ -136,11 +135,10 @@
                                 Response Data
                             </h4>
                             <div class="max-w-full overflow-x-auto rounded-lg bg-gray-50 p-3 dark:bg-gray-900">
-                                <ngx-json-viewer
+                                <app-json-viewer
                                     [json]="log.response_data"
-                                    [expanded]="true"
-                                    [depth]="2"
-                                ></ngx-json-viewer>
+                                    [initialDepth]="2"
+                                ></app-json-viewer>
                             </div>
                         </div>
                     </div>
