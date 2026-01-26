@@ -22,98 +22,106 @@
                 <div
                     class="relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
                 >
-                    <div class="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <!-- Name Field -->
-                        <div class="col-span-1">
-                            <label
-                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                i18n
-                                for="account-name"
-                                >Name</label
-                            >
-                            <input
-                                type="text"
-                                id="account-name"
-                                [(ngModel)]="userStore.currentUser.name"
-                                [disabled]="!isEditing"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                            />
+                    <div class="p-6">
+                        <!-- Card Header with Edit/Save Buttons -->
+                        <div class="mb-5 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900 dark:text-white" i18n>
+                                    Your Details
+                                </h3>
+                                <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400" i18n>
+                                    Update your personal information
+                                </p>
+                            </div>
+                            @if (!isEditing) {
+                                <button
+                                    (click)="toggleEdit()"
+                                    [disabled]="loading"
+                                    class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
+                                    i18n
+                                >
+                                    <mat-icon class="mr-1.5 !h-4 !w-4 text-xs">edit</mat-icon>
+                                    Edit
+                                </button>
+                            } @else {
+                                <div class="flex items-center gap-2">
+                                    <button
+                                        (click)="cancelEdit()"
+                                        [disabled]="loading"
+                                        class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
+                                        i18n
+                                    >
+                                        <mat-icon class="mr-1.5 !h-4 !w-4 text-xs">close</mat-icon>
+                                        Cancel
+                                    </button>
+                                    <button
+                                        (click)="saveChanges()"
+                                        [disabled]="loading"
+                                        class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400 dark:focus:ring-offset-gray-800"
+                                        i18n
+                                    >
+                                        <mat-icon class="mr-1.5 !h-4 !w-4 text-xs">{{
+                                            loading ? "hourglass_empty" : "save"
+                                        }}</mat-icon>
+                                        {{ loading ? "Saving..." : "Save" }}
+                                    </button>
+                                </div>
+                            }
                         </div>
-                        <!-- Email Field -->
-                        <div class="col-span-1">
-                            <label
-                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                                i18n
-                                for="account-email"
-                                >Email</label
-                            >
-                            <input
-                                type="email"
-                                id="account-email"
-                                [(ngModel)]="userStore.currentUser.email"
-                                [disabled]="!isEditing"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                            />
-                        </div>
-                        <!-- Password Field (only when editing) -->
-                        @if (isEditing) {
+                        <!-- Form Fields -->
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            <!-- Name Field -->
                             <div class="col-span-1">
                                 <label
                                     class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                                     i18n
-                                    for="account-new-password"
-                                    >New Password</label
+                                    for="account-name"
+                                    >Name</label
                                 >
                                 <input
-                                    type="password"
-                                    id="account-new-password"
-                                    [(ngModel)]="userStore.currentUser.password"
-                                    placeholder="Leave empty to keep current"
-                                    i18n-placeholder
-                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                                    type="text"
+                                    id="account-name"
+                                    [(ngModel)]="userStore.currentUser.name"
+                                    [disabled]="!isEditing"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                                 />
                             </div>
-                        }
-                    </div>
-                    <!-- Action Buttons -->
-                    <div
-                        class="flex flex-col gap-3 border-t border-gray-200 p-6 pt-6 dark:border-gray-700 sm:flex-row"
-                    >
-                        @if (!isEditing) {
-                            <button
-                                (click)="toggleEdit()"
-                                [disabled]="loading"
-                                class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
-                                i18n
-                            >
-                                <mat-icon class="mr-2 !h-5 !w-5 text-sm">edit</mat-icon>
-                                Edit Profile
-                            </button>
-                        }
-                        @if (isEditing) {
-                            <div class="flex gap-3">
-                                <button
-                                    (click)="cancelEdit()"
-                                    [disabled]="loading"
-                                    class="inline-flex flex-1 items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-gray-700 sm:flex-initial"
+                            <!-- Email Field -->
+                            <div class="col-span-1">
+                                <label
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                                     i18n
+                                    for="account-email"
+                                    >Email</label
                                 >
-                                    <mat-icon class="mr-2 !h-5 !w-5 text-sm">close</mat-icon>
-                                    Cancel
-                                </button>
-                                <button
-                                    (click)="saveChanges()"
-                                    [disabled]="loading"
-                                    class="inline-flex flex-1 items-center justify-center rounded-lg bg-green-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800 sm:flex-initial"
-                                    i18n
-                                >
-                                    <mat-icon class="mr-2 !h-5 !w-5 text-sm">{{
-                                        loading ? "hourglass_empty" : "save"
-                                    }}</mat-icon>
-                                    {{ loading ? "Saving..." : "Save Changes" }}
-                                </button>
+                                <input
+                                    type="email"
+                                    id="account-email"
+                                    [(ngModel)]="userStore.currentUser.email"
+                                    [disabled]="!isEditing"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                                />
                             </div>
-                        }
+                            <!-- Password Field (only when editing) -->
+                            @if (isEditing) {
+                                <div class="col-span-1">
+                                    <label
+                                        class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                        i18n
+                                        for="account-new-password"
+                                        >New Password</label
+                                    >
+                                    <input
+                                        type="password"
+                                        id="account-new-password"
+                                        [(ngModel)]="userStore.currentUser.password"
+                                        placeholder="Leave empty to keep current"
+                                        i18n-placeholder
+                                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                                    />
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             }
@@ -296,56 +304,70 @@
 
                     <!-- Theme Setting -->
                     <div class="p-6" id="theme-mode-selector">
-                        <div class="mb-3">
-                            <p class="text-sm font-medium text-gray-700 dark:text-gray-300" i18n>
-                                Theme
-                            </p>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400" i18n>
-                                Choose your preferred color scheme
-                            </p>
-                        </div>
-                        <div
-                            class="inline-flex rounded-lg border border-gray-200 p-1 dark:border-gray-600"
-                        >
-                            <button
-                                (click)="toggleTheme(ThemeMode.light)"
-                                [class.bg-blue-600]="localSettings.themeMode === ThemeMode.light"
-                                [class.text-white]="localSettings.themeMode === ThemeMode.light"
-                                class="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
-                                [class.hover:!bg-blue-700]="
-                                    localSettings.themeMode === ThemeMode.light
-                                "
-                                type="button"
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p
+                                    class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                >
+                                    Theme
+                                </p>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400" i18n>
+                                    Choose your preferred color scheme
+                                </p>
+                            </div>
+                            <div
+                                class="inline-flex rounded-lg border border-gray-200 p-1 dark:border-gray-600"
                             >
-                                <span class="mr-1">☀️</span>
-                                <span i18n>Light</span>
-                            </button>
-                            <button
-                                (click)="toggleTheme(ThemeMode.dark)"
-                                [class.bg-blue-600]="localSettings.themeMode === ThemeMode.dark"
-                                [class.text-white]="localSettings.themeMode === ThemeMode.dark"
-                                class="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
-                                [class.hover:!bg-blue-700]="
-                                    localSettings.themeMode === ThemeMode.dark
-                                "
-                                type="button"
-                            >
-                                <span class="mr-1">🌙</span>
-                                <span i18n>Dark</span>
-                            </button>
-                            <button
-                                (click)="toggleTheme(ThemeMode.system)"
-                                [class.bg-blue-600]="localSettings.themeMode === ThemeMode.system"
-                                [class.text-white]="localSettings.themeMode === ThemeMode.system"
-                                class="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
-                                [class.hover:!bg-blue-700]="
-                                    localSettings.themeMode === ThemeMode.system
-                                "
-                                type="button"
-                            >
-                                <span class="mr-1">💻</span>
-                                <span i18n>System</span>
-                            </button>
+                                <button
+                                    (click)="toggleTheme(ThemeMode.light)"
+                                    [class.bg-blue-600]="
+                                        localSettings.themeMode === ThemeMode.light
+                                    "
+                                    [class.text-white]="localSettings.themeMode === ThemeMode.light"
+                                    class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    [class.hover:!bg-blue-700]="
+                                        localSettings.themeMode === ThemeMode.light
+                                    "
+                                    type="button"
+                                    aria-label="Light theme"
+                                    i18n-aria-label
+                                >
+                                    <span>☀️</span>
+                                </button>
+                                <button
+                                    (click)="toggleTheme(ThemeMode.dark)"
+                                    [class.bg-blue-600]="localSettings.themeMode === ThemeMode.dark"
+                                    [class.text-white]="localSettings.themeMode === ThemeMode.dark"
+                                    class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    [class.hover:!bg-blue-700]="
+                                        localSettings.themeMode === ThemeMode.dark
+                                    "
+                                    type="button"
+                                    aria-label="Dark theme"
+                                    i18n-aria-label
+                                >
+                                    <span>🌙</span>
+                                </button>
+                                <button
+                                    (click)="toggleTheme(ThemeMode.system)"
+                                    [class.bg-blue-600]="
+                                        localSettings.themeMode === ThemeMode.system
+                                    "
+                                    [class.text-white]="
+                                        localSettings.themeMode === ThemeMode.system
+                                    "
+                                    class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    [class.hover:!bg-blue-700]="
+                                        localSettings.themeMode === ThemeMode.system
+                                    "
+                                    type="button"
+                                    aria-label="System theme"
+                                    i18n-aria-label
+                                >
+                                    <span>💻</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
