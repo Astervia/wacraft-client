@@ -29,7 +29,9 @@ export class JsonViewerComponent {
 
         if (node.type === "object" && value !== null) {
             const obj = value as Record<string, unknown>;
-            node.children = Object.keys(obj).flatMap(k => this.parseValue(obj[k], k, expandDepth - 1));
+            node.children = Object.keys(obj).flatMap(k =>
+                this.parseValue(obj[k], k, expandDepth - 1),
+            );
             node.length = Object.keys(obj).length;
         } else if (node.type === "array") {
             const arr = value as unknown[];

@@ -2,15 +2,21 @@
     <!-- User Settings Section -->
     <div class="mb-8">
         <div class="mb-4 flex items-center gap-3">
-            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100" i18n>User Settings</h3>
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100" i18n>
+                User Settings
+            </h3>
             @if (user) {
                 <span
                     [ngClass]="{
                         'rounded-full px-3 py-1 text-xs font-semibold uppercase': true,
-                        'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400': user.role === Role.user,
-                        'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400': user.role === Role.admin,
-                        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400': user.role === Role.automation,
-                        'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-400': user.role === Role.developer,
+                        'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400':
+                            user.role === Role.user,
+                        'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400':
+                            user.role === Role.admin,
+                        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400':
+                            user.role === Role.automation,
+                        'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-400':
+                            user.role === Role.developer,
                     }"
                     [textContent]="user.role"
                 ></span>
@@ -89,10 +95,14 @@
                             [disabled]="!isEditing"
                             [(ngModel)]="user.role"
                             [ngClass]="{
-                                'border-green-500 text-green-600 dark:border-green-400 dark:text-green-400': user.role === Role.user,
-                                'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400': user.role === Role.admin,
-                                'border-yellow-500 text-yellow-600 dark:border-yellow-400 dark:text-yellow-400': user.role === Role.automation,
-                                'border-cyan-500 text-cyan-600 dark:border-cyan-400 dark:text-cyan-400': user.role === Role.developer,
+                                'border-green-500 text-green-600 dark:border-green-400 dark:text-green-400':
+                                    user.role === Role.user,
+                                'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400':
+                                    user.role === Role.admin,
+                                'border-yellow-500 text-yellow-600 dark:border-yellow-400 dark:text-yellow-400':
+                                    user.role === Role.automation,
+                                'border-cyan-500 text-cyan-600 dark:border-cyan-400 dark:text-cyan-400':
+                                    user.role === Role.developer,
                             }"
                         >
                             <option [value]="Role.user">{{ Role.user }}</option>
@@ -124,13 +134,17 @@
                                 (click)="copyToClipboard(user.email)"
                                 matTooltip="Copy email"
                             >
-                                <mat-icon class="material-icons-outlined text-lg">content_copy</mat-icon>
+                                <mat-icon class="material-icons-outlined text-lg"
+                                    >content_copy</mat-icon
+                                >
                             </button>
                         </div>
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="col-span-12 flex gap-3 border-t border-gray-200 pt-5 dark:border-gray-700">
+                    <div
+                        class="col-span-12 flex gap-3 border-t border-gray-200 pt-5 dark:border-gray-700"
+                    >
                         @if (!isEditing) {
                             <button
                                 (click)="toggleEdit()"

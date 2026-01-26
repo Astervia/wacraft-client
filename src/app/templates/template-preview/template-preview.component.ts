@@ -17,7 +17,13 @@ import { TemplateCategoryBadgeComponent } from "../template-category-badge/templ
 
 @Component({
     selector: "app-template-preview",
-    imports: [CommonModule, FormsModule, RouterModule, TemplateStatusBadgeComponent, TemplateCategoryBadgeComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        TemplateStatusBadgeComponent,
+        TemplateCategoryBadgeComponent,
+    ],
     templateUrl: "./template-preview.component.html",
     styleUrl: "./template-preview.component.scss",
     standalone: true,

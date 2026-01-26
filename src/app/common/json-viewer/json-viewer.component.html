@@ -1,6 +1,8 @@
 <div class="json-viewer max-w-full overflow-x-auto font-mono text-sm">
     <ng-container *ngFor="let node of nodes">
-        <ng-container *ngTemplateOutlet="nodeTemplate; context: { node: node, depth: 0, isRoot: true }"></ng-container>
+        <ng-container
+            *ngTemplateOutlet="nodeTemplate; context: { node: node, depth: 0, isRoot: true }"
+        ></ng-container>
     </ng-container>
 </div>
 
@@ -20,7 +22,12 @@
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                 >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"
+                    />
                 </svg>
             </button>
         </ng-container>
@@ -36,10 +43,18 @@
 
         <!-- Value -->
         <ng-container [ngSwitch]="node.type">
-            <span *ngSwitchCase="'string'" class="break-all text-green-600 dark:text-green-400">{{ getDisplayValue(node) }}</span>
-            <span *ngSwitchCase="'number'" class="text-blue-600 dark:text-blue-400">{{ getDisplayValue(node) }}</span>
-            <span *ngSwitchCase="'boolean'" class="text-orange-600 dark:text-orange-400">{{ getDisplayValue(node) }}</span>
-            <span *ngSwitchCase="'null'" class="text-gray-500 dark:text-gray-500">{{ getDisplayValue(node) }}</span>
+            <span *ngSwitchCase="'string'" class="break-all text-green-600 dark:text-green-400">{{
+                getDisplayValue(node)
+            }}</span>
+            <span *ngSwitchCase="'number'" class="text-blue-600 dark:text-blue-400">{{
+                getDisplayValue(node)
+            }}</span>
+            <span *ngSwitchCase="'boolean'" class="text-orange-600 dark:text-orange-400">{{
+                getDisplayValue(node)
+            }}</span>
+            <span *ngSwitchCase="'null'" class="text-gray-500 dark:text-gray-500">{{
+                getDisplayValue(node)
+            }}</span>
             <ng-container *ngSwitchCase="'object'">
                 <button
                     *ngIf="!node.expanded"
@@ -49,7 +64,9 @@
                 >
                     {{ getDisplayValue(node) }}
                 </button>
-                <span *ngIf="node.expanded" class="text-gray-600 dark:text-gray-400">{{ '{' }}</span>
+                <span *ngIf="node.expanded" class="text-gray-600 dark:text-gray-400">{{
+                    "{"
+                }}</span>
             </ng-container>
             <ng-container *ngSwitchCase="'array'">
                 <button
@@ -75,11 +92,33 @@
             (click)="copyNode(node, $event)"
             [title]="copiedNode === node ? 'Copied!' : 'Copy to clipboard'"
         >
-            <svg *ngIf="copiedNode !== node" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            <svg
+                *ngIf="copiedNode !== node"
+                class="h-3.5 w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
             </svg>
-            <svg *ngIf="copiedNode === node" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            <svg
+                *ngIf="copiedNode === node"
+                class="h-3.5 w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                />
             </svg>
         </button>
     </div>
@@ -87,7 +126,12 @@
     <!-- Children (recursive) -->
     <ng-container *ngIf="node.expanded && node.children">
         <ng-container *ngFor="let child of node.children">
-            <ng-container *ngTemplateOutlet="nodeTemplate; context: { node: child, depth: depth + 1, isRoot: false }"></ng-container>
+            <ng-container
+                *ngTemplateOutlet="
+                    nodeTemplate;
+                    context: { node: child, depth: depth + 1, isRoot: false }
+                "
+            ></ng-container>
         </ng-container>
         <!-- Closing bracket -->
         <div [style.padding-left.px]="depth * 16" class="flex">

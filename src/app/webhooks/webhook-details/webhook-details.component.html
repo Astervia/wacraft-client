@@ -10,12 +10,18 @@
                 <span
                     [ngClass]="{
                         'rounded-full px-3 py-1 text-xs font-semibold uppercase': true,
-                        'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400': webhook.http_method === HttpMethod.GET,
-                        'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400': webhook.http_method === HttpMethod.POST,
-                        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400': webhook.http_method === HttpMethod.PUT,
-                        'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400': webhook.http_method === HttpMethod.DELETE,
-                        'bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-400': webhook.http_method === HttpMethod.PATCH,
-                        'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400': webhook.http_method === HttpMethod.OPTIONS,
+                        'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400':
+                            webhook.http_method === HttpMethod.GET,
+                        'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400':
+                            webhook.http_method === HttpMethod.POST,
+                        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400':
+                            webhook.http_method === HttpMethod.PUT,
+                        'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400':
+                            webhook.http_method === HttpMethod.DELETE,
+                        'bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-400':
+                            webhook.http_method === HttpMethod.PATCH,
+                        'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400':
+                            webhook.http_method === HttpMethod.OPTIONS,
                     }"
                     [textContent]="webhook.http_method"
                 ></span>
@@ -53,7 +59,9 @@
                                 (click)="copyToClipboard(webhook.url)"
                                 matTooltip="Copy URL"
                             >
-                                <mat-icon class="material-icons-outlined text-lg">content_copy</mat-icon>
+                                <mat-icon class="material-icons-outlined text-lg"
+                                    >content_copy</mat-icon
+                                >
                             </button>
                         </div>
                     </div>
@@ -93,12 +101,18 @@
                             [(ngModel)]="webhook.http_method"
                             [disabled]="!isEditing"
                             [ngClass]="{
-                                'border-green-500 text-green-600 dark:border-green-400 dark:text-green-400': webhook.http_method === HttpMethod.GET,
-                                'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400': webhook.http_method === HttpMethod.POST,
-                                'border-yellow-500 text-yellow-600 dark:border-yellow-400 dark:text-yellow-400': webhook.http_method === HttpMethod.PUT,
-                                'border-orange-500 text-orange-600 dark:border-orange-400 dark:text-orange-400': webhook.http_method === HttpMethod.PATCH,
-                                'border-red-500 text-red-600 dark:border-red-400 dark:text-red-400': webhook.http_method === HttpMethod.DELETE,
-                                'border-gray-400 text-gray-600 dark:border-gray-500 dark:text-gray-400': webhook.http_method === HttpMethod.OPTIONS,
+                                'border-green-500 text-green-600 dark:border-green-400 dark:text-green-400':
+                                    webhook.http_method === HttpMethod.GET,
+                                'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400':
+                                    webhook.http_method === HttpMethod.POST,
+                                'border-yellow-500 text-yellow-600 dark:border-yellow-400 dark:text-yellow-400':
+                                    webhook.http_method === HttpMethod.PUT,
+                                'border-orange-500 text-orange-600 dark:border-orange-400 dark:text-orange-400':
+                                    webhook.http_method === HttpMethod.PATCH,
+                                'border-red-500 text-red-600 dark:border-red-400 dark:text-red-400':
+                                    webhook.http_method === HttpMethod.DELETE,
+                                'border-gray-400 text-gray-600 dark:border-gray-500 dark:text-gray-400':
+                                    webhook.http_method === HttpMethod.OPTIONS,
                             }"
                         >
                             <option [ngValue]="HttpMethod.POST">{{ HttpMethod.POST }}</option>
@@ -131,7 +145,9 @@
                                 (click)="copyToClipboard(webhook.authorization)"
                                 matTooltip="Copy authorization"
                             >
-                                <mat-icon class="material-icons-outlined text-lg">content_copy</mat-icon>
+                                <mat-icon class="material-icons-outlined text-lg"
+                                    >content_copy</mat-icon
+                                >
                             </button>
                         </div>
                     </div>
@@ -155,7 +171,9 @@
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="col-span-12 flex gap-3 border-t border-gray-200 pt-5 dark:border-gray-700">
+                    <div
+                        class="col-span-12 flex gap-3 border-t border-gray-200 pt-5 dark:border-gray-700"
+                    >
                         @if (!isEditing) {
                             <button
                                 (click)="toggleEdit()"
