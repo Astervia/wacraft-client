@@ -15,6 +15,7 @@ import { Status } from "../../status/entity/status.entity";
 import { statusOrder } from "../../status/constant/status-order.constant";
 import { MutexSwapper } from "../../synch/mutex-swapper/mutex-swapper";
 import { NGXLogger } from "ngx-logger";
+import { DeepEqualService } from "../../common/comparator";
 
 @Injectable({
     providedIn: "root",
@@ -27,6 +28,7 @@ export class UserConversationsStoreService {
     private messageGateway = inject(MessageGatewayService);
     private statusGateway = inject(StatusGatewayService);
     private logger = inject(NGXLogger);
+    private deepEqual = inject(DeepEqualService);
 
     public paginationLimit = 50;
 
@@ -156,13 +158,11 @@ export class UserConversationsStoreService {
         if (!unsentMessages) return;
         const index = unsentMessages.findIndex(msg =>
             msg.sender_data
-                ? this.areEqual(
+                ? this.deepEqual.areEqual(
                       msg.sender_data[msg.sender_data.type],
                       senderData[msg.sender_data.type],
                   )
-                : // ? compareSenderData(msg.sender_data, senderData)
-                  // ? this.areEqual(msg.sender_data, senderData)
-                  false,
+                : false,
         );
         if (index !== -1) {
             unsentMessages.splice(index, 1);
@@ -297,57 +297,6 @@ export class UserConversationsStoreService {
         await this.getMutex.acquire(mpcId);
         this.messageHistory.set(mpcId, []);
         await this.getMutex.release(mpcId);
-    }
-
-    areEqual(a: unknown, b: unknown): boolean {
-        const isPrimitive = (
-            val: unknown,
-        ): val is string | number | boolean | symbol | null | undefined | Date =>
-            val === null || typeof val !== "object" || val instanceof Date;
-
-        const isEmpty = (val: unknown): boolean =>
-            val === null ||
-            val === undefined ||
-            val === "" ||
-            (typeof val === "object" && !Array.isArray(val) && Object.keys(val).length === 0);
-
-        const normalize = (val: unknown): unknown => (isEmpty(val) ? null : val);
-
-        const deepCompare = (x: unknown, y: unknown): boolean => {
-            const normalizedX = normalize(x);
-            const normalizedY = normalize(y);
-
-            if (isPrimitive(normalizedX) || isPrimitive(normalizedY)) {
-                return normalizedX === normalizedY;
-            }
-
-            if (Array.isArray(normalizedX) && Array.isArray(normalizedY)) {
-                if (normalizedX.length !== normalizedY.length) return false;
-                return normalizedX.every((val, i) => deepCompare(val, normalizedY[i]));
-            }
-
-            if (
-                normalizedX &&
-                normalizedY &&
-                typeof normalizedX === "object" &&
-                typeof normalizedY === "object"
-            ) {
-                const objX = normalizedX as Record<string, unknown>;
-                const objY = normalizedY as Record<string, unknown>;
-                const allKeys = new Set([...Object.keys(objX), ...Object.keys(objY)]);
-
-                for (const key of allKeys) {
-                    if (!deepCompare(objX[key], objY[key])) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-
-            return false;
-        };
-
-        return deepCompare(a, b);
     }
 
     private reachedMaxLimit = new Map<string, boolean>();

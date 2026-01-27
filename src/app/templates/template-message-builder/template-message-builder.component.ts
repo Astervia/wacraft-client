@@ -203,11 +203,11 @@ export class TemplateMessageBuilderComponent {
                 [component.format?.toLowerCase() as ParameterType]: this.headerUseMedia,
             });
         } else if (example.header_text && example.header_text.length > 0) {
-            example.header_text.forEach(exampleValue => {
+            example.header_text.forEach(() => {
                 useComponent.parameters.push({
                     type: ParameterType.text,
                     text: "",
-                    placeholder: exampleValue || undefined,
+                    // placeholder: exampleValue || undefined,
                 });
             });
         } else if (
@@ -216,11 +216,11 @@ export class TemplateMessageBuilderComponent {
         ) {
             // If no example data, extract variables directly from the header text
             const variables = this.extractVariables(component.text);
-            variables.forEach(variableName => {
+            variables.forEach(() => {
                 useComponent.parameters.push({
                     type: ParameterType.text,
                     text: "",
-                    placeholder: `Enter ${variableName}`,
+                    // placeholder: `Enter ${variableName}`,
                 });
             });
         }
@@ -233,12 +233,12 @@ export class TemplateMessageBuilderComponent {
     ) {
         // First, try to use example.body_text if it exists
         if (example.body_text && example.body_text.length > 0) {
-            example.body_text.forEach(exampleGroup => {
-                const exampleValue = Array.isArray(exampleGroup) ? exampleGroup[0] : exampleGroup;
+            example.body_text.forEach(() => {
+                // const exampleValue = Array.isArray(exampleGroup) ? exampleGroup[0] : exampleGroup;
                 useComponent.parameters.push({
                     type: ParameterType.text,
                     text: "",
-                    placeholder: exampleValue || undefined,
+                    // placeholder: exampleValue || undefined,
                 });
             });
             return;
@@ -247,11 +247,11 @@ export class TemplateMessageBuilderComponent {
         // If no example data, extract variables directly from the component text
         if (component.text) {
             const variables = this.extractVariables(component.text);
-            variables.forEach(variableName => {
+            variables.forEach(() => {
                 useComponent.parameters.push({
                     type: ParameterType.text,
                     text: "",
-                    placeholder: `Enter ${variableName}`,
+                    // placeholder: `Enter ${variableName}`,
                 });
             });
         }
@@ -281,16 +281,16 @@ export class TemplateMessageBuilderComponent {
             useComponent.parameters.push({
                 type: ParameterType.text,
                 text: "",
-                placeholder: component.text,
+                // placeholder: component.text,
             });
             return;
         }
 
-        variables.forEach(variableName => {
+        variables.forEach(() => {
             useComponent.parameters.push({
                 type: ParameterType.text,
                 text: "",
-                placeholder: `Enter ${variableName}`,
+                // placeholder: `Enter ${variableName}`,
             });
         });
     }
@@ -310,14 +310,14 @@ export class TemplateMessageBuilderComponent {
             if (button && button.url) {
                 // Extract variables from the URL template
                 const variables = this.extractVariables(button.url);
-                const exampleValues = this.extractButtonExampleValues(button.url, button.example);
+                // const exampleValues = this.extractButtonExampleValues(button.url, button.example);
 
-                variables.forEach((variableName, index) => {
-                    const placeholder = exampleValues[index] || `Enter ${variableName}`;
+                variables.forEach(() => {
+                    // const placeholder = exampleValues[index] || `Enter ${variableName}`;
                     useComponent.parameters.push({
                         type: ParameterType.text,
                         text: "",
-                        placeholder,
+                        // placeholder,
                     });
                 });
             }
@@ -329,14 +329,14 @@ export class TemplateMessageBuilderComponent {
             if (button.url) {
                 // Extract variables from the URL template
                 const variables = this.extractVariables(button.url);
-                const exampleValues = this.extractButtonExampleValues(button.url, button.example);
+                // const exampleValues = this.extractButtonExampleValues(button.url, button.example);
 
-                variables.forEach((variableName, index) => {
-                    const placeholder = exampleValues[index] || `Enter ${variableName}`;
+                variables.forEach(() => {
+                    // const placeholder = exampleValues[index] || `Enter ${variableName}`;
                     useComponent.parameters.push({
                         type: ParameterType.text,
                         text: "",
-                        placeholder,
+                        // placeholder,
                     });
                 });
             }
