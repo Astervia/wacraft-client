@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild, inject } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
 import { AuthService } from "../../core/auth/service/auth.service";
 import { AuthModule } from "../../core/auth/auth.module";
 import { UserModule } from "../../core/user/user.module";
@@ -7,7 +7,7 @@ import { isHttpError } from "../../core/common/model/http-error-shape.model";
 
 @Component({
     selector: "app-login",
-    imports: [AuthModule, UserModule],
+    imports: [AuthModule, UserModule, RouterModule],
     templateUrl: "./login.component.html",
     styleUrl: "./login.component.scss",
     standalone: true,

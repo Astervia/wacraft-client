@@ -28,4 +28,15 @@ export enum ServerEndpoints {
     like = "like",
     count = "count",
     block = "block",
+
+    workspace = "workspace",
+    member = "member",
+    invitation = "invitation",
+    phone_config = "phone-config",
+    register = "register",
+    verify_email = "verify-email",
+    forgot_password = "forgot-password",
+    accept_invitation = "accept-invitation",
+    resend_verification = "resend-verification",
+    auth = "auth",
 }

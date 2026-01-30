@@ -6,6 +6,7 @@ export interface UserFields extends Audit {
     email: string;
     password: string;
     role: Role;
+    email_verified?: boolean;
 }
 
 // export interface User extends UserFields {}

@@ -1,0 +1,166 @@
+<app-sidebar-layout [activePage]="RoutePath.workspaceSettings">
+    <div
+        class="grow-1 mx-auto h-full w-full overflow-y-auto p-4 dark:bg-gray-900 dark:text-gray-100 sm:p-6"
+    >
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 sm:text-3xl" i18n>
+                Workspace Settings
+            </h1>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400" i18n>
+                Manage your workspace details and configuration
+            </p>
+        </div>
+
+        @if (errorMessage) {
+            <div
+                class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/50 dark:bg-red-900/20"
+            >
+                <span class="text-sm text-red-700 dark:text-red-400">{{ errorMessage }}</span>
+            </div>
+        }
+
+        @if (workspaceStore.currentWorkspace) {
+            <!-- Workspace Details Section -->
+            <div class="mb-6">
+                <h2 class="mb-3 text-lg font-semibold text-gray-700 dark:text-gray-200" i18n>
+                    Workspace Details
+                </h2>
+
+                <div
+                    class="relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                >
+                    <div class="p-6">
+                        <!-- Card Header with Edit/Save Buttons -->
+                        <div class="mb-5 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900 dark:text-white" i18n>
+                                    General Information
+                                </h3>
+                                <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400" i18n>
+                                    Update your workspace name, slug, and description
+                                </p>
+                            </div>
+                            @if (!isEditing) {
+                                <button
+                                    (click)="toggleEdit()"
+                                    [disabled]="loading"
+                                    class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
+                                    i18n
+                                >
+                                    Edit
+                                </button>
+                            } @else {
+                                <div class="flex items-center gap-2">
+                                    <button
+                                        (click)="cancel()"
+                                        [disabled]="loading"
+                                        class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
+                                        i18n
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        (click)="save()"
+                                        [disabled]="loading"
+                                        class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400 dark:focus:ring-offset-gray-800"
+                                        i18n
+                                    >
+                                        {{ loading ? "Saving..." : "Save" }}
+                                    </button>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Form Fields -->
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <!-- Name Field -->
+                            <div class="col-span-1">
+                                <label
+                                    for="ws-name"
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                    >Name</label
+                                >
+                                <input
+                                    id="ws-name"
+                                    type="text"
+                                    [(ngModel)]="editData.name"
+                                    [disabled]="!isEditing"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 dark:disabled:bg-gray-800"
+                                />
+                            </div>
+
+                            <!-- Slug Field -->
+                            <div class="col-span-1">
+                                <label
+                                    for="ws-slug"
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                    >Slug</label
+                                >
+                                <input
+                                    id="ws-slug"
+                                    type="text"
+                                    [(ngModel)]="editData.slug"
+                                    [disabled]="!isEditing"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 dark:disabled:bg-gray-800"
+                                />
+                            </div>
+
+                            <!-- Description Field -->
+                            <div class="col-span-1 sm:col-span-2">
+                                <label
+                                    for="ws-description"
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                    >Description</label
+                                >
+                                <textarea
+                                    id="ws-description"
+                                    [(ngModel)]="editData.description"
+                                    [disabled]="!isEditing"
+                                    rows="3"
+                                    placeholder="Add a description for this workspace"
+                                    i18n-placeholder
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 dark:disabled:bg-gray-800"
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="mb-6">
+                <h2 class="mb-3 text-lg font-semibold text-gray-700 dark:text-gray-200" i18n>
+                    Danger Zone
+                </h2>
+                <div
+                    class="overflow-hidden rounded-xl border border-red-200 bg-red-50 shadow-sm dark:border-red-900/50 dark:bg-red-900/20"
+                >
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-red-800 dark:text-red-400" i18n>
+                                    Delete Workspace
+                                </h3>
+                                <p class="mt-1 text-xs text-red-600 dark:text-red-500" i18n>
+                                    Permanently delete this workspace and all its data
+                                </p>
+                            </div>
+                            <button
+                                class="inline-flex items-center rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 focus:outline-none focus:ring-4 focus:ring-red-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-800 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 dark:focus:ring-red-900"
+                                (click)="deleteWorkspace()"
+                                [disabled]="loading"
+                                i18n
+                            >
+                                Delete Workspace
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</app-sidebar-layout>

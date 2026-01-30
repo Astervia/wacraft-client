@@ -4,12 +4,26 @@ import { Template, TemplateCategory, TemplateStatus } from "../model/template.mo
 import { TemplateQueryParams, TemplateQualityScore } from "../model/template-query-params.model";
 import { TemplateSummary } from "../model/template-summary.model";
 import { MutexSwapper } from "../../synch/mutex-swapper/mutex-swapper";
+import { WorkspaceStoreService } from "../../workspace/store/workspace-store.service";
 
 @Injectable({
     providedIn: "root",
 })
 export class TemplateStoreService {
     private templateController = inject(TemplateControllerService);
+    private workspaceStore = inject(WorkspaceStoreService);
+
+    constructor() {
+        this.workspaceStore.workspaceChanged.subscribe(() => {
+            this.templates = [];
+            this.searchTemplates = [];
+            this.templatesByName.clear();
+            this.searchValue = "";
+            this.nextAfterTemplate = undefined;
+            this.nextAfterTemplateSearch = undefined;
+            this.clearAllFilters();
+        });
+    }
 
     public searchValue = "";
     private templatesPaginationLimit = 15;

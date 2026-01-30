@@ -4,6 +4,7 @@ import { Query } from "../model/query.model";
 import { CampaignControllerService } from "../controller/campaign-controller.service";
 import { DateOrderEnum } from "../../common/model/date-order.model";
 import { NGXLogger } from "ngx-logger";
+import { WorkspaceStoreService } from "../../workspace/store/workspace-store.service";
 
 @Injectable({
     providedIn: "root",
@@ -11,12 +12,24 @@ import { NGXLogger } from "ngx-logger";
 export class CampaignStoreService {
     private campaignController = inject(CampaignControllerService);
     private logger = inject(NGXLogger);
+    private workspaceStore = inject(WorkspaceStoreService);
 
     private paginationLimit = 15;
 
     public reachedMaxLimit = false;
     public reachedMaxSearchLimit = false;
     currentCampaign!: Campaign;
+
+    constructor() {
+        this.workspaceStore.workspaceChanged.subscribe(() => {
+            this.campaigns = [];
+            this.searchCampaigns = [];
+            this.campaignsById.clear();
+            this.reachedMaxLimit = false;
+            this.reachedMaxSearchLimit = false;
+            this.searchValue = "";
+        });
+    }
 
     searchMode = "name" as const;
 

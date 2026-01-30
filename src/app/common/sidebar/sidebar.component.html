@@ -93,13 +93,7 @@
             </a>
         }
 
-        @if (
-            userStore.currentUser &&
-            !environment.isLite &&
-            (userStore.currentUser.role === Role.admin ||
-                userStore.currentUser.role === Role.developer ||
-                userStore.currentUser.role === Role.automation)
-        ) {
+        @if (workspaceStore.hasPolicy(Policy.workspace_admin) && !environment.isLite) {
             <a
                 [routerLink]="['/', RoutePath.automation]"
                 [queryParams]="queryParamsService.globalQueryParams"
@@ -129,12 +123,7 @@
             </a>
         }
 
-        @if (
-            userStore.currentUser &&
-            (userStore.currentUser.role === Role.admin ||
-                userStore.currentUser.role === Role.developer ||
-                userStore.currentUser.role === Role.automation)
-        ) {
+        @if (workspaceStore.hasPolicy(Policy.webhook_read)) {
             <a
                 [routerLink]="['/', RoutePath.webhooks]"
                 [queryParams]="queryParamsService.globalQueryParams"
@@ -150,7 +139,58 @@
             </a>
         }
 
-        @if (userStore.currentUser && userStore.currentUser.role === Role.admin) {
+        @if (workspaceStore.hasPolicy(Policy.phone_config_read)) {
+            <a
+                [routerLink]="['/', RoutePath.phoneConfigs]"
+                [queryParams]="queryParamsService.globalQueryParams"
+                queryParamsHandling="replace"
+                class="navigator"
+            >
+                <app-small-button
+                    [active]="activePage === RoutePath.phoneConfigs"
+                    matTooltip="Phone Configs"
+                    matIcon="phone_android"
+                    i18n-matTooltip
+                ></app-small-button>
+            </a>
+        }
+
+        @if (workspaceStore.hasPolicy(Policy.workspace_settings)) {
+            <a
+                [routerLink]="['/', RoutePath.workspaceSettings]"
+                [queryParams]="queryParamsService.globalQueryParams"
+                queryParamsHandling="replace"
+                class="navigator"
+            >
+                <app-small-button
+                    [active]="activePage === RoutePath.workspaceSettings"
+                    matTooltip="Workspace Settings"
+                    matSymbol="tune"
+                    i18n-matTooltip
+                ></app-small-button>
+            </a>
+        }
+
+        @if (workspaceStore.hasPolicy(Policy.workspace_members)) {
+            <a
+                [routerLink]="['/', RoutePath.workspaceMembers]"
+                [queryParams]="queryParamsService.globalQueryParams"
+                queryParamsHandling="replace"
+                class="navigator"
+            >
+                <app-small-button
+                    [active]="activePage === RoutePath.workspaceMembers"
+                    matTooltip="Workspace Members"
+                    matIcon="group"
+                    i18n-matTooltip
+                ></app-small-button>
+            </a>
+        }
+
+        <!-- Admin Section -->
+        @if (userStore.currentUser?.role === Role.admin) {
+            <hr class="my-3 w-8 border-b border-gray-600 dark:border-gray-600" />
+
             <a
                 [routerLink]="['/', RoutePath.users]"
                 [queryParams]="queryParamsService.globalQueryParams"
@@ -159,8 +199,8 @@
             >
                 <app-small-button
                     [active]="activePage === RoutePath.users"
-                    matTooltip="Users"
-                    matIcon="people"
+                    matTooltip="Users (Admin)"
+                    matIcon="admin_panel_settings"
                     i18n-matTooltip
                 >
                 </app-small-button>
@@ -169,6 +209,8 @@
     </div>
 
     <div class="flex flex-col items-center justify-center">
+        <app-workspace-switcher class="mb-3"></app-workspace-switcher>
+
         <a
             [routerLink]="['/', RoutePath.account]"
             [queryParams]="queryParamsService.globalQueryParams"

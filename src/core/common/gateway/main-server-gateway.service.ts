@@ -10,6 +10,7 @@
 
 import { Injectable, inject } from "@angular/core";
 import { AuthService } from "../../auth/service/auth.service";
+import { WorkspaceContextService } from "../../workspace/store/workspace-context.service";
 import { environment } from "../../../environments/environment";
 import { ServerEndpoints } from "../constant/server-endpoints.enum";
 import { firstValueFrom, Subject } from "rxjs";
@@ -19,6 +20,7 @@ import { NGXLogger } from "ngx-logger";
 @Injectable({ providedIn: "root" })
 export class MainServerGatewayService {
     private auth = inject(AuthService);
+    private workspaceContext = inject(WorkspaceContextService);
     private logger = inject(NGXLogger);
 
     /* ───── Connection target ───── */
@@ -56,6 +58,7 @@ export class MainServerGatewayService {
     /* ───── ctor ───── */
     constructor() {
         this.watchToken(); // auto-initialises socket and hot-swaps token
+        this.watchWorkspace();
     }
 
     /* ───── Public path helpers ───── */
@@ -75,7 +78,12 @@ export class MainServerGatewayService {
         /* Build URL:  ws(s)://host/a/b?Authorization=Bearer xxxx */
         const base = `${this.prefix}/${this.path.map(p => encodeURIComponent(p)).join("/")}`;
         const u = new URL(base);
-        u.search = new URLSearchParams({ Authorization: `Bearer ${token!}` }).toString();
+        const params: Record<string, string> = { Authorization: `Bearer ${token!}` };
+        const workspaceId = this.workspaceContext.currentWorkspaceId;
+        if (workspaceId) {
+            params["workspace_id"] = workspaceId;
+        }
+        u.search = new URLSearchParams(params).toString();
         const url = u.toString();
 
         const ws = new WebSocket(url);
@@ -115,6 +123,11 @@ export class MainServerGatewayService {
     /* ───── Token watcher ───── */
     private watchToken(): void {
         this.auth.token.subscribe(tok => this.setWs(tok));
+    }
+
+    /* ───── Workspace watcher ───── */
+    private watchWorkspace(): void {
+        this.workspaceContext.workspaceChanged.subscribe(() => this.setWs());
     }
 
     /* ───── Reconnection helpers ───── */

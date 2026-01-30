@@ -6,11 +6,14 @@ import { UserControllerService } from "../../../core/user/controller/user-contro
 import { Role } from "../../../core/user/model/role.model";
 import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
 import { UserStoreService } from "../../../core/user/store/user-store.service";
+import { WorkspaceStoreService } from "../../../core/workspace/store/workspace-store.service";
+import { Policy } from "../../../core/workspace/model/policy.model";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { RoutePath } from "../../app.routes";
 import { HomeFragment } from "../../home/model/home-fragment.model";
 import { NavItem } from "./model/nav-item.model";
 import { ShortcutsComponent } from "../../shortcuts/shortcuts.component";
+import { WorkspaceSwitcherComponent } from "../workspace-switcher/workspace-switcher.component";
 import { environment } from "../../../environments/environment";
 
 @Component({
@@ -21,6 +24,7 @@ import { environment } from "../../../environments/environment";
         MatTooltipModule,
         RouterModule,
         ShortcutsComponent,
+        WorkspaceSwitcherComponent,
     ],
     templateUrl: "./sidebar.component.html",
     styleUrl: "./sidebar.component.scss",
@@ -31,11 +35,13 @@ export class SidebarComponent implements OnInit {
     queryParamsService = inject(QueryParamsService);
     userController = inject(UserControllerService);
     userStore = inject(UserStoreService);
+    workspaceStore = inject(WorkspaceStoreService);
     private router = inject(Router);
 
     // Global variables that are used in HTML and we need to define here.
     environment = environment;
     Role = Role;
+    Policy = Policy;
     HomeFragment: typeof HomeFragment = HomeFragment;
     RoutePath = RoutePath;
 
@@ -75,28 +81,27 @@ export class SidebarComponent implements OnInit {
             },
             {
                 route: ["/", RoutePath.automation],
-                visible: () =>
-                    !!this.userStore.currentUser &&
-                    [Role.admin, Role.developer, Role.automation].includes(
-                        this.userStore.currentUser.role,
-                    ),
+                visible: () => this.workspaceStore.hasPolicy(Policy.workspace_admin),
             },
             {
                 route: ["/", RoutePath.webhooks],
-                visible: () =>
-                    !!this.userStore.currentUser &&
-                    [Role.admin, Role.developer, Role.automation].includes(
-                        this.userStore.currentUser.role,
-                    ),
+                visible: () => this.workspaceStore.hasPolicy(Policy.webhook_read),
             },
             {
-                route: ["/", RoutePath.users],
-                visible: () =>
-                    !!this.userStore.currentUser && this.userStore.currentUser.role === Role.admin,
+                route: ["/", RoutePath.workspaceSettings],
+                visible: () => this.workspaceStore.hasPolicy(Policy.workspace_settings),
+            },
+            {
+                route: ["/", RoutePath.workspaceMembers],
+                visible: () => this.workspaceStore.hasPolicy(Policy.workspace_members),
+            },
+            {
+                route: ["/", RoutePath.phoneConfigs],
+                visible: () => this.workspaceStore.hasPolicy(Policy.phone_config_read),
             },
             {
                 route: ["/", RoutePath.account],
-                visible: () => true, // “account” goes at the bottom
+                visible: () => true, // "account" goes at the bottom
             },
         ].filter(x => x.visible());
     }
@@ -115,7 +120,7 @@ export class SidebarComponent implements OnInit {
             return;
         }
 
-        const idx = Number(e.key); // “1”, “2”, …
+        const idx = Number(e.key); // "1", "2", …
         if (idx === 0)
             return this.queryParamsService.sidebarOpen
                 ? this.queryParamsService.closeSidebar()

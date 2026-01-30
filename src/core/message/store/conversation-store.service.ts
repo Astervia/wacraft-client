@@ -16,6 +16,7 @@ import { StatusGatewayService } from "../../status/gateway/status-gateway.servic
 import { statusOrder } from "../../status/constant/status-order.constant";
 import { Status } from "../../status/entity/status.entity";
 import { NGXLogger } from "ngx-logger";
+import { WorkspaceStoreService } from "../../workspace/store/workspace-store.service";
 
 @Injectable({
     providedIn: "root",
@@ -28,6 +29,7 @@ export class ConversationStoreService {
     private statusGateway = inject(StatusGatewayService);
     private localSettings = inject(LocalSettingsService);
     private messagingProductContactController = inject(MessagingProductContactControllerService);
+    private workspaceStore = inject(WorkspaceStoreService);
     private logger = inject(NGXLogger);
 
     // Handles queries, loading, filters and stuff related to data
@@ -49,6 +51,23 @@ export class ConversationStoreService {
         text: string;
         query?: Query;
     }[] = [];
+
+    constructor() {
+        this.workspaceStore.workspaceChanged.subscribe(() => {
+            this.resetState();
+        });
+    }
+
+    resetState(): void {
+        this.conversations = [];
+        this.searchConversations = [];
+        this.reachedMaxConversationLimit = false;
+        this.reachedMaxSearchConversationLimit = false;
+        this.count = 0;
+        this.searchCount = 0;
+        this.searchValue = "";
+        this.initPromise = null;
+    }
 
     private initPromise: Promise<void> | null = null;
     public initConditionally(route: ActivatedRoute): Promise<void> {

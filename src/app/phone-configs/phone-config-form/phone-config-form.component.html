@@ -1,0 +1,433 @@
+<div
+    class="mb-6 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
+>
+    <!-- Form Header -->
+    <div class="border-b border-slate-200 bg-slate-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div
+                class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30"
+            >
+                <svg
+                    class="h-5 w-5 text-blue-600 dark:text-blue-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                    />
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-base font-semibold text-slate-900 dark:text-white" i18n>
+                    {{ editingConfig ? "Edit Phone Configuration" : "New Phone Configuration" }}
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400" i18n>
+                    {{
+                        editingConfig
+                            ? "Update your WhatsApp Business phone settings"
+                            : "Connect a new WhatsApp Business phone number"
+                    }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Body -->
+    <div class="px-6 py-5">
+        <div class="grid gap-6 lg:grid-cols-2">
+            <!-- Left Column: Basic Information + WhatsApp Business API -->
+            <div class="space-y-6">
+                <!-- Basic Information Section -->
+                <div>
+                    <h4
+                        class="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white"
+                        i18n
+                    >
+                        <svg
+                            class="h-4 w-4 text-slate-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        Basic Information
+                    </h4>
+                    <div class="space-y-4">
+                        <div>
+                            <label
+                                for="pc-name"
+                                class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
+                            >
+                                <span i18n>Configuration Name</span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="pc-name"
+                                type="text"
+                                [(ngModel)]="formData.name"
+                                placeholder="e.g., Main Support Line, Sales Team"
+                                class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
+                                [class.border-red-300]="!formData.name"
+                                [class.focus:border-red-500]="!formData.name"
+                            />
+                            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400" i18n>
+                                A friendly name to identify this phone configuration
+                            </p>
+                        </div>
+
+                        <div>
+                            <label
+                                for="pc-display-phone"
+                                class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
+                            >
+                                <span i18n>Display Phone Number</span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="pc-display-phone"
+                                type="text"
+                                [(ngModel)]="formData.display_phone"
+                                placeholder="+1 234 567 8900"
+                                class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
+                            />
+                            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400" i18n>
+                                Phone number in international format
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WhatsApp Business API Section -->
+                <div class="border-t border-slate-200 pt-6 dark:border-slate-700">
+                    <h4
+                        class="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white"
+                        i18n
+                    >
+                        <svg
+                            class="h-4 w-4 text-slate-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                            />
+                        </svg>
+                        WhatsApp Business API Configuration
+                    </h4>
+                    <div class="space-y-4">
+                        <div>
+                            <label
+                                for="pc-waba-id"
+                                class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
+                            >
+                                <span i18n>WABA ID</span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="pc-waba-id"
+                                type="text"
+                                [(ngModel)]="formData.waba_id"
+                                placeholder="123456789012345"
+                                class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
+                                [class.border-red-300]="!formData.waba_id"
+                                [class.focus:border-red-500]="!formData.waba_id"
+                            />
+                            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400" i18n>
+                                Phone Number ID from Meta
+                            </p>
+                        </div>
+
+                        <div>
+                            <label
+                                for="pc-waba-account-id"
+                                class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
+                            >
+                                <span i18n>WABA Account ID</span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="pc-waba-account-id"
+                                type="text"
+                                [(ngModel)]="formData.waba_account_id"
+                                placeholder="123456789012345"
+                                class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
+                                [class.border-red-300]="!formData.waba_account_id"
+                                [class.focus:border-red-500]="!formData.waba_account_id"
+                            />
+                            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400" i18n>
+                                WhatsApp Business Account identifier
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Section -->
+                <div class="border-t border-slate-200 pt-6 dark:border-slate-700">
+                    <h4
+                        class="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white"
+                        i18n
+                    >
+                        <svg
+                            class="h-4 w-4 text-slate-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        Status
+                    </h4>
+                    <label
+                        class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-700/50"
+                    >
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="formData.is_active"
+                            class="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            id="is-active"
+                        />
+                        <div>
+                            <span
+                                class="block text-sm font-medium text-slate-900 dark:text-white"
+                                i18n
+                                >Set as Active</span
+                            >
+                            <span class="mt-0.5 block text-xs text-slate-500 dark:text-slate-400" i18n>
+                                Only active phone configurations can send and receive messages
+                            </span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Right Column: Security Credentials -->
+            <div>
+                <div class="mb-3 flex items-start gap-2">
+                    <svg
+                        class="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                        />
+                    </svg>
+                    <div>
+                        <h4 class="text-sm font-semibold text-slate-900 dark:text-white" i18n>
+                            Security Credentials
+                        </h4>
+                        @if (editingConfig) {
+                            <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400" i18n>
+                                Leave fields blank to keep current values
+                            </p>
+                        } @else {
+                            <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400" i18n>
+                                All credential fields are required for new configurations
+                            </p>
+                        }
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label
+                            for="pc-app-secret"
+                            class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
+                        >
+                            <span i18n>Meta App Secret</span>
+                            @if (!editingConfig) {
+                                <span class="text-red-500">*</span>
+                            }
+                        </label>
+                        <div class="relative">
+                            <input
+                                id="pc-app-secret"
+                                [type]="showAppSecret ? 'text' : 'password'"
+                                [(ngModel)]="formData.meta_app_secret"
+                                [placeholder]="editingConfig ? 'Leave blank to keep current' : 'Your Meta App Secret'"
+                                class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 font-mono text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
+                            />
+                            <button
+                                type="button"
+                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                                (click)="showAppSecret = !showAppSecret"
+                            >
+                                <svg
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    @if (showAppSecret) {
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                        />
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                        />
+                                    } @else {
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                                        />
+                                    }
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label
+                            for="pc-access-token"
+                            class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
+                        >
+                            <span i18n>Access Token</span>
+                            @if (!editingConfig) {
+                                <span class="text-red-500">*</span>
+                            }
+                        </label>
+                        <div class="relative">
+                            <input
+                                id="pc-access-token"
+                                [type]="showAccessToken ? 'text' : 'password'"
+                                [(ngModel)]="formData.access_token"
+                                [placeholder]="editingConfig ? 'Leave blank to keep current' : 'Your WhatsApp Business API access token'"
+                                class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 font-mono text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
+                            />
+                            <button
+                                type="button"
+                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                                (click)="showAccessToken = !showAccessToken"
+                            >
+                                <svg
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    @if (showAccessToken) {
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                        />
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                        />
+                                    } @else {
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                                        />
+                                    }
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400" i18n>
+                            Long-lived access token from Meta Business
+                        </p>
+                    </div>
+
+                    <div>
+                        <label
+                            for="pc-webhook-verify"
+                            class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
+                        >
+                            <span i18n>Webhook Verify Token</span>
+                            @if (!editingConfig) {
+                                <span class="text-red-500">*</span>
+                            }
+                        </label>
+                        <input
+                            id="pc-webhook-verify"
+                            type="text"
+                            [(ngModel)]="formData.webhook_verify_token"
+                            [placeholder]="editingConfig ? 'Leave blank to keep current' : 'Your custom verification token'"
+                            class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
+                        />
+                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400" i18n>
+                            Token used to verify webhook endpoint
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Footer -->
+    <div
+        class="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-900/50"
+    >
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+            <span class="text-red-500">*</span>
+            <span i18n>Required fields</span>
+        </p>
+        <div class="flex gap-3">
+            <button
+                class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
+                (click)="onCancel()"
+                i18n
+            >
+                Cancel
+            </button>
+            <button
+                class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                (click)="onSubmit()"
+                [disabled]="!formData.name || !formData.waba_id || !formData.display_phone || !formData.waba_account_id"
+                i18n
+            >
+                <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                    />
+                </svg>
+                {{ editingConfig ? "Update Configuration" : "Create Configuration" }}
+            </button>
+        </div>
+    </div>
+</div>

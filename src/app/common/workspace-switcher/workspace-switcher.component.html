@@ -1,0 +1,102 @@
+<div class="relative flex flex-col items-center">
+    <button
+        #triggerBtn
+        class="flex aspect-square w-10 items-center justify-center rounded-lg border text-xs font-bold transition-colors"
+        [ngClass]="{
+            'border-blue-500 bg-blue-600 text-white': isOpen,
+            'border-gray-500 text-gray-500 hover:border-gray-400 hover:text-gray-400 dark:border-gray-500 dark:text-gray-400':
+                !isOpen,
+        }"
+        (click)="toggle()"
+        [matTooltip]="workspaceStore.currentWorkspace?.name || 'Select workspace'"
+        i18n-matTooltip
+    >
+        @if (workspaceStore.currentWorkspace) {
+            {{ workspaceStore.currentWorkspace.name.charAt(0).toUpperCase() }}
+        } @else {
+            <span class="material-icons text-lg">workspaces</span>
+        }
+    </button>
+
+    @if (isOpen) {
+        <div
+            class="z-50 w-56 rounded-lg border border-gray-300 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800"
+            [ngStyle]="dropdownStyle"
+        >
+            <div class="border-b border-gray-200 px-3 py-2 dark:border-gray-700">
+                <p class="text-xs font-semibold text-gray-500 dark:text-gray-400" i18n>
+                    Workspaces
+                </p>
+            </div>
+
+            <div class="max-h-48 overflow-y-auto py-1">
+                @for (workspace of workspaceStore.workspaces; track workspace.id) {
+                    <button
+                        class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+                        [ngClass]="{
+                            'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400':
+                                workspace.id === workspaceStore.currentWorkspace?.id,
+                            'text-gray-700 dark:text-gray-300':
+                                workspace.id !== workspaceStore.currentWorkspace?.id,
+                        }"
+                        (click)="selectWorkspace(workspace)"
+                    >
+                        <span
+                            class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-gray-200 text-xs font-bold dark:bg-gray-600"
+                        >
+                            {{ workspace.name.charAt(0).toUpperCase() }}
+                        </span>
+                        <span class="truncate">{{ workspace.name }}</span>
+                        @if (workspace.id === workspaceStore.currentWorkspace?.id) {
+                            <span class="material-icons ml-auto text-base text-blue-500"
+                                >check</span
+                            >
+                        }
+                    </button>
+                }
+            </div>
+
+            @if (!showCreateForm) {
+                <div class="border-t border-gray-200 py-1 dark:border-gray-700">
+                    <button
+                        class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+                        (click)="showCreateForm = true"
+                    >
+                        <span class="material-icons text-base">add</span>
+                        <span i18n>Create workspace</span>
+                    </button>
+                </div>
+            }
+
+            @if (showCreateForm) {
+                <div class="border-t border-gray-200 p-3 dark:border-gray-700">
+                    <input
+                        type="text"
+                        [(ngModel)]="newWorkspaceName"
+                        class="mb-2 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                        placeholder="Workspace name"
+                        i18n-placeholder
+                        (keydown.enter)="createWorkspace()"
+                    />
+                    <div class="flex gap-1">
+                        <button
+                            class="flex-1 rounded bg-blue-600 px-2 py-1 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                            (click)="createWorkspace()"
+                            [disabled]="isCreating || !newWorkspaceName.trim()"
+                            i18n
+                        >
+                            Create
+                        </button>
+                        <button
+                            class="rounded px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            (click)="showCreateForm = false"
+                            i18n
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
