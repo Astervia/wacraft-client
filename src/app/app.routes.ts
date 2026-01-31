@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { LoginComponent } from "./login/login.component";
 import { userGuard } from "./../core/auth/guard/user.guard";
 import { adminGuard } from "./../core/auth/guard/admin.guard";
+import { emailVerifiedGuard } from "./../core/auth/guard/email-verified.guard";
 import { HomeComponent } from "./home/home.component";
 import { PluginsManagerService } from "../plugins/common/service/plugins-manager.service";
 import { AccountComponent } from "./account/account.component";
@@ -16,6 +17,7 @@ import { VerifyEmailComponent } from "./verify-email/verify-email.component";
 import { ForgotPasswordComponent } from "./forgot-password/forgot-password.component";
 import { ResetPasswordComponent } from "./reset-password/reset-password.component";
 import { AcceptInvitationComponent } from "./accept-invitation/accept-invitation.component";
+import { VerifyEmailRequiredComponent } from "./verify-email-required/verify-email-required.component";
 import { environment } from "../environments/environment";
 
 export enum RoutePath {
@@ -34,6 +36,7 @@ export enum RoutePath {
     forgotPassword = "forgot-password",
     resetPassword = "reset-password",
     acceptInvitation = "accept-invitation",
+    verifyEmailRequired = "verify-email-required",
 }
 
 export const routes: Routes = [
@@ -64,9 +67,14 @@ export const routes: Routes = [
     },
     // Protected routes
     {
+        path: RoutePath.verifyEmailRequired,
+        component: VerifyEmailRequiredComponent,
+        canActivate: [userGuard],
+    },
+    {
         path: RoutePath.home,
         component: HomeComponent,
-        canActivate: [userGuard],
+        canActivate: [emailVerifiedGuard],
     },
     {
         path: RoutePath.account,
@@ -76,27 +84,27 @@ export const routes: Routes = [
     {
         path: RoutePath.webhooks,
         component: WebhooksComponent,
-        canActivate: [userGuard],
+        canActivate: [emailVerifiedGuard],
     },
     {
         path: RoutePath.users,
         component: UsersComponent,
-        canActivate: [userGuard, adminGuard],
+        canActivate: [userGuard, adminGuard, emailVerifiedGuard],
     },
     {
         path: RoutePath.workspaceSettings,
         component: WorkspaceSettingsComponent,
-        canActivate: [userGuard],
+        canActivate: [emailVerifiedGuard],
     },
     {
         path: RoutePath.workspaceMembers,
         component: WorkspaceMembersComponent,
-        canActivate: [userGuard],
+        canActivate: [emailVerifiedGuard],
     },
     {
         path: RoutePath.phoneConfigs,
         component: PhoneConfigsComponent,
-        canActivate: [userGuard],
+        canActivate: [emailVerifiedGuard],
     },
     environment.isLite
         ? {
@@ -106,7 +114,7 @@ export const routes: Routes = [
         : {
               path: RoutePath.automation,
               component: AutomationComponent,
-              canActivate: [userGuard],
+              canActivate: [emailVerifiedGuard],
           },
     {
         path: "",

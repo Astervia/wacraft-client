@@ -29,7 +29,7 @@
                 </p>
             </div>
 
-            <div class="max-h-48 overflow-y-auto py-1">
+            <div class="scrollable max-h-60 overflow-y-auto py-1" (scroll)="onScroll($event)">
                 @for (workspace of workspaceStore.workspaces; track workspace.id) {
                     <button
                         class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"

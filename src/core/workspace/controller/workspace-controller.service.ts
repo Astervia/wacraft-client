@@ -3,6 +3,8 @@ import { MainServerControllerService } from "../../common/controller/main-server
 import { AuthService } from "../../auth/service/auth.service";
 import { ServerEndpoints } from "../../common/constant/server-endpoints.enum";
 import { Workspace } from "../entity/workspace.entity";
+import { Paginate } from "../../common/model/paginate.model";
+import { DateOrder } from "../../common/model/date-order.model";
 
 @Injectable({
     providedIn: "root",
@@ -20,8 +22,13 @@ export class WorkspaceControllerService extends MainServerControllerService {
         this.setHttp();
     }
 
-    async get(): Promise<Workspace[]> {
-        return (await this.http.get<Workspace[]>("")).data;
+    async get(
+        pagination: Paginate = { limit: 15, offset: 0 },
+        order: DateOrder = {},
+    ): Promise<Workspace[]> {
+        return (await this.http.get<Workspace[]>("", {
+            params: { ...pagination, ...order },
+        })).data;
     }
 
     async create(data: { name: string; slug: string; description?: string }): Promise<Workspace> {

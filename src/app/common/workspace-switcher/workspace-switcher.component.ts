@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, ElementRef, inject, ViewChild } from "@angular/core";
+import { Component, ElementRef, HostListener, inject, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
@@ -17,6 +17,7 @@ import { Workspace } from "../../../core/workspace/entity/workspace.entity";
 export class WorkspaceSwitcherComponent {
     workspaceStore = inject(WorkspaceStoreService);
     private workspaceController = inject(WorkspaceControllerService);
+    private elementRef = inject(ElementRef);
 
     @ViewChild("triggerBtn", { static: false }) triggerBtn!: ElementRef<HTMLButtonElement>;
 
@@ -26,6 +27,12 @@ export class WorkspaceSwitcherComponent {
     newWorkspaceSlug = "";
     isCreating = false;
     dropdownStyle: Record<string, string> = {};
+    private scrolling = false;
+
+    @HostListener("document:click", ["$event"])
+    private onDocumentClick(event: MouseEvent): void {
+        if (!this.elementRef.nativeElement.contains(event.target)) this.close();
+    }
 
     toggle(): void {
         this.isOpen = !this.isOpen;
@@ -55,6 +62,22 @@ export class WorkspaceSwitcherComponent {
     selectWorkspace(workspace: Workspace): void {
         this.workspaceStore.setCurrentWorkspace(workspace);
         this.close();
+    }
+
+    onScroll(event: Event): void {
+        const el = event.target as HTMLElement;
+        if (el.scrollHeight - el.scrollTop > el.clientHeight + 100) return;
+        if (this.scrolling || this.workspaceStore.reachedMaxLimit) return;
+        this.loadMore();
+    }
+
+    async loadMore(): Promise<void> {
+        this.scrolling = true;
+        try {
+            await this.workspaceStore.get();
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     async createWorkspace(): Promise<void> {

@@ -62,42 +62,56 @@ export class SidebarComponent implements OnInit {
         return [RoutePath.account, RoutePath.automation].includes(this.activePage as RoutePath);
     }
 
+    get isEmailVerified(): boolean {
+        return !!this.userStore.currentUser?.email_verified;
+    }
+
     get navItems(): NavItem[] {
         return [
             {
                 route: ["/", RoutePath.home],
                 fragment: HomeFragment.chats,
-                visible: () => true,
+                visible: () => this.isEmailVerified,
             },
             {
                 route: ["/", RoutePath.home],
                 fragment: HomeFragment.templates,
-                visible: () => true,
+                visible: () => this.isEmailVerified,
             },
             {
                 route: ["/", RoutePath.home],
                 fragment: HomeFragment.campaigns,
-                visible: () => true,
+                visible: () => this.isEmailVerified,
             },
             {
                 route: ["/", RoutePath.automation],
-                visible: () => this.workspaceStore.hasPolicy(Policy.workspace_admin),
+                visible: () =>
+                    this.isEmailVerified &&
+                    this.workspaceStore.hasPolicy(Policy.workspace_admin),
             },
             {
                 route: ["/", RoutePath.webhooks],
-                visible: () => this.workspaceStore.hasPolicy(Policy.webhook_read),
+                visible: () =>
+                    this.isEmailVerified &&
+                    this.workspaceStore.hasPolicy(Policy.webhook_read),
             },
             {
                 route: ["/", RoutePath.workspaceSettings],
-                visible: () => this.workspaceStore.hasPolicy(Policy.workspace_settings),
+                visible: () =>
+                    this.isEmailVerified &&
+                    this.workspaceStore.hasPolicy(Policy.workspace_settings),
             },
             {
                 route: ["/", RoutePath.workspaceMembers],
-                visible: () => this.workspaceStore.hasPolicy(Policy.workspace_members),
+                visible: () =>
+                    this.isEmailVerified &&
+                    this.workspaceStore.hasPolicy(Policy.workspace_members),
             },
             {
                 route: ["/", RoutePath.phoneConfigs],
-                visible: () => this.workspaceStore.hasPolicy(Policy.phone_config_read),
+                visible: () =>
+                    this.isEmailVerified &&
+                    this.workspaceStore.hasPolicy(Policy.phone_config_read),
             },
             {
                 route: ["/", RoutePath.account],

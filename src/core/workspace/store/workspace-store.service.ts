@@ -8,6 +8,7 @@ import { WorkspaceMemberControllerService } from "../controller/workspace-member
 import { WorkspaceContextService } from "./workspace-context.service";
 import { UserStoreService } from "../../user/store/user-store.service";
 import { Policy, hasPolicy } from "../model/policy.model";
+import { DateOrderEnum } from "../../common/model/date-order.model";
 
 @Injectable({
     providedIn: "root",
@@ -19,6 +20,9 @@ export class WorkspaceStoreService {
     private userStore = inject(UserStoreService);
     private logger = inject(NGXLogger);
 
+    private paginationLimit = 15;
+    public reachedMaxLimit = false;
+
     workspaces: Workspace[] = [];
     currentWorkspace: Workspace | null = null;
     currentMembership: WorkspaceMember | null = null;
@@ -26,8 +30,22 @@ export class WorkspaceStoreService {
     workspaceChanged = new Subject<Workspace>();
 
     async loadWorkspaces(): Promise<void> {
+        this.workspaces = [];
+        this.reachedMaxLimit = false;
+        await this.get();
+    }
+
+    async get(): Promise<void> {
         try {
-            this.workspaces = await this.workspaceController.get();
+            const workspaces = await this.workspaceController.get(
+                { limit: this.paginationLimit, offset: this.workspaces.length },
+                { created_at: DateOrderEnum.desc },
+            );
+            if (!workspaces.length) {
+                this.reachedMaxLimit = true;
+                return;
+            }
+            this.workspaces = [...this.workspaces, ...workspaces];
         } catch (error) {
             this.logger.error("Error loading workspaces", error);
         }
