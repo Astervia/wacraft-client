@@ -18,6 +18,8 @@ import { ForgotPasswordComponent } from "./forgot-password/forgot-password.compo
 import { ResetPasswordComponent } from "./reset-password/reset-password.component";
 import { AcceptInvitationComponent } from "./accept-invitation/accept-invitation.component";
 import { VerifyEmailRequiredComponent } from "./verify-email-required/verify-email-required.component";
+import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
+import { TermsOfServiceComponent } from "./terms-of-service/terms-of-service.component";
 import { environment } from "../environments/environment";
 
 export enum RoutePath {
@@ -37,6 +39,8 @@ export enum RoutePath {
     resetPassword = "reset-password",
     acceptInvitation = "accept-invitation",
     verifyEmailRequired = "verify-email-required",
+    privacyPolicy = "privacy-policy",
+    termsOfService = "terms-of-service",
 }
 
 export const routes: Routes = [
@@ -64,6 +68,14 @@ export const routes: Routes = [
     {
         path: `${RoutePath.auth}/${RoutePath.acceptInvitation}`,
         component: AcceptInvitationComponent,
+    },
+    {
+        path: `${RoutePath.auth}/${RoutePath.privacyPolicy}`,
+        component: PrivacyPolicyComponent,
+    },
+    {
+        path: `${RoutePath.auth}/${RoutePath.termsOfService}`,
+        component: TermsOfServiceComponent,
     },
     // Protected routes
     {

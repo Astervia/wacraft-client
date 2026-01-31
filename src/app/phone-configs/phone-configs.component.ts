@@ -8,6 +8,7 @@ import { WorkspaceStoreService } from "../../core/workspace/store/workspace-stor
 import { PhoneConfig } from "../../core/phone-config/entity/phone-config.entity";
 import { PhoneConfigFormComponent } from "./phone-config-form/phone-config-form.component";
 import { CreatePhoneConfig, UpdatePhoneConfig } from "../../core/phone-config/model/create.model";
+import { environment } from "../../environments/environment";
 
 @Component({
     selector: "app-phone-configs",
@@ -86,6 +87,32 @@ export class PhoneConfigsComponent implements OnInit {
         } catch {
             this.errorMessage = "Failed to save phone config.";
         }
+    }
+
+    copiedField: { configId: string; field: string } | null = null;
+    expandedWebhook = new Set<string>();
+
+    toggleWebhookInfo(configId: string): void {
+        if (this.expandedWebhook.has(configId)) {
+            this.expandedWebhook.delete(configId);
+        } else {
+            this.expandedWebhook.add(configId);
+        }
+    }
+
+    getWebhookUrl(config: PhoneConfig): string {
+        const protocol = environment.mainServerSecurity ? "https" : "http";
+        return `${protocol}://${environment.mainServerUrl}/webhook-in/${config.waba_id}`;
+    }
+
+    async copyToClipboard(value: string, configId: string, field: string): Promise<void> {
+        await navigator.clipboard.writeText(value);
+        this.copiedField = { configId, field };
+        setTimeout(() => {
+            if (this.copiedField?.configId === configId && this.copiedField?.field === field) {
+                this.copiedField = null;
+            }
+        }, 2000);
     }
 
     async deleteConfig(config: PhoneConfig): Promise<void> {

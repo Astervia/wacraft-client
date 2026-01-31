@@ -23,6 +23,7 @@ export class RegisterComponent {
     errorMessage = "";
     successMessage = "";
     showPassword = false;
+    acceptedTerms = false;
 
     async register(): Promise<void> {
         if (this.password !== this.confirmPassword) {
