@@ -18,7 +18,7 @@ export const adminGuard: CanActivateFn = async () => {
         }
 
         return true;
-    } catch (error) {
+    } catch {
         router.navigate([RoutePath.home]);
         return false;
     }
