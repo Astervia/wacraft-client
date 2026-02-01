@@ -65,6 +65,17 @@ export class WorkspaceSettingsComponent implements OnInit {
         this.resetEditData();
     }
 
+    idCopied = false;
+
+    copyWorkspaceId(): void {
+        const ws = this.workspaceStore.currentWorkspace;
+        if (!ws) return;
+        navigator.clipboard.writeText(ws.id).then(() => {
+            this.idCopied = true;
+            setTimeout(() => (this.idCopied = false), 2000);
+        });
+    }
+
     async deleteWorkspace(): Promise<void> {
         const ws = this.workspaceStore.currentWorkspace;
         if (!ws) return;
