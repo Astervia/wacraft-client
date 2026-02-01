@@ -47,11 +47,7 @@ export class PhoneConfigControllerService extends MainServerControllerService {
         ).data;
     }
 
-    async update(
-        workspaceId: string,
-        id: string,
-        data: UpdatePhoneConfig,
-    ): Promise<PhoneConfig> {
+    async update(workspaceId: string, id: string, data: UpdatePhoneConfig): Promise<PhoneConfig> {
         return (
             await this.http.patch<PhoneConfig>(
                 `${workspaceId}/${ServerEndpoints.phone_config}/${id}`,

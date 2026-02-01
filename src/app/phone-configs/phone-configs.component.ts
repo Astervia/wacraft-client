@@ -43,7 +43,8 @@ export class PhoneConfigsComponent implements OnInit {
         )
             return;
 
-        if (!this.phoneConfigStore.reachedMaxLimit && !this.phoneConfigStore.loading) this.getMore();
+        if (!this.phoneConfigStore.reachedMaxLimit && !this.phoneConfigStore.loading)
+            this.getMore();
     }
 
     async getMore(): Promise<void> {

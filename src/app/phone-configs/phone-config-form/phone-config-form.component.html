@@ -2,7 +2,9 @@
     class="mb-6 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
 >
     <!-- Form Header -->
-    <div class="border-b border-slate-200 bg-slate-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-900/50">
+    <div
+        class="border-b border-slate-200 bg-slate-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-900/50"
+    >
         <div class="flex items-center gap-3">
             <div
                 class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30"
@@ -211,7 +213,10 @@
                                 i18n
                                 >Set as Active</span
                             >
-                            <span class="mt-0.5 block text-xs text-slate-500 dark:text-slate-400" i18n>
+                            <span
+                                class="mt-0.5 block text-xs text-slate-500 dark:text-slate-400"
+                                i18n
+                            >
                                 Only active phone configurations can send and receive messages
                             </span>
                         </div>
@@ -267,7 +272,11 @@
                                 id="pc-app-secret"
                                 [type]="showAppSecret ? 'text' : 'password'"
                                 [(ngModel)]="formData.meta_app_secret"
-                                [placeholder]="editingConfig ? 'Leave blank to keep current' : 'Your Meta App Secret'"
+                                [placeholder]="
+                                    editingConfig
+                                        ? 'Leave blank to keep current'
+                                        : 'Your Meta App Secret'
+                                "
                                 class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 font-mono text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
                             />
                             <button
@@ -322,7 +331,11 @@
                                 id="pc-access-token"
                                 [type]="showAccessToken ? 'text' : 'password'"
                                 [(ngModel)]="formData.access_token"
-                                [placeholder]="editingConfig ? 'Leave blank to keep current' : 'Your WhatsApp Business API access token'"
+                                [placeholder]="
+                                    editingConfig
+                                        ? 'Leave blank to keep current'
+                                        : 'Your WhatsApp Business API access token'
+                                "
                                 class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-10 font-mono text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
                             />
                             <button
@@ -379,7 +392,11 @@
                             id="pc-webhook-verify"
                             type="text"
                             [(ngModel)]="formData.webhook_verify_token"
-                            [placeholder]="editingConfig ? 'Leave blank to keep current' : 'Your custom verification token'"
+                            [placeholder]="
+                                editingConfig
+                                    ? 'Leave blank to keep current'
+                                    : 'Your custom verification token'
+                            "
                             class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
                         />
                         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400" i18n>
@@ -410,15 +427,15 @@
             <button
                 class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 (click)="onSubmit()"
-                [disabled]="!formData.name || !formData.waba_id || !formData.display_phone || !formData.waba_account_id"
+                [disabled]="
+                    !formData.name ||
+                    !formData.waba_id ||
+                    !formData.display_phone ||
+                    !formData.waba_account_id
+                "
                 i18n
             >
-                <svg
-                    class="h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                         stroke-linecap="round"
                         stroke-linejoin="round"

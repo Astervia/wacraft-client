@@ -86,14 +86,12 @@ export class SidebarComponent implements OnInit {
             {
                 route: ["/", RoutePath.automation],
                 visible: () =>
-                    this.isEmailVerified &&
-                    this.workspaceStore.hasPolicy(Policy.workspace_admin),
+                    this.isEmailVerified && this.workspaceStore.hasPolicy(Policy.workspace_admin),
             },
             {
                 route: ["/", RoutePath.webhooks],
                 visible: () =>
-                    this.isEmailVerified &&
-                    this.workspaceStore.hasPolicy(Policy.webhook_read),
+                    this.isEmailVerified && this.workspaceStore.hasPolicy(Policy.webhook_read),
             },
             {
                 route: ["/", RoutePath.workspaceSettings],
@@ -104,14 +102,12 @@ export class SidebarComponent implements OnInit {
             {
                 route: ["/", RoutePath.workspaceMembers],
                 visible: () =>
-                    this.isEmailVerified &&
-                    this.workspaceStore.hasPolicy(Policy.workspace_members),
+                    this.isEmailVerified && this.workspaceStore.hasPolicy(Policy.workspace_members),
             },
             {
                 route: ["/", RoutePath.phoneConfigs],
                 visible: () =>
-                    this.isEmailVerified &&
-                    this.workspaceStore.hasPolicy(Policy.phone_config_read),
+                    this.isEmailVerified && this.workspaceStore.hasPolicy(Policy.phone_config_read),
             },
             {
                 route: ["/", RoutePath.account],

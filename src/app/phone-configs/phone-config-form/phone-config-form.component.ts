@@ -2,7 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { PhoneConfig } from "../../../core/phone-config/entity/phone-config.entity";
-import { CreatePhoneConfig, UpdatePhoneConfig } from "../../../core/phone-config/model/create.model";
+import {
+    CreatePhoneConfig,
+    UpdatePhoneConfig,
+} from "../../../core/phone-config/model/create.model";
 
 @Component({
     selector: "app-phone-config-form",

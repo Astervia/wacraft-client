@@ -26,9 +26,11 @@ export class WorkspaceControllerService extends MainServerControllerService {
         pagination: Paginate = { limit: 15, offset: 0 },
         order: DateOrder = {},
     ): Promise<Workspace[]> {
-        return (await this.http.get<Workspace[]>("", {
-            params: { ...pagination, ...order },
-        })).data;
+        return (
+            await this.http.get<Workspace[]>("", {
+                params: { ...pagination, ...order },
+            })
+        ).data;
     }
 
     async create(data: { name: string; slug: string; description?: string }): Promise<Workspace> {
