@@ -1,4 +1,6 @@
-export const environment = {
+import { EnvironmentConfig } from "./config.model";
+
+export const environment: EnvironmentConfig = {
     isLite: true,
 
     env: "development",
@@ -6,8 +8,8 @@ export const environment = {
     googleMapsApiKey: "your google maps api key", // Should allow  Google Places API and Google Maps JavaScript API
     mainServerUrl: "localhost:6900",
     mainServerSecurity: true,
-    nodeRedServerUrl: "localhost:1880",
-    nodeRedServerSecurity: true,
+    automationServerUrl: "localhost:1880",
+    automationServerSecurity: true,
     appTitle: "wacraft",
 
     webSocketBasePingInterval: 30000,

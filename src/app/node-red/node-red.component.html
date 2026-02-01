@@ -1,7 +1,7 @@
-@if (environment.nodeRedServerUrl) {
+@if (environment.automationServerUrl) {
     <iframe
         [src]="
-            (environment.nodeRedServerUrl | urlWithHttp: environment.nodeRedServerSecurity) +
+            (environment.automationServerUrl | urlWithHttp: environment.automationServerSecurity) +
                 '?access_token=' +
                 accessToken | safeUrl
         "

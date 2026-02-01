@@ -131,7 +131,7 @@ export class AuthService {
             this.getToken(),
             7,
             "/",
-            this.getParentTransform(environment.nodeRedServerUrl),
+            this.getParentTransform(environment.automationServerUrl || ""),
             true,
             "None",
         );
@@ -150,7 +150,7 @@ export class AuthService {
             // Fallback to the full hostname if it's shorter than expected
         } catch (error) {
             this.logger.error("Error parsing URL for parent domain:", error);
-            // Fallback to using the full nodeRedServerUrl
+            // Fallback to using the full automationServerUrl
             return subdomainUrl;
         }
     }

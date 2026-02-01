@@ -24,7 +24,7 @@ export class ParentDomainPipe implements PipeTransform {
             }
         } catch (error) {
             this.logger.error("Error parsing URL for parent domain:", error);
-            // Fallback to using the full nodeRedServerUrl
+            // Fallback to using the full automationServerUrl
             return subdomainUrl;
         }
     }

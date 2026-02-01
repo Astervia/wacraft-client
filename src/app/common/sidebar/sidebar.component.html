@@ -93,7 +93,7 @@
             </a>
         }
 
-        @if (workspaceStore.hasPolicy(Policy.workspace_admin) && !environment.isLite) {
+        @if (workspaceStore.hasPolicy(Policy.workspace_admin) && !environment.isLite && environment.automationServerUrl) {
             <a
                 [routerLink]="['/', RoutePath.automation]"
                 [queryParams]="queryParamsService.globalQueryParams"
