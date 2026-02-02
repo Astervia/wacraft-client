@@ -16,7 +16,7 @@ export const environment = {
 
     mainServerUrl: "${process.env.MAIN_SERVER_URL}",
     mainServerSecurity: ${process.env.MAIN_SERVER_SECURITY == "true"},
-    automationServerUrl: "${process.env.AUTOMATION_SERVER_URL}",
+    automationServerUrl: ${process.env.AUTOMATION_SERVER_URL ? `"${process.env.AUTOMATION_SERVER_URL}"` : "undefined"},
     automationServerSecurity: ${process.env.AUTOMATION_SERVER_SECURITY == "true"},
     googleMapsApiKey: "${process.env.GOOGLE_MAPS_API_KEY}",
     appTitle: "${process.env.APP_TITLE || "wacraft"}",
