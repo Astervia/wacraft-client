@@ -4,6 +4,11 @@
             "source": "/",
             "destination": "/en/",
             "permanent": false
+        },
+        {
+            "source": "/:path((?!en|pt-BR|es-CL).*)",
+            "destination": "/en/:path",
+            "permanent": false
         }
     ],
     "rewrites": [
