@@ -2,7 +2,31 @@
     "redirects": [
         {
             "source": "/",
+            "has": [{ "type": "header", "key": "accept-language", "value": "pt.*" }],
+            "destination": "/pt-BR/",
+            "permanent": false
+        },
+        {
+            "source": "/",
+            "has": [{ "type": "header", "key": "accept-language", "value": "es.*" }],
+            "destination": "/es-CL/",
+            "permanent": false
+        },
+        {
+            "source": "/",
             "destination": "/en/",
+            "permanent": false
+        },
+        {
+            "source": "/:path((?!en|pt-BR|es-CL).*)",
+            "has": [{ "type": "header", "key": "accept-language", "value": "pt.*" }],
+            "destination": "/pt-BR/:path",
+            "permanent": false
+        },
+        {
+            "source": "/:path((?!en|pt-BR|es-CL).*)",
+            "has": [{ "type": "header", "key": "accept-language", "value": "es.*" }],
+            "destination": "/es-CL/:path",
             "permanent": false
         },
         {
