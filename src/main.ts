@@ -45,9 +45,17 @@ switch (themeMode) {
     }
 }
 
-// Load the Google Maps API before bootstrapping the app
-loadGoogleMaps(environment.googleMapsApiKey)
-    .then(() => {
-        bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
-    })
-    .catch(err => console.error(err));
+// Load the Google Maps API before bootstrapping the app (if API key is configured)
+const hasGoogleMapsApiKey =
+    !!environment.googleMapsApiKey && environment.googleMapsApiKey !== "undefined";
+
+if (hasGoogleMapsApiKey) {
+    loadGoogleMaps(environment.googleMapsApiKey!)
+        .then(() => {
+            bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+} else {
+    // Bootstrap without Google Maps (OpenStreetMap will be used)
+    bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
+}
