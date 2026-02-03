@@ -1,1 +1,12 @@
-<router-outlet />
+@if (isLoading()) {
+    <div class="splash-bg flex flex-col items-center justify-center h-screen font-sans">
+        <img src="favicon.png" alt="Loading" class="splash-logo w-20 h-20 rounded-2xl shadow-2xl" />
+        <div class="mt-8 flex gap-2">
+            <div class="splash-dot w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+            <div class="splash-dot w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+            <div class="splash-dot w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+        </div>
+    </div>
+} @else {
+    <router-outlet />
+}
