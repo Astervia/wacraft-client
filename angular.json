@@ -52,6 +52,7 @@
                             "@angular/material/prebuilt-themes/azure-blue.css",
                             "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
                             "node_modules/@ctrl/ngx-emoji-mart/picker.css",
+                            "node_modules/leaflet/dist/leaflet.css",
                             "src/styles.scss",
                             "src/phone-number.scss"
                         ],
@@ -138,6 +139,7 @@
                             "@angular/material/prebuilt-themes/azure-blue.css",
                             "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
                             "node_modules/@ctrl/ngx-emoji-mart/picker.css",
+                            "node_modules/leaflet/dist/leaflet.css",
                             "src/styles.scss",
                             "src/phone-number.scss"
                         ],
