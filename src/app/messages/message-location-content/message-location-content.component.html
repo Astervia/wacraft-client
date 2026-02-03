@@ -1,11 +1,15 @@
 <div id="content">
     <div class="mb-2">
-        @if (options) {
-            <google-map height="250px" id="map" [options]="options">
-                @if (markerPosition) {
-                    <map-marker [position]="markerPosition"></map-marker>
-                }
-            </google-map>
+        @if (useGoogleMaps) {
+            @if (options) {
+                <google-map height="250px" id="map" [options]="options">
+                    @if (markerPosition) {
+                        <map-marker [position]="markerPosition"></map-marker>
+                    }
+                </google-map>
+            }
+        } @else {
+            <div #osmMap id="osm-map" style="height: 250px; width: 100%"></div>
         }
     </div>
 
