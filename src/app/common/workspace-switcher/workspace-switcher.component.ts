@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, DOCUMENT } from "@angular/common";
 import { Component, ElementRef, HostListener, inject, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -18,6 +18,7 @@ export class WorkspaceSwitcherComponent {
     workspaceStore = inject(WorkspaceStoreService);
     private workspaceController = inject(WorkspaceControllerService);
     private elementRef = inject(ElementRef);
+    private document = inject(DOCUMENT);
 
     @ViewChild("triggerBtn", { static: false }) triggerBtn!: ElementRef<HTMLButtonElement>;
 
@@ -60,8 +61,13 @@ export class WorkspaceSwitcherComponent {
     }
 
     selectWorkspace(workspace: Workspace): void {
+        if (workspace.id === this.workspaceStore.currentWorkspace?.id) {
+            this.close();
+            return;
+        }
         this.workspaceStore.setCurrentWorkspace(workspace);
         this.close();
+        this.document.location.href = this.document.location.pathname;
     }
 
     onScroll(event: Event): void {
@@ -96,6 +102,7 @@ export class WorkspaceSwitcherComponent {
             this.newWorkspaceSlug = "";
             this.showCreateForm = false;
             this.close();
+            this.document.location.href = this.document.location.pathname;
         } finally {
             this.isCreating = false;
         }
