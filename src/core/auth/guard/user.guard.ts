@@ -26,15 +26,18 @@ export const userGuard: CanActivateFn = async (route, state) => {
             return router.createUrlTree([`/${RoutePath.auth}/${RoutePath.login}`]);
         }
 
-        const me = await userStore
-            .getCurrent()
-            .then(() => true)
-            .catch(() => router.createUrlTree([`/${RoutePath.auth}/${RoutePath.login}`]));
+        // Load user and workspaces in parallel
+        const [userResult] = await Promise.all([
+            userStore
+                .getCurrent()
+                .then(() => true as const)
+                .catch(() => router.createUrlTree([`/${RoutePath.auth}/${RoutePath.login}`])),
+            workspaceStore.loadWorkspaces(),
+        ]);
 
-        if (me !== true) return me;
+        if (userResult !== true) return userResult;
 
-        // Load workspaces and restore the current workspace
-        await workspaceStore.loadWorkspaces();
+        // Restore the current workspace from localStorage
         if (!workspaceStore.currentWorkspace) {
             workspaceStore.restoreWorkspace();
         }

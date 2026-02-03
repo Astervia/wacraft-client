@@ -27,6 +27,13 @@ function loadGoogleMaps(apiKey: string) {
         }
     });
 }
+// Load the Google Maps API before bootstrapping the app (if API key is configured)
+async function checkGoogleMapsApiKeyAndLoad() {
+    const hasGoogleMapsApiKey =
+        !!environment.googleMapsApiKey && environment.googleMapsApiKey !== "undefined";
+    if (!hasGoogleMapsApiKey) return;
+    await loadGoogleMaps(environment.googleMapsApiKey!);
+}
 
 // Dark Mode Toggle
 const themeMode = getThemeMode(localStorage.getItem("themeMode"));
@@ -45,17 +52,5 @@ switch (themeMode) {
     }
 }
 
-// Load the Google Maps API before bootstrapping the app (if API key is configured)
-const hasGoogleMapsApiKey =
-    !!environment.googleMapsApiKey && environment.googleMapsApiKey !== "undefined";
-
-if (hasGoogleMapsApiKey) {
-    loadGoogleMaps(environment.googleMapsApiKey!)
-        .then(() => {
-            bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
-        })
-        .catch(err => console.error(err));
-} else {
-    // Bootstrap without Google Maps (OpenStreetMap will be used)
-    bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
-}
+checkGoogleMapsApiKeyAndLoad();
+bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
