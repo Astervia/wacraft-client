@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, DOCUMENT } from "@angular/common";
 import { Component, HostListener, Input, OnInit, inject } from "@angular/core";
 import { SmallButtonComponent } from "../small-button/small-button.component";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
@@ -7,6 +7,7 @@ import { Role } from "../../../core/user/model/role.model";
 import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
 import { UserStoreService } from "../../../core/user/store/user-store.service";
 import { WorkspaceStoreService } from "../../../core/workspace/store/workspace-store.service";
+import { WorkspaceContextService } from "../../../core/workspace/store/workspace-context.service";
 import { Policy } from "../../../core/workspace/model/policy.model";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { RoutePath } from "../../app.routes";
@@ -36,7 +37,9 @@ export class SidebarComponent implements OnInit {
     userController = inject(UserControllerService);
     userStore = inject(UserStoreService);
     workspaceStore = inject(WorkspaceStoreService);
+    private workspaceContext = inject(WorkspaceContextService);
     private router = inject(Router);
+    private document = inject(DOCUMENT);
 
     // Global variables that are used in HTML and we need to define here.
     environment = environment;
@@ -52,9 +55,17 @@ export class SidebarComponent implements OnInit {
     }
 
     watchQueryParams() {
-        // Watch for sidebar query param and update.
         this.route.queryParams.subscribe(async params => {
+            // Watch for sidebar query param and update.
             this.queryParamsService.sidebarOpen = params["sidebar_open"] !== "false";
+
+            // Watch for workspace.id query param and sync with local storage.
+            const urlWorkspaceId = params["workspace.id"];
+            const localWorkspaceId = this.workspaceContext.currentWorkspaceId;
+            if (urlWorkspaceId && urlWorkspaceId !== localWorkspaceId) {
+                this.workspaceContext.setWorkspaceId(urlWorkspaceId);
+                this.document.location.reload();
+            }
         });
     }
 

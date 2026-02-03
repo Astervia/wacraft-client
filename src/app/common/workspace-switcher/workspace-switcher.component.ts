@@ -1,11 +1,13 @@
-import { CommonModule, DOCUMENT } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { Component, ElementRef, HostListener, inject, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
+import { Router } from "@angular/router";
 import { WorkspaceStoreService } from "../../../core/workspace/store/workspace-store.service";
 import { WorkspaceControllerService } from "../../../core/workspace/controller/workspace-controller.service";
 import { Workspace } from "../../../core/workspace/entity/workspace.entity";
+import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
 
 @Component({
     selector: "app-workspace-switcher",
@@ -18,7 +20,8 @@ export class WorkspaceSwitcherComponent {
     workspaceStore = inject(WorkspaceStoreService);
     private workspaceController = inject(WorkspaceControllerService);
     private elementRef = inject(ElementRef);
-    private document = inject(DOCUMENT);
+    private router = inject(Router);
+    private queryParamsService = inject(QueryParamsService);
 
     @ViewChild("triggerBtn", { static: false }) triggerBtn!: ElementRef<HTMLButtonElement>;
 
@@ -65,9 +68,15 @@ export class WorkspaceSwitcherComponent {
             this.close();
             return;
         }
-        this.workspaceStore.setCurrentWorkspace(workspace);
         this.close();
-        this.document.location.href = this.document.location.pathname;
+        this.router.navigate([], {
+            queryParams: {
+                ...this.queryParamsService.globalQueryParams,
+                "workspace.id": workspace.id,
+            },
+            queryParamsHandling: "replace",
+            preserveFragment: true,
+        });
     }
 
     onScroll(event: Event): void {
@@ -97,12 +106,18 @@ export class WorkspaceSwitcherComponent {
                     this.newWorkspaceName.trim().toLowerCase().replace(/\s+/g, "-"),
             });
             await this.workspaceStore.loadWorkspaces();
-            this.workspaceStore.setCurrentWorkspace(workspace);
             this.newWorkspaceName = "";
             this.newWorkspaceSlug = "";
             this.showCreateForm = false;
             this.close();
-            this.document.location.href = this.document.location.pathname;
+            this.router.navigate([], {
+                queryParams: {
+                    ...this.queryParamsService.globalQueryParams,
+                    "workspace.id": workspace.id,
+                },
+                queryParamsHandling: "replace",
+                preserveFragment: true,
+            });
         } finally {
             this.isCreating = false;
         }
