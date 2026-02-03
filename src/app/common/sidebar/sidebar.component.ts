@@ -70,7 +70,13 @@ export class SidebarComponent implements OnInit {
     }
 
     get isCollapsed(): boolean {
-        return [RoutePath.account, RoutePath.automation].includes(this.activePage as RoutePath);
+        return [
+            RoutePath.account,
+            RoutePath.automation,
+            RoutePath.phoneConfigs,
+            RoutePath.workspaceMembers,
+            RoutePath.workspaceSettings,
+        ].includes(this.activePage as RoutePath);
     }
 
     get isEmailVerified(): boolean {
