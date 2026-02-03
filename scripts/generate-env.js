@@ -10,7 +10,9 @@ if (fs.existsSync(targetPath)) {
 
 // Template for the environment.ts file
 const envConfigFile = `
-export const environment = {
+import { EnvironmentConfig } from "./config.model";
+
+export const environment: EnvironmentConfig = {
     env: "${process.env.ENV || "production"}",
     isLite: ${process.env.IS_LITE != "false"},
 
@@ -18,7 +20,7 @@ export const environment = {
     mainServerSecurity: ${process.env.MAIN_SERVER_SECURITY == "true"},
     automationServerUrl: ${process.env.AUTOMATION_SERVER_URL ? `"${process.env.AUTOMATION_SERVER_URL}"` : "undefined"},
     automationServerSecurity: ${process.env.AUTOMATION_SERVER_SECURITY == "true"},
-    googleMapsApiKey: "${process.env.GOOGLE_MAPS_API_KEY}",
+    googleMapsApiKey: ${process.env.GOOGLE_MAPS_API_KEY ? `"${process.env.GOOGLE_MAPS_API_KEY}"` : "undefined"},
     appTitle: "${process.env.APP_TITLE || "wacraft"}",
 
     webSocketBasePingInterval: ${process.env.WEBSOCKET_BASE_PING_INTERVAL || 30000},
