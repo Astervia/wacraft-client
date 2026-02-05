@@ -39,4 +39,5 @@ export enum ServerEndpoints {
     accept_invitation = "accept-invitation",
     resend_verification = "resend-verification",
     auth = "auth",
+    test = "test",
 }

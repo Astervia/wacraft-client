@@ -1,83 +1,204 @@
 <div
-    class="scrollable mx-auto h-full overflow-y-auto bg-gray-50 p-6 dark:bg-gray-900"
     id="webhook-details"
+    class="mx-auto h-full w-full overflow-y-auto bg-gray-50 px-4 dark:bg-gray-900 sm:px-6"
 >
-    <!-- Webhook Settings Section -->
-    <div class="mb-8">
-        <div class="mb-4 flex items-center gap-3">
-            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Webhook Settings</h3>
-            @if (webhook) {
-                <span
-                    [ngClass]="{
-                        'rounded-full px-3 py-1 text-xs font-semibold uppercase': true,
-                        'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400':
-                            webhook.http_method === HttpMethod.GET,
-                        'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400':
-                            webhook.http_method === HttpMethod.POST,
-                        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400':
-                            webhook.http_method === HttpMethod.PUT,
-                        'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400':
-                            webhook.http_method === HttpMethod.DELETE,
-                        'bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-400':
-                            webhook.http_method === HttpMethod.PATCH,
-                        'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400':
-                            webhook.http_method === HttpMethod.OPTIONS,
-                    }"
-                    [textContent]="webhook.http_method"
-                ></span>
-                <code
-                    class="rounded bg-gray-200 px-2 py-1 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-400"
-                    [textContent]="webhook.event"
-                ></code>
-            }
-        </div>
+    <!-- Header / Context -->
+    <div
+        class="sticky top-0 z-10 -mx-4 mb-6 border-b border-gray-200 bg-gray-50/90 px-4 py-4 backdrop-blur dark:border-gray-800 dark:bg-gray-900/80 sm:-mx-6 sm:px-6"
+    >
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div class="min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                    <h3 class="truncate text-lg font-semibold text-gray-900 dark:text-gray-100">
+                        Webhook Settings
+                    </h3>
 
-        @if (webhook) {
-            <div
-                class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
-            >
+                    @if (webhook) {
+                        <!-- Method pill -->
+                        <span
+                            [ngClass]="{
+                                'inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold uppercase ring-1 ring-inset': true,
+                                'bg-green-50 text-green-700 ring-green-200 dark:bg-green-900/30 dark:text-green-300 dark:ring-green-800':
+                                    webhook.http_method === HttpMethod.GET,
+                                'bg-blue-50 text-blue-700 ring-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:ring-blue-800':
+                                    webhook.http_method === HttpMethod.POST,
+                                'bg-yellow-50 text-yellow-800 ring-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-200 dark:ring-yellow-800':
+                                    webhook.http_method === HttpMethod.PUT,
+                                'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900/30 dark:text-red-300 dark:ring-red-800':
+                                    webhook.http_method === HttpMethod.DELETE,
+                                'bg-orange-50 text-orange-700 ring-orange-200 dark:bg-orange-900/30 dark:text-orange-200 dark:ring-orange-800':
+                                    webhook.http_method === HttpMethod.PATCH,
+                                'bg-gray-100 text-gray-700 ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-700':
+                                    webhook.http_method === HttpMethod.OPTIONS,
+                            }"
+                            [textContent]="webhook.http_method"
+                        ></span>
+
+                        <!-- Event pill -->
+                        <span
+                            class="inline-flex items-center gap-2 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-700"
+                        >
+                            <span class="h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+                            <code class="font-mono" [textContent]="webhook.event"></code>
+                        </span>
+                    }
+                </div>
+
+                @if (webhookId) {
+                    <div
+                        class="mt-2 flex flex-wrap items-center gap-3 text-xs text-gray-600 dark:text-gray-400"
+                    >
+                        <div class="inline-flex items-center gap-2">
+                            <span class="font-medium text-gray-700 dark:text-gray-300">Active</span>
+                            <span
+                                class="inline-flex items-center rounded-full px-2 py-0.5 ring-1 ring-inset"
+                                [ngClass]="{
+                                    'bg-green-50 text-green-700 ring-green-200 dark:bg-green-900/30 dark:text-green-300 dark:ring-green-800':
+                                        webhook.is_active,
+                                    'bg-gray-100 text-gray-700 ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-700':
+                                        !webhook.is_active,
+                                }"
+                            >
+                                {{ webhook.is_active ? "On" : "Off" }}
+                            </span>
+                        </div>
+
+                        <div class="inline-flex items-center gap-2">
+                            <span class="font-medium text-gray-700 dark:text-gray-300"
+                                >Circuit</span
+                            >
+                            <span
+                                [ngClass]="{
+                                    'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset': true,
+                                    'bg-green-50 text-green-700 ring-green-200 dark:bg-green-900/30 dark:text-green-300 dark:ring-green-800':
+                                        webhook.circuit_state === 'closed',
+                                    'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900/30 dark:text-red-300 dark:ring-red-800':
+                                        webhook.circuit_state === 'open',
+                                    'bg-yellow-50 text-yellow-800 ring-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-200 dark:ring-yellow-800':
+                                        webhook.circuit_state === 'half_open',
+                                }"
+                            >
+                                {{ getCircuitStateLabel() }}
+                            </span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Inline actions (top) -->
+            <div class="flex items-center gap-2">
+                @if (!isEditing) {
+                    <button
+                        type="button"
+                        (click)="toggleEdit()"
+                        class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    >
+                        <mat-icon class="mr-1 text-base">edit</mat-icon>
+                        Edit
+                    </button>
+                }
+                @if (!isEditing && webhookId) {
+                    <button
+                        type="button"
+                        (click)="delete()"
+                        class="inline-flex items-center justify-center rounded-lg border border-red-300 bg-white px-3 py-2 text-sm font-medium text-red-600 shadow-sm transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500/40 dark:border-red-500/50 dark:bg-transparent dark:text-red-300 dark:hover:bg-red-900/20"
+                    >
+                        <mat-icon class="mr-1 text-base">delete</mat-icon>
+                        Delete
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (webhook) {
+        <!-- Main card -->
+        <div
+            class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900"
+        >
+            <div class="p-5 sm:p-6">
                 <div class="grid grid-cols-12 gap-5">
-                    <!-- URL Field with Copy Button -->
+                    <!-- Active toggle (more prominent) -->
+                    @if (webhookId) {
+                        <div class="col-span-12">
+                            <div
+                                class="flex flex-col gap-3 rounded-xl bg-gray-50 p-4 ring-1 ring-inset ring-gray-200 dark:bg-gray-800/40 dark:ring-gray-800 sm:flex-row sm:items-center sm:justify-between"
+                            >
+                                <div>
+                                    <h4
+                                        class="text-sm font-semibold text-gray-900 dark:text-gray-100"
+                                    >
+                                        Status
+                                    </h4>
+                                    <p class="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
+                                        Enable/disable delivery and monitor circuit breaker state.
+                                    </p>
+                                </div>
+
+                                <label class="inline-flex items-center gap-3">
+                                    <span
+                                        class="text-sm font-medium text-gray-800 dark:text-gray-200"
+                                        >Active</span
+                                    >
+                                    <input
+                                        type="checkbox"
+                                        [(ngModel)]="webhook.is_active"
+                                        [disabled]="!isEditing"
+                                        class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/40 disabled:cursor-not-allowed dark:border-gray-700 dark:bg-gray-800"
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- URL -->
                     <div class="col-span-12 lg:col-span-8">
                         <label
-                            class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                            class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200"
                             for="webhook-url"
-                            >URL</label
                         >
-                        <div class="group relative">
+                            URL
+                        </label>
+
+                        <div class="relative">
                             <input
                                 type="url"
                                 id="webhook-url"
                                 [(ngModel)]="webhook.url"
                                 [disabled]="!isEditing"
                                 placeholder="https://example.com/webhook"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 pr-12 font-mono text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-800"
+                                class="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 py-3 pr-12 font-mono text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-900"
                             />
                             <button
                                 type="button"
-                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-gray-400 opacity-0 transition-all hover:bg-gray-100 hover:text-gray-600 group-hover:opacity-100 dark:hover:bg-gray-600 dark:hover:text-gray-200"
                                 (click)="copyToClipboard(webhook.url)"
                                 matTooltip="Copy URL"
+                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/30 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                             >
                                 <mat-icon class="material-icons-outlined text-lg"
                                     >content_copy</mat-icon
                                 >
                             </button>
                         </div>
+
+                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                            This endpoint will receive event payloads from the platform.
+                        </p>
                     </div>
 
-                    <!-- Event Select Field -->
+                    <!-- Event -->
                     <div class="col-span-6 lg:col-span-2">
                         <label
-                            class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                            class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200"
                             for="webhook-event"
-                            >Event</label
                         >
+                            Event
+                        </label>
                         <select
                             id="webhook-event"
-                            class="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-800"
                             [disabled]="!isEditing"
                             [(ngModel)]="webhook.event"
+                            class="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 py-3 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-900"
                         >
                             <option [value]="Event.ReceiveWhatsAppMessage">
                                 {{ Event.ReceiveWhatsAppMessage }}
@@ -88,30 +209,31 @@
                         </select>
                     </div>
 
-                    <!-- Method Field -->
+                    <!-- Method -->
                     <div class="col-span-6 lg:col-span-2">
                         <label
-                            class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                            class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200"
                             for="webhook-method"
-                            >Method</label
                         >
+                            Method
+                        </label>
                         <select
                             id="webhook-method"
-                            class="w-full rounded-lg border-2 bg-gray-50 p-3 text-sm font-semibold outline-none transition-colors focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:bg-gray-700 dark:disabled:bg-gray-800"
                             [(ngModel)]="webhook.http_method"
                             [disabled]="!isEditing"
+                            class="w-full rounded-xl border-2 bg-gray-50 px-3 py-3 text-sm font-semibold outline-none transition focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:bg-gray-800 dark:disabled:bg-gray-900"
                             [ngClass]="{
-                                'border-green-500 text-green-600 dark:border-green-400 dark:text-green-400':
+                                'border-green-500 text-green-600 dark:border-green-400 dark:text-green-300':
                                     webhook.http_method === HttpMethod.GET,
-                                'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400':
+                                'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-300':
                                     webhook.http_method === HttpMethod.POST,
-                                'border-yellow-500 text-yellow-600 dark:border-yellow-400 dark:text-yellow-400':
+                                'border-yellow-500 text-yellow-700 dark:border-yellow-400 dark:text-yellow-200':
                                     webhook.http_method === HttpMethod.PUT,
-                                'border-orange-500 text-orange-600 dark:border-orange-400 dark:text-orange-400':
+                                'border-orange-500 text-orange-600 dark:border-orange-400 dark:text-orange-200':
                                     webhook.http_method === HttpMethod.PATCH,
-                                'border-red-500 text-red-600 dark:border-red-400 dark:text-red-400':
+                                'border-red-500 text-red-600 dark:border-red-400 dark:text-red-300':
                                     webhook.http_method === HttpMethod.DELETE,
-                                'border-gray-400 text-gray-600 dark:border-gray-500 dark:text-gray-400':
+                                'border-gray-400 text-gray-700 dark:border-gray-600 dark:text-gray-300':
                                     webhook.http_method === HttpMethod.OPTIONS,
                             }"
                         >
@@ -124,98 +246,676 @@
                         </select>
                     </div>
 
-                    <!-- Authorization Field with Copy Button -->
-                    <div class="col-span-12 lg:col-span-10">
+                    <!-- Auth -->
+                    <div class="col-span-12 lg:col-span-9">
                         <label
-                            class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                            class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200"
                             for="webhook-authorization"
-                            >Authorization Header</label
                         >
-                        <div class="group relative">
+                            Authorization Header
+                        </label>
+                        <div class="relative">
                             <input
                                 id="webhook-authorization"
                                 [(ngModel)]="webhook.authorization"
                                 [disabled]="!isEditing"
                                 placeholder="Bearer token..."
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 pr-12 font-mono text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-800"
+                                class="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 py-3 pr-12 font-mono text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-900"
                             />
                             <button
                                 type="button"
-                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-gray-400 opacity-0 transition-all hover:bg-gray-100 hover:text-gray-600 group-hover:opacity-100 dark:hover:bg-gray-600 dark:hover:text-gray-200"
                                 (click)="copyToClipboard(webhook.authorization)"
                                 matTooltip="Copy authorization"
+                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/30 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                             >
                                 <mat-icon class="material-icons-outlined text-lg"
                                     >content_copy</mat-icon
                                 >
                             </button>
                         </div>
+                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                            Optional. Include if your endpoint requires authentication.
+                        </p>
                     </div>
 
-                    <!-- Timeout Field -->
-                    <div class="col-span-12 lg:col-span-2">
+                    <!-- Timeout -->
+                    <div class="col-span-12 lg:col-span-3">
                         <label
-                            class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                            class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200"
                             for="webhook-timeout"
-                            >Timeout (seconds)</label
                         >
-                        <input
-                            id="webhook-timeout"
-                            [(ngModel)]="webhook.timeout"
-                            [disabled]="!isEditing"
-                            type="number"
-                            min="1"
-                            max="60"
-                            class="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-800"
-                        />
+                            Timeout
+                        </label>
+                        <div class="relative">
+                            <input
+                                id="webhook-timeout"
+                                [(ngModel)]="webhook.timeout"
+                                [disabled]="!isEditing"
+                                type="number"
+                                min="1"
+                                max="60"
+                                class="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 py-3 pr-12 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-900"
+                            />
+                            <span
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500 dark:text-gray-400"
+                                >sec</span
+                            >
+                        </div>
                     </div>
 
-                    <!-- Action Buttons -->
+                    <!-- Divider -->
                     <div
-                        class="col-span-12 flex gap-3 border-t border-gray-200 pt-5 dark:border-gray-700"
+                        class="col-span-12 my-1 border-t border-gray-200 dark:border-gray-800"
+                    ></div>
+
+                    <!-- Security accordion -->
+                    <div class="col-span-12">
+                        <button
+                            type="button"
+                            (click)="toggleSecuritySection()"
+                            class="flex w-full items-center justify-between rounded-xl bg-gray-50 px-4 py-3 text-left ring-1 ring-inset ring-gray-200 transition hover:bg-gray-100 dark:bg-gray-800/40 dark:ring-gray-800 dark:hover:bg-gray-800/70"
+                        >
+                            <div>
+                                <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                    Security
+                                </h4>
+                                <p class="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
+                                    Request signing & secret handling.
+                                </p>
+                            </div>
+                            <mat-icon
+                                class="text-gray-500 transition-transform dark:text-gray-400"
+                                [ngClass]="{ 'rotate-180': showSecuritySection }"
+                            >
+                                expand_more
+                            </mat-icon>
+                        </button>
+
+                        @if (showSecuritySection) {
+                            <div
+                                class="mt-3 space-y-3 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900"
+                            >
+                                <label class="flex items-start gap-3">
+                                    <input
+                                        type="checkbox"
+                                        [(ngModel)]="webhook.signing_enabled"
+                                        [disabled]="!isEditing || webhookId !== undefined"
+                                        class="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/40 disabled:cursor-not-allowed dark:border-gray-700 dark:bg-gray-800"
+                                    />
+                                    <span>
+                                        <span
+                                            class="block text-sm font-medium text-gray-900 dark:text-gray-100"
+                                            >Enable request signing</span
+                                        >
+                                        <span class="block text-xs text-gray-600 dark:text-gray-400"
+                                            >Adds a signature header so your server can verify
+                                            authenticity.</span
+                                        >
+                                    </span>
+                                </label>
+
+                                @if (webhookId && webhook.signing_enabled && !signingSecret) {
+                                    <div
+                                        class="rounded-xl bg-blue-50 p-3 text-xs text-blue-800 ring-1 ring-inset ring-blue-200 dark:bg-blue-900/20 dark:text-blue-200 dark:ring-blue-900/40"
+                                    >
+                                        Request signing is enabled. The signing secret was provided
+                                        when this webhook was created.
+                                    </div>
+                                }
+
+                                @if (signingSecret) {
+                                    <div
+                                        class="rounded-xl bg-yellow-50 p-3 ring-1 ring-inset ring-yellow-200 dark:bg-yellow-900/20 dark:ring-yellow-900/40"
+                                    >
+                                        <p
+                                            class="mb-2 text-xs font-semibold text-yellow-900 dark:text-yellow-200"
+                                        >
+                                            Signing Secret (save this now — it won’t be shown again)
+                                        </p>
+                                        <div class="relative">
+                                            <code
+                                                class="block w-full break-all rounded-lg bg-yellow-100 p-3 font-mono text-xs text-yellow-900 dark:bg-yellow-900/40 dark:text-yellow-100"
+                                            >
+                                                {{ signingSecret }}
+                                            </code>
+                                            <button
+                                                type="button"
+                                                (click)="copyToClipboard(signingSecret)"
+                                                matTooltip="Copy signing secret"
+                                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-yellow-700 transition hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500/30 dark:text-yellow-200 dark:hover:bg-yellow-800/60"
+                                            >
+                                                <mat-icon class="material-icons-outlined text-lg"
+                                                    >content_copy</mat-icon
+                                                >
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Reliability -->
+                    <div class="col-span-12">
+                        <div
+                            class="rounded-xl bg-gray-50 p-4 ring-1 ring-inset ring-gray-200 dark:bg-gray-800/40 dark:ring-gray-800"
+                        >
+                            <div class="mb-3">
+                                <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                    Reliability
+                                </h4>
+                                <p class="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
+                                    Retry strategy for failed deliveries.
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-12 gap-3">
+                                <div class="col-span-12 sm:col-span-6">
+                                    <label
+                                        class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200"
+                                        for="max-retries"
+                                    >
+                                        Max Retries
+                                    </label>
+                                    <input
+                                        id="max-retries"
+                                        type="number"
+                                        [(ngModel)]="webhook.max_retries"
+                                        [disabled]="!isEditing"
+                                        min="0"
+                                        max="10"
+                                        class="w-full rounded-xl border border-gray-300 bg-white px-3 py-3 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:disabled:bg-gray-900"
+                                    />
+                                </div>
+
+                                <div class="col-span-12 sm:col-span-6">
+                                    <label
+                                        class="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200"
+                                        for="retry-delay"
+                                    >
+                                        Retry Delay (ms)
+                                    </label>
+                                    <input
+                                        id="retry-delay"
+                                        type="number"
+                                        [(ngModel)]="webhook.retry_delay_ms"
+                                        [disabled]="!isEditing"
+                                        min="100"
+                                        max="60000"
+                                        step="100"
+                                        class="w-full rounded-xl border border-gray-300 bg-white px-3 py-3 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:disabled:bg-gray-900"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Headers accordion (same logic, nicer layout) -->
+                    <div class="col-span-12">
+                        <div class="flex items-center justify-between gap-3">
+                            <button
+                                type="button"
+                                (click)="toggleCustomHeaders()"
+                                class="flex flex-1 items-center justify-between rounded-xl bg-gray-50 px-4 py-3 text-left ring-1 ring-inset ring-gray-200 transition hover:bg-gray-100 dark:bg-gray-800/40 dark:ring-gray-800 dark:hover:bg-gray-800/70"
+                            >
+                                <div>
+                                    <h4
+                                        class="text-sm font-semibold text-gray-900 dark:text-gray-100"
+                                    >
+                                        Custom Headers
+                                    </h4>
+                                    <p class="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
+                                        Add extra headers to each request.
+                                    </p>
+                                </div>
+                                <mat-icon
+                                    class="text-gray-500 transition-transform dark:text-gray-400"
+                                    [ngClass]="{ 'rotate-180': showCustomHeaders }"
+                                >
+                                    expand_more
+                                </mat-icon>
+                            </button>
+
+                            @if (isEditing && showCustomHeaders) {
+                                <button
+                                    type="button"
+                                    (click)="addCustomHeader()"
+                                    class="inline-flex shrink-0 items-center gap-1 rounded-xl bg-blue-600 px-3 py-3 text-xs font-medium text-white shadow-sm transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                >
+                                    <mat-icon class="text-base">add</mat-icon>
+                                    Add
+                                </button>
+                            }
+                        </div>
+
+                        @if (showCustomHeaders) {
+                            <div
+                                class="mt-3 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900"
+                            >
+                                @if (customHeaders.length > 0) {
+                                    <div class="space-y-2">
+                                        @for (header of customHeaders; track $index) {
+                                            <div class="grid grid-cols-12 gap-2">
+                                                <input
+                                                    type="text"
+                                                    [(ngModel)]="header.key"
+                                                    [disabled]="!isEditing"
+                                                    placeholder="Header name"
+                                                    class="col-span-12 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:col-span-5"
+                                                />
+                                                <input
+                                                    type="text"
+                                                    [(ngModel)]="header.value"
+                                                    [disabled]="!isEditing"
+                                                    placeholder="Header value"
+                                                    class="col-span-12 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:col-span-6"
+                                                />
+                                                @if (isEditing) {
+                                                    <button
+                                                        type="button"
+                                                        (click)="removeCustomHeader($index)"
+                                                        class="col-span-12 rounded-xl bg-red-600 px-3 py-2.5 text-xs font-medium text-white transition hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 md:col-span-1"
+                                                    >
+                                                        <mat-icon class="text-base">close</mat-icon>
+                                                    </button>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                } @else {
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        No custom headers configured
+                                    </p>
+                                }
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Event Filter accordion (same logic, nicer layout) -->
+                    <div class="col-span-12">
+                        <div class="flex items-center justify-between gap-3">
+                            <button
+                                type="button"
+                                (click)="toggleEventFilter()"
+                                class="flex flex-1 items-center justify-between rounded-xl bg-gray-50 px-4 py-3 text-left ring-1 ring-inset ring-gray-200 transition hover:bg-gray-100 dark:bg-gray-800/40 dark:ring-gray-800 dark:hover:bg-gray-800/70"
+                            >
+                                <div>
+                                    <h4
+                                        class="text-sm font-semibold text-gray-900 dark:text-gray-100"
+                                    >
+                                        Event Filter
+                                    </h4>
+                                    <p class="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
+                                        Route only matching payloads.
+                                    </p>
+                                </div>
+                                <mat-icon
+                                    class="text-gray-500 transition-transform dark:text-gray-400"
+                                    [ngClass]="{ 'rotate-180': showEventFilter }"
+                                >
+                                    expand_more
+                                </mat-icon>
+                            </button>
+
+                            @if (isEditing && showEventFilter) {
+                                <button
+                                    type="button"
+                                    (click)="addFilterCondition()"
+                                    class="inline-flex shrink-0 items-center gap-1 rounded-xl bg-blue-600 px-3 py-3 text-xs font-medium text-white shadow-sm transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                >
+                                    <mat-icon class="text-base">add</mat-icon>
+                                    Add
+                                </button>
+                            }
+                        </div>
+
+                        @if (showEventFilter) {
+                            <div
+                                class="mt-3 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900"
+                            >
+                                @if (
+                                    webhook.event_filter &&
+                                    webhook.event_filter.conditions.length > 0
+                                ) {
+                                    <div class="space-y-3">
+                                        <div class="flex items-center gap-3">
+                                            <label
+                                                for="event-filter-logic"
+                                                class="text-xs font-medium text-gray-700 dark:text-gray-300"
+                                                >Logic</label
+                                            >
+                                            <select
+                                                id="event-filter-logic"
+                                                [(ngModel)]="webhook.event_filter.logic"
+                                                [disabled]="!isEditing"
+                                                class="w-28 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900"
+                                            >
+                                                <option value="AND">AND</option>
+                                                <option value="OR">OR</option>
+                                            </select>
+                                        </div>
+
+                                        @for (
+                                            condition of webhook.event_filter.conditions;
+                                            track $index
+                                        ) {
+                                            <div class="grid grid-cols-12 gap-2">
+                                                <input
+                                                    type="text"
+                                                    [(ngModel)]="condition.path"
+                                                    [disabled]="!isEditing"
+                                                    placeholder="Path (e.g., message.type)"
+                                                    class="col-span-12 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:col-span-4"
+                                                />
+                                                <select
+                                                    [(ngModel)]="condition.operator"
+                                                    [disabled]="!isEditing"
+                                                    class="col-span-12 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:col-span-3"
+                                                >
+                                                    <option value="equals">equals</option>
+                                                    <option value="contains">contains</option>
+                                                    <option value="regex">regex</option>
+                                                    <option value="exists">exists</option>
+                                                </select>
+
+                                                @if (condition.operator !== "exists") {
+                                                    <input
+                                                        type="text"
+                                                        [(ngModel)]="condition.value"
+                                                        [disabled]="!isEditing"
+                                                        placeholder="Value"
+                                                        class="col-span-12 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:col-span-4"
+                                                    />
+                                                } @else {
+                                                    <div
+                                                        class="col-span-12 rounded-xl bg-gray-50 px-3 py-2.5 text-xs text-gray-500 ring-1 ring-inset ring-gray-200 dark:bg-gray-800/50 dark:text-gray-400 dark:ring-gray-800 md:col-span-4"
+                                                    >
+                                                        No value needed
+                                                    </div>
+                                                }
+
+                                                @if (isEditing) {
+                                                    <button
+                                                        type="button"
+                                                        (click)="removeFilterCondition($index)"
+                                                        class="col-span-12 rounded-xl bg-red-600 px-3 py-2.5 text-xs font-medium text-white transition hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 md:col-span-1"
+                                                    >
+                                                        <mat-icon class="text-base">close</mat-icon>
+                                                    </button>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                } @else {
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        No event filters configured
+                                    </p>
+                                }
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Test -->
+                    @if (webhookId) {
+                        <div class="col-span-12">
+                            <div
+                                class="rounded-xl bg-gray-50 p-4 ring-1 ring-inset ring-gray-200 dark:bg-gray-800/40 dark:ring-gray-800"
+                            >
+                                <div class="mb-3">
+                                    <h4
+                                        class="text-sm font-semibold text-gray-900 dark:text-gray-100"
+                                    >
+                                        Test Webhook
+                                    </h4>
+                                    <p class="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
+                                        Send a sample payload and inspect the response.
+                                    </p>
+                                </div>
+
+                                <label
+                                    for="webhook-test-payload"
+                                    class="mb-2 block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                    >Test Payload (JSON)</label
+                                >
+                                <textarea
+                                    id="webhook-test-payload"
+                                    [(ngModel)]="testPayload"
+                                    rows="4"
+                                    placeholder='{"key":"value"}'
+                                    class="w-full rounded-xl border border-gray-300 bg-white p-3 font-mono text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                                ></textarea>
+
+                                <div class="mt-3 flex items-center gap-3">
+                                    <button
+                                        type="button"
+                                        (click)="testWebhook()"
+                                        [disabled]="isTesting"
+                                        class="inline-flex items-center rounded-xl bg-purple-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-purple-500 dark:hover:bg-purple-600"
+                                    >
+                                        <mat-icon class="mr-2 text-base">bolt</mat-icon>
+                                        {{ isTesting ? "Testing..." : "Test Webhook" }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Sticky action bar -->
+            <div
+                class="sticky bottom-0 z-10 border-t border-gray-200 bg-white/90 px-5 py-4 backdrop-blur dark:border-gray-800 dark:bg-gray-900/80 sm:px-6"
+            >
+                <div class="flex flex-col gap-2 sm:flex-row sm:justify-end">
+                    @if (isEditing) {
+                        <button
+                            type="button"
+                            (click)="cancelEdit()"
+                            class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500/30 dark:border-gray-700 dark:bg-transparent dark:text-gray-200 dark:hover:bg-gray-800"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            (click)="saveChanges()"
+                            class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:bg-blue-500 dark:hover:bg-blue-600"
+                        >
+                            <mat-icon class="mr-2 text-base">save</mat-icon>
+                            Save changes
+                        </button>
+                    } @else {
+                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                            Tip: click <span class="font-semibold">Edit</span> to change settings.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Logs -->
+    <div class="mt-6">
+        <div class="mb-3 flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Logs</h3>
+        </div>
+        <div
+            class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900"
+        >
+            <div class="p-4 sm:p-5">
+                <app-webhook-logs class="block" #webhookLogs></app-webhook-logs>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Result Modal -->
+@if (showTestModal && testResult) {
+    <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        (click)="closeTestModal()"
+        (keydown.enter)="closeTestModal()"
+        (keydown.space)="closeTestModal()"
+        tabindex="0"
+        role="button"
+        aria-label="Close test result modal"
+    >
+        <div
+            class="scrollable max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5 dark:bg-gray-900 dark:ring-white/10"
+            (click)="$event.stopPropagation()"
+            (keydown)="$event.stopPropagation()"
+            tabindex="0"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="webhook-test-result-title"
+        >
+            <div class="mb-5 flex items-start justify-between gap-4">
+                <div>
+                    <h3
+                        id="webhook-test-result-title"
+                        class="text-lg font-semibold text-gray-900 dark:text-gray-100"
                     >
-                        @if (!isEditing) {
-                            <button
-                                (click)="toggleEdit()"
-                                class="flex-1 rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:bg-blue-500 dark:hover:bg-blue-600"
-                            >
-                                Edit
-                            </button>
-                        }
-                        @if (!isEditing && webhookId) {
-                            <button
-                                (click)="delete()"
-                                class="flex-1 rounded-lg border border-red-300 bg-white px-4 py-2.5 font-medium text-red-600 transition-colors hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500/50 dark:border-red-500/50 dark:bg-transparent dark:text-red-400 dark:hover:bg-red-900/20"
-                            >
-                                Delete
-                            </button>
-                        }
-                        @if (isEditing) {
-                            <button
-                                (click)="cancelEdit()"
-                                class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500/50 dark:border-gray-600 dark:bg-transparent dark:text-gray-300 dark:hover:bg-gray-700"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                (click)="saveChanges()"
-                                class="flex-1 rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:bg-blue-500 dark:hover:bg-blue-600"
-                            >
-                                Save
-                            </button>
+                        Webhook Test Result
+                    </h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        Live response summary for this webhook.
+                    </p>
+                </div>
+                <button
+                    type="button"
+                    (click)="closeTestModal()"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                    aria-label="Close test result modal"
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+
+            <div
+                [ngClass]="{
+                    'rounded-2xl px-4 py-4 shadow-sm ring-1': true,
+                    'bg-green-50 ring-green-200/70 dark:bg-green-900/20 dark:ring-green-500/30':
+                        testResult.success,
+                    'bg-red-50 ring-red-200/70 dark:bg-red-900/20 dark:ring-red-500/30':
+                        !testResult.success,
+                }"
+            >
+                <div class="flex flex-wrap items-center gap-3">
+                    <span
+                        [ngClass]="{
+                            'inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium': true,
+                            'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300':
+                                testResult.success,
+                            'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300':
+                                !testResult.success,
+                        }"
+                    >
+                        <mat-icon class="text-base">{{
+                            testResult.success ? "check_circle" : "error"
+                        }}</mat-icon>
+                        {{ testResult.success ? "Success" : "Failed" }}
+                    </span>
+                    <div class="text-sm text-gray-600 dark:text-gray-300">
+                        Status code
+                        <span class="font-semibold">{{ testResult.status_code }}</span> ·
+                        <span class="font-semibold">{{ testResult.duration_ms }}ms</span> response
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 grid gap-4 sm:grid-cols-3">
+                <div
+                    class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900"
+                >
+                    <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        Status Code
+                    </p>
+                    <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                        {{ testResult.status_code }}
+                    </p>
+                </div>
+                <div
+                    class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900"
+                >
+                    <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        Duration
+                    </p>
+                    <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                        {{ testResult.duration_ms }}ms
+                    </p>
+                </div>
+                <div
+                    class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900"
+                >
+                    <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        Headers Sent
+                    </p>
+                    <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                        {{ (testResult.headers_sent | keyvalue).length }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-5 space-y-4">
+                @if (testResult.error) {
+                    <div
+                        class="rounded-2xl border border-red-200 bg-red-50 p-4 shadow-sm dark:border-red-900/40 dark:bg-red-900/20"
+                    >
+                        <div
+                            class="mb-2 flex items-center gap-2 text-sm font-semibold text-red-700 dark:text-red-300"
+                        >
+                            <mat-icon class="text-base">report_problem</mat-icon>
+                            Error details
+                        </div>
+                        <p class="text-sm text-red-700 dark:text-red-200">
+                            {{ testResult.error }}
+                        </p>
+                    </div>
+                }
+
+                @if (testResult.response || testResult.response_body) {
+                    <div
+                        class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900"
+                    >
+                        <div class="mb-2 flex items-center justify-between">
+                            <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                                Response Body
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">JSON</span>
+                        </div>
+                        <div
+                            class="max-h-72 overflow-auto rounded-xl bg-gray-50 p-3 dark:bg-gray-800"
+                        >
+                            <app-json-viewer
+                                [json]="getTestResponsePayload()"
+                                [initialDepth]="2"
+                            ></app-json-viewer>
+                        </div>
+                    </div>
+                }
+
+                <div
+                    class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900"
+                >
+                    <div class="mb-2 text-sm font-semibold text-gray-800 dark:text-gray-200">
+                        Headers Sent
+                    </div>
+                    <div class="max-h-40 overflow-auto rounded-xl bg-gray-50 p-3 dark:bg-gray-800">
+                        @for (header of testResult.headers_sent | keyvalue; track header.key) {
+                            <div class="mb-1 flex flex-wrap gap-1 text-xs">
+                                <span class="font-semibold text-gray-700 dark:text-gray-200">
+                                    {{ header.key }}:
+                                </span>
+                                <span class="text-gray-600 dark:text-gray-400">
+                                    {{ header.value }}
+                                </span>
+                            </div>
                         }
                     </div>
                 </div>
             </div>
-        }
+        </div>
     </div>
-
-    <!-- Logs Section -->
-    <div>
-        <h3 class="mb-4 text-xl font-semibold text-gray-800 dark:text-gray-100">Logs</h3>
-        <app-webhook-logs class="block" #webhookLogs></app-webhook-logs>
-    </div>
-</div>
+}
 
 <app-timeout-error-modal
     [message]="errorStr"

@@ -16,10 +16,43 @@
                 class="truncate text-sm font-medium text-gray-900 dark:text-gray-100"
                 [textContent]="webhook.url"
             ></span>
-            <span
-                class="shrink-0 text-xs text-gray-500 dark:text-gray-400"
-                [textContent]="webhook.created_at | date: 'short'"
-            ></span>
+            <div class="flex shrink-0 items-center gap-2">
+                <!-- Active/Inactive Badge -->
+                <span
+                    [ngClass]="{
+                        'rounded-full px-2 py-0.5 text-xs font-medium': true,
+                        'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400':
+                            webhook.is_active,
+                        'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400':
+                            !webhook.is_active,
+                    }"
+                >
+                    {{ webhook.is_active ? "Active" : "Inactive" }}
+                </span>
+                <!-- Circuit State Badge -->
+                <span
+                    [ngClass]="{
+                        'rounded-full px-2 py-0.5 text-xs font-medium': true,
+                        'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400':
+                            webhook.circuit_state === 'closed',
+                        'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400':
+                            webhook.circuit_state === 'open',
+                        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400':
+                            webhook.circuit_state === 'half_open',
+                    }"
+                    [title]="
+                        webhook.circuit_state === 'open' ? 'Failures: ' + webhook.failure_count : ''
+                    "
+                >
+                    {{
+                        webhook.circuit_state === "closed"
+                            ? "●"
+                            : webhook.circuit_state === "open"
+                              ? "✕"
+                              : "◐"
+                    }}
+                </span>
+            </div>
         </div>
         <div class="flex w-full items-center justify-between gap-3">
             <span
