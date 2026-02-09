@@ -1,7 +1,8 @@
 @if (environment.automationServerUrl) {
     <iframe
         [src]="
-            (environment.automationServerUrl | urlWithHttp: !!environment.automationServerSecurity) +
+            (environment.automationServerUrl
+                | urlWithHttp: !!environment.automationServerSecurity) +
                 '?access_token=' +
                 accessToken | safeUrl
         "
