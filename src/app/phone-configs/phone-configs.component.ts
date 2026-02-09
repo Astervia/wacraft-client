@@ -1,18 +1,17 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { Router } from "@angular/router";
 import { SidebarLayoutComponent } from "../common/sidebar-layout/sidebar-layout.component";
 import { RoutePath } from "../app.routes";
 import { PhoneConfigStoreService } from "../../core/phone-config/store/phone-config-store.service";
 import { PhoneConfigControllerService } from "../../core/phone-config/controller/phone-config-controller.service";
 import { WorkspaceStoreService } from "../../core/workspace/store/workspace-store.service";
 import { PhoneConfig } from "../../core/phone-config/entity/phone-config.entity";
-import { PhoneConfigFormComponent } from "./phone-config-form/phone-config-form.component";
-import { CreatePhoneConfig, UpdatePhoneConfig } from "../../core/phone-config/model/create.model";
 import { environment } from "../../environments/environment";
 
 @Component({
     selector: "app-phone-configs",
-    imports: [CommonModule, SidebarLayoutComponent, PhoneConfigFormComponent],
+    imports: [CommonModule, SidebarLayoutComponent],
     templateUrl: "./phone-configs.component.html",
     standalone: true,
 })
@@ -20,11 +19,9 @@ export class PhoneConfigsComponent implements OnInit {
     phoneConfigStore = inject(PhoneConfigStoreService);
     private phoneConfigController = inject(PhoneConfigControllerService);
     workspaceStore = inject(WorkspaceStoreService);
+    private router = inject(Router);
 
     RoutePath = RoutePath;
-
-    showForm = false;
-    editingConfig: PhoneConfig | null = null;
     errorMessage = "";
 
     private scrolling = false;
@@ -58,42 +55,19 @@ export class PhoneConfigsComponent implements OnInit {
         }
     }
 
-    openCreateForm(): void {
-        this.editingConfig = null;
-        this.showForm = true;
+    navigateToDetail(config: PhoneConfig): void {
+        this.router.navigate(["/" + RoutePath.phoneConfigs, config.id]);
     }
 
-    openEditForm(config: PhoneConfig): void {
-        this.editingConfig = config;
-        this.showForm = true;
-    }
-
-    closeForm(): void {
-        this.showForm = false;
-        this.editingConfig = null;
-    }
-
-    async onSave(data: CreatePhoneConfig | UpdatePhoneConfig): Promise<void> {
-        const ws = this.workspaceStore.currentWorkspace;
-        if (!ws) return;
-        this.errorMessage = "";
-        try {
-            if (this.editingConfig) {
-                await this.phoneConfigController.update(ws.id, this.editingConfig.id, data);
-            } else {
-                await this.phoneConfigController.create(ws.id, data as CreatePhoneConfig);
-            }
-            this.closeForm();
-            await this.phoneConfigStore.load();
-        } catch {
-            this.errorMessage = "Failed to save phone config.";
-        }
+    navigateToCreate(): void {
+        this.router.navigate(["/" + RoutePath.phoneConfigNew]);
     }
 
     copiedField: { configId: string; field: string } | null = null;
     expandedWebhook = new Set<string>();
 
-    toggleWebhookInfo(configId: string): void {
+    toggleWebhookInfo(event: Event, configId: string): void {
+        event.stopPropagation();
         if (this.expandedWebhook.has(configId)) {
             this.expandedWebhook.delete(configId);
         } else {
@@ -106,7 +80,13 @@ export class PhoneConfigsComponent implements OnInit {
         return `${protocol}://${environment.mainServerUrl}/webhook-in/${config.waba_id}`;
     }
 
-    async copyToClipboard(value: string, configId: string, field: string): Promise<void> {
+    async copyToClipboard(
+        event: Event,
+        value: string,
+        configId: string,
+        field: string,
+    ): Promise<void> {
+        event.stopPropagation();
         await navigator.clipboard.writeText(value);
         this.copiedField = { configId, field };
         setTimeout(() => {
@@ -116,7 +96,8 @@ export class PhoneConfigsComponent implements OnInit {
         }, 2000);
     }
 
-    async deleteConfig(config: PhoneConfig): Promise<void> {
+    async deleteConfig(event: Event, config: PhoneConfig): Promise<void> {
+        event.stopPropagation();
         const ws = this.workspaceStore.currentWorkspace;
         if (!ws) return;
         if (!confirm(`Delete phone config "${config.name}"?`)) return;

@@ -12,6 +12,7 @@ import { AutomationComponent } from "./automation/automation.component";
 import { WorkspaceSettingsComponent } from "./workspace-settings/workspace-settings.component";
 import { WorkspaceMembersComponent } from "./workspace-members/workspace-members.component";
 import { PhoneConfigsComponent } from "./phone-configs/phone-configs.component";
+import { PhoneConfigDetailComponent } from "./phone-configs/phone-config-detail/phone-config-detail.component";
 import { RegisterComponent } from "./register/register.component";
 import { VerifyEmailComponent } from "./verify-email/verify-email.component";
 import { ForgotPasswordComponent } from "./forgot-password/forgot-password.component";
@@ -33,6 +34,8 @@ export enum RoutePath {
     workspaceSettings = "workspace-settings",
     workspaceMembers = "workspace-members",
     phoneConfigs = "phone-configs",
+    phoneConfigNew = "phone-configs/new",
+    phoneConfigDetail = "phone-configs/:id",
     register = "register",
     verifyEmail = "verify-email",
     forgotPassword = "forgot-password",
@@ -111,6 +114,16 @@ export const routes: Routes = [
     {
         path: RoutePath.workspaceMembers,
         component: WorkspaceMembersComponent,
+        canActivate: [emailVerifiedGuard],
+    },
+    {
+        path: RoutePath.phoneConfigNew,
+        component: PhoneConfigDetailComponent,
+        canActivate: [emailVerifiedGuard],
+    },
+    {
+        path: RoutePath.phoneConfigDetail,
+        component: PhoneConfigDetailComponent,
         canActivate: [emailVerifiedGuard],
     },
     {

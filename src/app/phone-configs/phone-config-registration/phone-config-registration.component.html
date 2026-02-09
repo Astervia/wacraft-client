@@ -1,0 +1,500 @@
+<div class="mt-6 rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+    <!-- Toggle Header -->
+    <button
+        class="flex w-full items-center gap-3 px-6 py-4 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50"
+        (click)="toggle()"
+    >
+        <svg
+            class="h-4 w-4 text-slate-400 transition-transform"
+            [class.rotate-90]="expanded"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+            />
+        </svg>
+        <div
+            class="flex h-8 w-8 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/30"
+        >
+            <svg
+                class="h-4 w-4 text-green-600 dark:text-green-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
+            </svg>
+        </div>
+        <span class="text-sm font-semibold text-slate-900 dark:text-white" i18n
+            >WhatsApp Registration</span
+        >
+    </button>
+
+    @if (expanded) {
+        <div class="border-t border-slate-200 px-6 py-5 dark:border-slate-700">
+            <!-- Messages -->
+            @if (successMessage) {
+                <div
+                    class="mb-4 flex items-start gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-3 dark:border-green-800 dark:bg-green-900/30"
+                >
+                    <svg
+                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M5 13l4 4L19 7"
+                        />
+                    </svg>
+                    <span class="flex-1 text-sm text-green-700 dark:text-green-400">{{
+                        successMessage
+                    }}</span>
+                </div>
+            }
+            @if (errorMessage) {
+                <div
+                    class="mb-4 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800 dark:bg-red-900/30"
+                >
+                    <svg
+                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600 dark:text-red-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                    </svg>
+                    <span class="flex-1 text-sm text-red-700 dark:text-red-400">{{
+                        errorMessage
+                    }}</span>
+                </div>
+            }
+
+            <div class="space-y-6">
+                <!-- 1. Request Code -->
+                <div class="rounded-lg border border-slate-200 p-4 dark:border-slate-700">
+                    <div class="mb-3 flex items-center gap-2">
+                        <h4
+                            class="text-sm font-semibold text-slate-900 dark:text-white"
+                            i18n
+                        >
+                            1. Request Verification Code
+                        </h4>
+                        <a
+                            class="rounded p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
+                            href="https://developers.facebook.com/documentation/business-messaging/whatsapp/business-phone-numbers/phone-numbers#verify"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Where to get this information"
+                        >
+                            <span class="sr-only" i18n
+                                >Where to get this information</span
+                            >
+                            <svg
+                                class="h-4 w-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+                                />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="flex flex-wrap items-end gap-3">
+                        <div>
+                            <label
+                                class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
+                                i18n
+                                >Method</label
+                            >
+                            <select
+                                [(ngModel)]="codeMethod"
+                                class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                            >
+                                <option value="SMS">SMS</option>
+                                <option value="VOICE">Voice</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
+                                i18n
+                                >Language</label
+                            >
+                            <select
+                                [(ngModel)]="language"
+                                class="min-w-48 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                            >
+                                @for (option of languageOptions; track option.value) {
+                                    <option [value]="option.value">
+                                        {{ option.label }}
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <button
+                            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            (click)="onRequestCode()"
+                            [disabled]="loading"
+                            i18n
+                        >
+                            Request Code
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Verify Code -->
+                <div class="rounded-lg border border-slate-200 p-4 dark:border-slate-700">
+                    <div class="mb-3 flex items-center gap-2">
+                        <h4
+                            class="text-sm font-semibold text-slate-900 dark:text-white"
+                            i18n
+                        >
+                            2. Verify Code
+                        </h4>
+                        <a
+                            class="rounded p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
+                            href="https://developers.facebook.com/documentation/business-messaging/whatsapp/business-phone-numbers/phone-numbers#verify"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Where to get this information"
+                        >
+                            <span class="sr-only" i18n
+                                >Where to get this information</span
+                            >
+                            <svg
+                                class="h-4 w-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+                                />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="flex items-end gap-3">
+                        <div>
+                            <label
+                                class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
+                                i18n
+                                >6-digit Code</label
+                            >
+                            <input
+                                type="text"
+                                [(ngModel)]="verifyCode"
+                                placeholder="123456"
+                                maxlength="6"
+                                class="w-32 rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
+                            />
+                        </div>
+                        <button
+                            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            (click)="onVerifyCode()"
+                            [disabled]="loading || !verifyCode"
+                            i18n
+                        >
+                            Verify
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. PIN Authenticate -->
+                <div class="rounded-lg border border-slate-200 p-4 dark:border-slate-700">
+                    <div class="mb-3 flex items-center gap-2">
+                        <h4
+                            class="text-sm font-semibold text-slate-900 dark:text-white"
+                            i18n
+                        >
+                            3. PIN Authenticate
+                        </h4>
+                        <a
+                            class="rounded p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
+                            href="https://developers.facebook.com/documentation/business-messaging/whatsapp/business-phone-numbers/phone-numbers#verify"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Where to get this information"
+                        >
+                            <span class="sr-only" i18n
+                                >Where to get this information</span
+                            >
+                            <svg
+                                class="h-4 w-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+                                />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="flex items-end gap-3">
+                        <div>
+                            <label
+                                class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
+                                i18n
+                                >6-digit PIN</label
+                            >
+                            <div class="relative">
+                                <input
+                                    [type]="showPinAuth ? 'text' : 'password'"
+                                    [(ngModel)]="pinAuth"
+                                    placeholder="******"
+                                    maxlength="6"
+                                    class="w-32 rounded-lg border border-slate-300 bg-white px-3 py-2 pr-8 font-mono text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
+                                />
+                                <button
+                                    type="button"
+                                    class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                                    (click)="showPinAuth = !showPinAuth"
+                                >
+                                    <svg
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        @if (showPinAuth) {
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                            />
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                            />
+                                        } @else {
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                                            />
+                                        }
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <button
+                            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            (click)="onPinAuthenticate()"
+                            [disabled]="loading || !pinAuth"
+                            i18n
+                        >
+                            Authenticate
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. Register (collapsible) -->
+                <div class="rounded-lg border border-slate-200 dark:border-slate-700">
+                    <div
+                        class="flex items-center gap-2 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                    >
+                        <button
+                            class="flex flex-1 items-center gap-2 text-left transition-colors hover:text-slate-700 dark:hover:text-slate-200"
+                            (click)="toggleRegister()"
+                        >
+                            <svg
+                                class="h-3.5 w-3.5 text-slate-400 transition-transform"
+                                [class.rotate-90]="registerExpanded"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                            <h4
+                                class="text-sm font-semibold text-slate-900 dark:text-white"
+                                i18n
+                            >
+                                4. Register
+                            </h4>
+                        </button>
+                        <a
+                            class="rounded p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
+                            href="https://developers.facebook.com/documentation/business-messaging/whatsapp/business-phone-numbers/registration/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Where to get this information"
+                        >
+                            <span class="sr-only" i18n
+                                >Where to get this information</span
+                            >
+                            <svg
+                                class="h-4 w-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+                                />
+                            </svg>
+                        </a>
+                    </div>
+                    @if (registerExpanded) {
+                        <div
+                            class="border-t border-slate-200 p-4 dark:border-slate-700"
+                        >
+                            <div class="flex flex-wrap items-end gap-3">
+                                <div>
+                                    <label
+                                        class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
+                                        i18n
+                                        >6-digit PIN</label
+                                    >
+                                    <div class="relative">
+                                        <input
+                                            [type]="
+                                                showRegisterPin
+                                                    ? 'text'
+                                                    : 'password'
+                                            "
+                                            [(ngModel)]="registerPin"
+                                            placeholder="******"
+                                            maxlength="6"
+                                            class="w-32 rounded-lg border border-slate-300 bg-white px-3 py-2 pr-8 font-mono text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder-slate-500"
+                                        />
+                                        <button
+                                            type="button"
+                                            class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                                            (click)="
+                                                showRegisterPin =
+                                                    !showRegisterPin
+                                            "
+                                        >
+                                            <svg
+                                                class="h-4 w-4"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                @if (showRegisterPin) {
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                    />
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                    />
+                                                } @else {
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                                                    />
+                                                }
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label
+                                        class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
+                                        i18n
+                                        >Region (optional)</label
+                                    >
+                                    <select
+                                        [(ngModel)]="dataLocalizationRegion"
+                                        class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                                    >
+                                        @for (
+                                            region of regionOptions;
+                                            track region.value
+                                        ) {
+                                            <option [value]="region.value">
+                                                {{ region.label }}
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+                                <button
+                                    class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                    (click)="onRegister()"
+                                    [disabled]="loading || !registerPin"
+                                    i18n
+                                >
+                                    Register
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- 5. Deregister -->
+                <div
+                    class="rounded-lg border border-red-200 bg-red-50/50 p-4 dark:border-red-800 dark:bg-red-900/10"
+                >
+                    <h4
+                        class="mb-1 text-sm font-semibold text-red-700 dark:text-red-400"
+                        i18n
+                    >
+                        5. Deregister
+                    </h4>
+                    <p class="mb-3 text-xs text-red-600 dark:text-red-400" i18n>
+                        This will deregister your phone number from WhatsApp Cloud API.
+                    </p>
+                    <button
+                        class="rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-700 dark:bg-slate-800 dark:text-red-400 dark:hover:bg-red-900/20"
+                        (click)="onDeregister()"
+                        [disabled]="loading"
+                        i18n
+                    >
+                        Deregister Phone
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

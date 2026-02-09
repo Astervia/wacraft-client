@@ -14,10 +14,10 @@
                         Manage your WhatsApp Business API phone numbers and settings
                     </p>
                 </div>
-                @if (!showForm && phoneConfigStore.phoneConfigs.length <= 0) {
+                @if (phoneConfigStore.phoneConfigs.length > 0) {
                     <button
                         class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        (click)="openCreateForm()"
+                        (click)="navigateToCreate()"
                         i18n
                     >
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,15 +58,6 @@
             </div>
         }
 
-        <!-- Form -->
-        @if (showForm) {
-            <app-phone-config-form
-                [editingConfig]="editingConfig"
-                (save)="onSave($event)"
-                (cancel)="closeForm()"
-            ></app-phone-config-form>
-        }
-
         <!-- Loading State -->
         @if (phoneConfigStore.loading) {
             <div class="flex flex-col items-center justify-center py-12">
@@ -83,7 +74,8 @@
         <div class="space-y-3">
             @for (config of phoneConfigStore.phoneConfigs; track config.id) {
                 <div
-                    class="group rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+                    class="group cursor-pointer rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+                    (click)="navigateToDetail(config)"
                 >
                     <div class="flex items-start justify-between gap-4">
                         <!-- Config Info -->
@@ -165,15 +157,8 @@
                         <!-- Actions -->
                         <div class="flex flex-shrink-0 gap-2">
                             <button
-                                class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
-                                (click)="openEditForm(config)"
-                                i18n
-                            >
-                                Edit
-                            </button>
-                            <button
                                 class="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:border-red-800 dark:bg-slate-700 dark:text-red-400 dark:hover:bg-red-900/20"
-                                (click)="deleteConfig(config)"
+                                (click)="deleteConfig($event, config)"
                                 i18n
                             >
                                 Delete
@@ -184,7 +169,7 @@
                     <!-- Webhook Toggle -->
                     <button
                         class="mt-3 flex items-center gap-1.5 text-xs font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                        (click)="toggleWebhookInfo(config.id)"
+                        (click)="toggleWebhookInfo($event, config.id)"
                     >
                         <svg
                             class="h-3.5 w-3.5 transition-transform"
@@ -221,7 +206,7 @@
                                 <button
                                     class="flex-shrink-0 rounded p-1 text-slate-400 transition-colors hover:bg-white hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
                                     (click)="
-                                        copyToClipboard(getWebhookUrl(config), config.id, 'url')
+                                        copyToClipboard($event, getWebhookUrl(config), config.id, 'url')
                                     "
                                     [title]="
                                         copiedField?.configId === config.id &&
@@ -278,6 +263,7 @@
                                     class="flex-shrink-0 rounded p-1 text-slate-400 transition-colors hover:bg-white hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
                                     (click)="
                                         copyToClipboard(
+                                            $event,
                                             config.webhook_verify_token,
                                             config.id,
                                             'token'
@@ -331,7 +317,7 @@
         </div>
 
         <!-- Empty State -->
-        @if (!phoneConfigStore.loading && phoneConfigStore.phoneConfigs.length === 0 && !showForm) {
+        @if (!phoneConfigStore.loading && phoneConfigStore.phoneConfigs.length === 0) {
             <div
                 class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 py-12 dark:border-slate-700 dark:bg-slate-800/50"
             >
@@ -360,7 +346,7 @@
                 </p>
                 <button
                     class="mt-4 flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700"
-                    (click)="openCreateForm()"
+                    (click)="navigateToCreate()"
                     i18n
                 >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
