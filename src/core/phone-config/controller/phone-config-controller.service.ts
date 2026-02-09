@@ -64,9 +64,7 @@ export class PhoneConfigControllerService extends MainServerControllerService {
 
     async getById(workspaceId: string, id: string): Promise<PhoneConfig> {
         return (
-            await this.http.get<PhoneConfig>(
-                `${workspaceId}/${ServerEndpoints.phone_config}/${id}`,
-            )
+            await this.http.get<PhoneConfig>(`${workspaceId}/${ServerEndpoints.phone_config}/${id}`)
         ).data;
     }
 
@@ -83,11 +81,7 @@ export class PhoneConfigControllerService extends MainServerControllerService {
         ).data;
     }
 
-    async verifyCode(
-        workspaceId: string,
-        id: string,
-        data: { code: string },
-    ): Promise<void> {
+    async verifyCode(workspaceId: string, id: string, data: { code: string }): Promise<void> {
         return (
             await this.http.post<void>(
                 `${workspaceId}/${ServerEndpoints.phone_config}/${id}/${ServerEndpoints.verify_code}`,
@@ -96,11 +90,7 @@ export class PhoneConfigControllerService extends MainServerControllerService {
         ).data;
     }
 
-    async pinAuthenticate(
-        workspaceId: string,
-        id: string,
-        data: { pin: string },
-    ): Promise<void> {
+    async pinAuthenticate(workspaceId: string, id: string, data: { pin: string }): Promise<void> {
         return (
             await this.http.post<void>(
                 `${workspaceId}/${ServerEndpoints.phone_config}/${id}/${ServerEndpoints.pin_authenticate}`,
