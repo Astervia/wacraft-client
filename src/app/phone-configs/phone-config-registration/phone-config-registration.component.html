@@ -171,11 +171,13 @@
                     <div class="flex flex-wrap items-end gap-3">
                         <div>
                             <label
+                                for="codeMethod"
                                 class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
                                 i18n
                                 >Method</label
                             >
                             <select
+                                id="codeMethod"
                                 [(ngModel)]="codeMethod"
                                 class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
                             >
@@ -185,11 +187,13 @@
                         </div>
                         <div>
                             <label
+                                for="language"
                                 class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
                                 i18n
                                 >Language</label
                             >
                             <select
+                                id="language"
                                 [(ngModel)]="language"
                                 class="min-w-48 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
                             >
@@ -243,11 +247,13 @@
                     <div class="flex items-end gap-3">
                         <div>
                             <label
+                                for="verifyCode"
                                 class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
                                 i18n
                                 >6-digit Code</label
                             >
                             <input
+                                id="verifyCode"
                                 type="text"
                                 [(ngModel)]="verifyCode"
                                 placeholder="123456"
@@ -298,12 +304,14 @@
                     <div class="flex items-end gap-3">
                         <div>
                             <label
+                                for="pinAuth"
                                 class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
                                 i18n
                                 >6-digit PIN</label
                             >
                             <div class="relative">
                                 <input
+                                    id="pinAuth"
                                     [type]="showPinAuth ? 'text' : 'password'"
                                     [(ngModel)]="pinAuth"
                                     placeholder="******"
@@ -412,12 +420,14 @@
                             <div class="flex flex-wrap items-end gap-3">
                                 <div>
                                     <label
+                                        for="registerPin"
                                         class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
                                         i18n
                                         >6-digit PIN</label
                                     >
                                     <div class="relative">
                                         <input
+                                            id="registerPin"
                                             [type]="showRegisterPin ? 'text' : 'password'"
                                             [(ngModel)]="registerPin"
                                             placeholder="******"
@@ -462,11 +472,13 @@
                                 </div>
                                 <div>
                                     <label
+                                        for="dataLocalizationRegion"
                                         class="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400"
                                         i18n
                                         >Region (optional)</label
                                     >
                                     <select
+                                        id="dataLocalizationRegion"
                                         [(ngModel)]="dataLocalizationRegion"
                                         class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
                                     >

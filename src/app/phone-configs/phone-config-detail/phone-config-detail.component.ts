@@ -15,6 +15,7 @@ import {
 } from "../../../core/phone-config/model/create.model";
 import { environment } from "../../../environments/environment";
 import { WhatsAppError } from "../../../core/common/model/whatsapp-error.model";
+import { isHttpError } from "../../../core/common/model/http-error-shape.model";
 
 @Component({
     selector: "app-phone-config-detail",
@@ -80,14 +81,18 @@ export class PhoneConfigDetailComponent implements OnInit {
     }
 
     private handleError(error: unknown, fallback: string): void {
-        const data = (error as any)?.response?.data;
-        if (data?.context === "whatsapp" && data?.content?.error) {
-            this.whatsappError = data.content.error;
-            this.errorMessage = data.message || fallback;
-        } else {
-            this.whatsappError = null;
-            this.errorMessage = fallback;
+        if (isHttpError(error)) {
+            const data = error.response?.data as
+                | { context?: string; content?: { error?: WhatsAppError }; message?: string }
+                | undefined;
+            if (data?.context === "whatsapp" && data?.content?.error) {
+                this.whatsappError = data.content.error;
+                this.errorMessage = data.message || fallback;
+                return;
+            }
         }
+        this.whatsappError = null;
+        this.errorMessage = fallback;
     }
 
     async onSave(data: CreatePhoneConfig | UpdatePhoneConfig): Promise<void> {
