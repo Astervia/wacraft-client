@@ -4,10 +4,12 @@ export interface EnvironmentConfig {
 
     mainServerUrl: string;
     mainServerSecurity: boolean;
-    automationServerUrl?: string;
-    automationServerSecurity: boolean;
-    googleMapsApiKey?: string;
     appTitle: string;
+
+    automationServerUrl?: string;
+    automationServerSecurity?: boolean;
+
+    googleMapsApiKey?: string;
 
     webSocketBasePingInterval: number;
 }

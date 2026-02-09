@@ -8,22 +8,40 @@ if (fs.existsSync(targetPath)) {
     console.log("environment.ts already exists.");
 }
 
+const hasEnv = key => Object.prototype.hasOwnProperty.call(process.env, key);
+
+const envLines = [
+    `    env: "${process.env.ENV || "production"}",`,
+    `    isLite: ${process.env.IS_LITE != "false"},`,
+    ``,
+    `    mainServerUrl: "${process.env.MAIN_SERVER_URL}",`,
+    `    mainServerSecurity: ${process.env.MAIN_SERVER_SECURITY == "true"},`,
+];
+
+if (hasEnv("AUTOMATION_SERVER_URL")) {
+    envLines.push(`    automationServerUrl: "${process.env.AUTOMATION_SERVER_URL}",`);
+}
+if (hasEnv("AUTOMATION_SERVER_SECURITY")) {
+    envLines.push(
+        `    automationServerSecurity: ${process.env.AUTOMATION_SERVER_SECURITY == "true"},`,
+    );
+}
+if (hasEnv("GOOGLE_MAPS_API_KEY")) {
+    envLines.push(`    googleMapsApiKey: "${process.env.GOOGLE_MAPS_API_KEY}",`);
+}
+
+envLines.push(
+    `    appTitle: "${process.env.APP_TITLE || "wacraft"}",`,
+    ``,
+    `    webSocketBasePingInterval: ${process.env.WEBSOCKET_BASE_PING_INTERVAL || 30000},`,
+);
+
 // Template for the environment.ts file
 const envConfigFile = `
 import { EnvironmentConfig } from "./config.model";
 
 export const environment: EnvironmentConfig = {
-    env: "${process.env.ENV || "production"}",
-    isLite: ${process.env.IS_LITE != "false"},
-
-    mainServerUrl: "${process.env.MAIN_SERVER_URL}",
-    mainServerSecurity: ${process.env.MAIN_SERVER_SECURITY == "true"},
-    automationServerUrl: ${process.env.AUTOMATION_SERVER_URL ? `"${process.env.AUTOMATION_SERVER_URL}"` : "undefined"},
-    automationServerSecurity: ${process.env.AUTOMATION_SERVER_SECURITY == "true"},
-    googleMapsApiKey: ${process.env.GOOGLE_MAPS_API_KEY ? `"${process.env.GOOGLE_MAPS_API_KEY}"` : "undefined"},
-    appTitle: "${process.env.APP_TITLE || "wacraft"}",
-
-    webSocketBasePingInterval: ${process.env.WEBSOCKET_BASE_PING_INTERVAL || 30000},
+${envLines.join("\n")}
 };
 `;
 
