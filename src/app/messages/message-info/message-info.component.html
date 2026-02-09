@@ -106,10 +106,22 @@
                         <strong i18n>Message:</strong>
                         {{ error.message }}
                     </p>
-                    @if (error.error_data.details) {
+                    @if (error.error_user_title) {
+                        <p>
+                            <strong i18n>Error title:</strong>
+                            {{ error.error_user_title }}
+                        </p>
+                    }
+                    @if (error.error_user_msg) {
+                        <p>
+                            <strong i18n>Error user message:</strong>
+                            {{ error.error_user_msg }}
+                        </p>
+                    }
+                    @if (error.error_data?.details) {
                         <p>
                             <strong i18n>Details:</strong>
-                            {{ error.error_data.details }}
+                            {{ error.error_data?.details }}
                         </p>
                     }
                 </div>
