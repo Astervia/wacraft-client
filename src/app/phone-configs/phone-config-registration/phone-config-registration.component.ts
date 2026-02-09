@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { PhoneConfig } from "../../../core/phone-config/entity/phone-config.entity";
 import { PhoneConfigControllerService } from "../../../core/phone-config/controller/phone-config-controller.service";
 import { WorkspaceStoreService } from "../../../core/workspace/store/workspace-store.service";
+import { WhatsAppError } from "../../../core/common/model/whatsapp-error.model";
 
 @Component({
     selector: "app-phone-config-registration",
@@ -20,6 +21,7 @@ export class PhoneConfigRegistrationComponent {
     expanded = false;
     successMessage = "";
     errorMessage = "";
+    whatsappError: WhatsAppError | null = null;
 
     // Request Code
     codeMethod = "SMS";
@@ -182,6 +184,18 @@ export class PhoneConfigRegistrationComponent {
     private clearMessages(): void {
         this.successMessage = "";
         this.errorMessage = "";
+        this.whatsappError = null;
+    }
+
+    private handleError(error: unknown, fallback: string): void {
+        const data = (error as any)?.response?.data;
+        if (data?.context === "whatsapp" && data?.content?.error) {
+            this.whatsappError = data.content.error;
+            this.errorMessage = data.message || fallback;
+        } else {
+            this.whatsappError = null;
+            this.errorMessage = fallback;
+        }
     }
 
     async onRequestCode(): Promise<void> {
@@ -195,8 +209,8 @@ export class PhoneConfigRegistrationComponent {
                 language: this.language,
             });
             this.successMessage = "Verification code requested successfully.";
-        } catch {
-            this.errorMessage = "Failed to request verification code.";
+        } catch (error) {
+            this.handleError(error, "Failed to request verification code.");
         } finally {
             this.loading = false;
         }
@@ -213,8 +227,8 @@ export class PhoneConfigRegistrationComponent {
             });
             this.successMessage = "Code verified successfully.";
             this.verifyCode = "";
-        } catch {
-            this.errorMessage = "Failed to verify code.";
+        } catch (error) {
+            this.handleError(error, "Failed to verify code.");
         } finally {
             this.loading = false;
         }
@@ -232,8 +246,8 @@ export class PhoneConfigRegistrationComponent {
             this.successMessage = "PIN authenticated successfully.";
             this.pinAuth = "";
             this.registerExpanded = true;
-        } catch {
-            this.errorMessage = "Failed to authenticate PIN.";
+        } catch (error) {
+            this.handleError(error, "Failed to authenticate PIN.");
         } finally {
             this.loading = false;
         }
@@ -255,8 +269,8 @@ export class PhoneConfigRegistrationComponent {
             this.successMessage = "Phone registered successfully.";
             this.registerPin = "";
             this.dataLocalizationRegion = "";
-        } catch {
-            this.errorMessage = "Failed to register phone.";
+        } catch (error) {
+            this.handleError(error, "Failed to register phone.");
         } finally {
             this.loading = false;
         }
@@ -271,8 +285,8 @@ export class PhoneConfigRegistrationComponent {
         try {
             await this.phoneConfigController.deregister(ws.id, this.config.id);
             this.successMessage = "Phone deregistered successfully.";
-        } catch {
-            this.errorMessage = "Failed to deregister phone.";
+        } catch (error) {
+            this.handleError(error, "Failed to deregister phone.");
         } finally {
             this.loading = false;
         }
