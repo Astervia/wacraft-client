@@ -9,8 +9,12 @@ import { WorkspaceStoreService } from "../../../core/workspace/store/workspace-s
 import { PhoneConfig } from "../../../core/phone-config/entity/phone-config.entity";
 import { PhoneConfigFormComponent } from "../phone-config-form/phone-config-form.component";
 import { PhoneConfigRegistrationComponent } from "../phone-config-registration/phone-config-registration.component";
-import { CreatePhoneConfig, UpdatePhoneConfig } from "../../../core/phone-config/model/create.model";
+import {
+    CreatePhoneConfig,
+    UpdatePhoneConfig,
+} from "../../../core/phone-config/model/create.model";
 import { environment } from "../../../environments/environment";
+import { WhatsAppError } from "../../../core/common/model/whatsapp-error.model";
 
 @Component({
     selector: "app-phone-config-detail",
@@ -37,6 +41,7 @@ export class PhoneConfigDetailComponent implements OnInit {
     isEditing = false;
     loading = false;
     errorMessage = "";
+    whatsappError: WhatsAppError | null = null;
 
     copiedField: string | null = null;
 
@@ -74,10 +79,22 @@ export class PhoneConfigDetailComponent implements OnInit {
         this.isEditing = false;
     }
 
+    private handleError(error: unknown, fallback: string): void {
+        const data = (error as any)?.response?.data;
+        if (data?.context === "whatsapp" && data?.content?.error) {
+            this.whatsappError = data.content.error;
+            this.errorMessage = data.message || fallback;
+        } else {
+            this.whatsappError = null;
+            this.errorMessage = fallback;
+        }
+    }
+
     async onSave(data: CreatePhoneConfig | UpdatePhoneConfig): Promise<void> {
         const ws = this.workspaceStore.currentWorkspace;
         if (!ws) return;
         this.errorMessage = "";
+        this.whatsappError = null;
 
         try {
             if (this.isCreateMode) {
@@ -97,10 +114,13 @@ export class PhoneConfigDetailComponent implements OnInit {
                 this.phoneConfigStore.phoneConfigsById.set(updated.id, updated);
                 this.isEditing = false;
             }
-        } catch {
-            this.errorMessage = this.isCreateMode
-                ? "Failed to create phone config."
-                : "Failed to update phone config.";
+        } catch (error) {
+            this.handleError(
+                error,
+                this.isCreateMode
+                    ? "Failed to create phone config."
+                    : "Failed to update phone config.",
+            );
         }
     }
 
@@ -112,8 +132,8 @@ export class PhoneConfigDetailComponent implements OnInit {
             await this.phoneConfigController.delete(ws.id, this.config.id);
             await this.phoneConfigStore.load();
             this.navigateBack();
-        } catch {
-            this.errorMessage = "Failed to delete phone config.";
+        } catch (error) {
+            this.handleError(error, "Failed to delete phone config.");
         }
     }
 

@@ -206,7 +206,12 @@
                                 <button
                                     class="flex-shrink-0 rounded p-1 text-slate-400 transition-colors hover:bg-white hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
                                     (click)="
-                                        copyToClipboard($event, getWebhookUrl(config), config.id, 'url')
+                                        copyToClipboard(
+                                            $event,
+                                            getWebhookUrl(config),
+                                            config.id,
+                                            'url'
+                                        )
                                     "
                                     [title]="
                                         copiedField?.configId === config.id &&

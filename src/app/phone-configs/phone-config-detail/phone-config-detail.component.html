@@ -6,12 +6,7 @@
                 class="flex items-center gap-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
                 (click)="navigateBack()"
             >
-                <svg
-                    class="h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -24,7 +19,55 @@
         </div>
 
         <!-- Error Message -->
-        @if (errorMessage) {
+        @if (whatsappError) {
+            <div
+                class="mb-4 overflow-hidden rounded-lg border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/30"
+            >
+                <div
+                    class="flex items-center gap-2 border-b border-red-200 bg-red-100/50 px-4 py-2.5 dark:border-red-800 dark:bg-red-900/20"
+                >
+                    <svg
+                        class="h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                    </svg>
+                    <span class="text-sm font-semibold text-red-800 dark:text-red-300">{{
+                        whatsappError.error_user_title || errorMessage
+                    }}</span>
+                    @if (whatsappError.code) {
+                        <span
+                            class="ml-auto rounded bg-red-200/50 px-1.5 py-0.5 font-mono text-xs text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                            >{{ whatsappError.code }}</span
+                        >
+                    }
+                </div>
+                <div class="space-y-2 px-4 py-3">
+                    @if (whatsappError.error_user_msg) {
+                        <p class="text-sm text-red-700 dark:text-red-400">
+                            {{ whatsappError.error_user_msg }}
+                        </p>
+                    }
+                    @if (whatsappError.error_data?.details) {
+                        <p class="text-xs text-red-600/80 dark:text-red-400/70">
+                            {{ whatsappError.error_data!.details }}
+                        </p>
+                    }
+                    @if (whatsappError.message) {
+                        <p class="text-xs text-red-500/70 dark:text-red-500/50">
+                            {{ whatsappError.message }}
+                        </p>
+                    }
+                </div>
+            </div>
+        } @else if (errorMessage) {
             <div
                 class="mb-4 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800 dark:bg-red-900/30"
             >
@@ -138,9 +181,7 @@
                                         >
                                             Name
                                         </dt>
-                                        <dd
-                                            class="mt-0.5 text-sm text-slate-900 dark:text-white"
-                                        >
+                                        <dd class="mt-0.5 text-sm text-slate-900 dark:text-white">
                                             {{ config.name }}
                                         </dd>
                                     </div>
@@ -151,9 +192,7 @@
                                         >
                                             Display Phone
                                         </dt>
-                                        <dd
-                                            class="mt-0.5 text-sm text-slate-900 dark:text-white"
-                                        >
+                                        <dd class="mt-0.5 text-sm text-slate-900 dark:text-white">
                                             {{ config.display_phone }}
                                         </dd>
                                     </div>
@@ -183,11 +222,7 @@
                                                             !config.is_active,
                                                     }"
                                                 ></span>
-                                                {{
-                                                    config.is_active
-                                                        ? "Active"
-                                                        : "Inactive"
-                                                }}
+                                                {{ config.is_active ? "Active" : "Inactive" }}
                                             </span>
                                         </dd>
                                     </div>
@@ -233,13 +268,8 @@
                     </div>
 
                     <!-- Webhook Info -->
-                    <div
-                        class="border-t border-slate-200 px-6 py-5 dark:border-slate-700"
-                    >
-                        <h4
-                            class="mb-3 text-sm font-semibold text-slate-900 dark:text-white"
-                            i18n
-                        >
+                    <div class="border-t border-slate-200 px-6 py-5 dark:border-slate-700">
+                        <h4 class="mb-3 text-sm font-semibold text-slate-900 dark:text-white" i18n>
                             Webhook Information
                         </h4>
                         <div class="space-y-2">
@@ -255,14 +285,8 @@
                                 >
                                 <button
                                     class="flex-shrink-0 rounded p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
-                                    (click)="
-                                        copyToClipboard(getWebhookUrl(), 'url')
-                                    "
-                                    [title]="
-                                        copiedField === 'url'
-                                            ? 'Copied!'
-                                            : 'Copy'
-                                    "
+                                    (click)="copyToClipboard(getWebhookUrl(), 'url')"
+                                    [title]="copiedField === 'url' ? 'Copied!' : 'Copy'"
                                 >
                                     @if (copiedField === "url") {
                                         <svg
@@ -307,17 +331,8 @@
                                 >
                                 <button
                                     class="flex-shrink-0 rounded p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
-                                    (click)="
-                                        copyToClipboard(
-                                            config.webhook_verify_token,
-                                            'token'
-                                        )
-                                    "
-                                    [title]="
-                                        copiedField === 'token'
-                                            ? 'Copied!'
-                                            : 'Copy'
-                                    "
+                                    (click)="copyToClipboard(config.webhook_verify_token, 'token')"
+                                    [title]="copiedField === 'token' ? 'Copied!' : 'Copy'"
                                 >
                                     @if (copiedField === "token") {
                                         <svg
@@ -355,9 +370,7 @@
                 </div>
 
                 <!-- Registration Section -->
-                <app-phone-config-registration
-                    [config]="config"
-                ></app-phone-config-registration>
+                <app-phone-config-registration [config]="config"></app-phone-config-registration>
             }
         }
     </div>
