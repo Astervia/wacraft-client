@@ -76,6 +76,19 @@ export class PhoneConfigStoreService {
     }
 
     async getById(id: string): Promise<PhoneConfig | undefined> {
-        return this.phoneConfigsById.get(id);
+        const cached = this.phoneConfigsById.get(id);
+        if (cached) return cached;
+
+        const ws = this.workspaceStore.currentWorkspace;
+        if (!ws) return undefined;
+
+        try {
+            const config = await this.phoneConfigController.getById(ws.id, id);
+            this.phoneConfigsById.set(config.id, config);
+            return config;
+        } catch {
+            this.logger.error("Error fetching phone config by id", id);
+            return undefined;
+        }
     }
 }
