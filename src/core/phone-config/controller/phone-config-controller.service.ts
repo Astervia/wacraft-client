@@ -61,4 +61,72 @@ export class PhoneConfigControllerService extends MainServerControllerService {
             await this.http.delete<void>(`${workspaceId}/${ServerEndpoints.phone_config}/${id}`)
         ).data;
     }
+
+    async getById(workspaceId: string, id: string): Promise<PhoneConfig> {
+        return (
+            await this.http.get<PhoneConfig>(
+                `${workspaceId}/${ServerEndpoints.phone_config}/${id}`,
+            )
+        ).data;
+    }
+
+    async requestCode(
+        workspaceId: string,
+        id: string,
+        data: { code_method: string; language: string },
+    ): Promise<void> {
+        return (
+            await this.http.post<void>(
+                `${workspaceId}/${ServerEndpoints.phone_config}/${id}/${ServerEndpoints.request_code}`,
+                data,
+            )
+        ).data;
+    }
+
+    async verifyCode(
+        workspaceId: string,
+        id: string,
+        data: { code: string },
+    ): Promise<void> {
+        return (
+            await this.http.post<void>(
+                `${workspaceId}/${ServerEndpoints.phone_config}/${id}/${ServerEndpoints.verify_code}`,
+                data,
+            )
+        ).data;
+    }
+
+    async pinAuthenticate(
+        workspaceId: string,
+        id: string,
+        data: { pin: string },
+    ): Promise<void> {
+        return (
+            await this.http.post<void>(
+                `${workspaceId}/${ServerEndpoints.phone_config}/${id}/${ServerEndpoints.pin_authenticate}`,
+                data,
+            )
+        ).data;
+    }
+
+    async register(
+        workspaceId: string,
+        id: string,
+        data: { pin: string; data_localization_region?: string },
+    ): Promise<void> {
+        return (
+            await this.http.post<void>(
+                `${workspaceId}/${ServerEndpoints.phone_config}/${id}/${ServerEndpoints.register}`,
+                data,
+            )
+        ).data;
+    }
+
+    async deregister(workspaceId: string, id: string): Promise<void> {
+        return (
+            await this.http.post<void>(
+                `${workspaceId}/${ServerEndpoints.phone_config}/${id}/${ServerEndpoints.deregister}`,
+            )
+        ).data;
+    }
 }
