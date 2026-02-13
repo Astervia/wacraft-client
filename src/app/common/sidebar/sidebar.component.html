@@ -1,35 +1,35 @@
 <div
-    class="flex h-screen w-14 flex-col items-center justify-between overflow-auto border-r border-gray-300 bg-gray-200 py-2 dark:border-gray-700 dark:bg-gray-700"
+    class="flex h-screen w-14 flex-col items-center border-r border-gray-300 bg-gray-200 py-2 dark:border-gray-700 dark:bg-gray-700"
 >
-    <div class="flex flex-col items-center justify-center">
-        <div
-            [ngClass]="{
-                'flex flex-col items-center justify-center overflow-hidden transition-all duration-300': true,
-                'max-h-0': isCollapsed,
-                'max-h-80': !isCollapsed,
-            }"
+    <div
+        [ngClass]="{
+            'flex flex-col items-center justify-center overflow-hidden transition-all duration-300': true,
+            'max-h-0': isCollapsed,
+            'max-h-80': !isCollapsed,
+        }"
+    >
+        <button
+            id="sidebar-toggle"
+            class="flex aspect-square w-10 items-center justify-center rounded-lg border border-gray-500 text-white dark:border-gray-500"
+            (click)="
+                queryParamsService.sidebarOpen
+                    ? queryParamsService.closeSidebar()
+                    : queryParamsService.openSidebar()
+            "
         >
-            <button
-                id="sidebar-toggle"
-                class="flex aspect-square w-10 items-center justify-center rounded-lg border border-gray-500 text-white dark:border-gray-500"
-                (click)="
-                    queryParamsService.sidebarOpen
-                        ? queryParamsService.closeSidebar()
-                        : queryParamsService.openSidebar()
-                "
-            >
-                <i
-                    [ngClass]="{
-                        'fa-solid fa-chevron-right outline-none transition-transform duration-300': true,
-                        'text-gray-500 dark:text-gray-500': true,
-                        'rotate-180': queryParamsService.sidebarOpen,
-                    }"
-                ></i>
-            </button>
+            <i
+                [ngClass]="{
+                    'fa-solid fa-chevron-right outline-none transition-transform duration-300': true,
+                    'text-gray-500 dark:text-gray-500': true,
+                    'rotate-180': queryParamsService.sidebarOpen,
+                }"
+            ></i>
+        </button>
 
-            <hr class="my-5 w-8 border-b border-gray-600 dark:border-gray-600" />
-        </div>
+        <hr class="my-5 w-8 border-b border-gray-600 dark:border-gray-600" />
+    </div>
 
+    <div class="scrollable-on-hover flex min-h-0 flex-1 flex-col items-center overflow-y-auto">
         <a
             [routerLink]="['/', RoutePath.home]"
             [fragment]="HomeFragment.chats"
@@ -191,6 +191,20 @@
             </a>
         }
 
+        <a
+            [routerLink]="['/', RoutePath.billing]"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class="navigator"
+        >
+            <app-small-button
+                [active]="activePage === RoutePath.billing"
+                matTooltip="Billing"
+                matIcon="payment"
+                i18n-matTooltip
+            ></app-small-button>
+        </a>
+
         <!-- Admin Section -->
         @if (userStore.currentUser.role === Role.admin) {
             <hr class="my-3 w-8 border-b border-gray-600 dark:border-gray-600" />
@@ -209,10 +223,24 @@
                 >
                 </app-small-button>
             </a>
+
+            <a
+                [routerLink]="['/', RoutePath.billingAdmin]"
+                [queryParams]="queryParamsService.globalQueryParams"
+                queryParamsHandling="replace"
+                class="navigator"
+            >
+                <app-small-button
+                    [active]="activePage === RoutePath.billingAdmin"
+                    matTooltip="Billing (Admin)"
+                    matIcon="receipt_long"
+                    i18n-matTooltip
+                ></app-small-button>
+            </a>
         }
     </div>
 
-    <div class="flex flex-col items-center justify-center">
+    <div class="mt-4 flex shrink-0 flex-col items-center justify-center">
         <app-workspace-switcher class="mb-3"></app-workspace-switcher>
 
         <a

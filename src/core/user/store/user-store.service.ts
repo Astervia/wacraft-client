@@ -17,6 +17,7 @@ export class UserStoreService {
     public reachedMaxLimit = false;
     public reachedMaxSearchLimit = false;
     currentUser!: User;
+    billingEnabled = false;
 
     searchMode: "email" | "name" | "role" = "email";
 
@@ -42,11 +43,10 @@ export class UserStoreService {
     }
 
     async getCurrent(): Promise<User> {
-        const user = {
-            ...(await this.userController.getCurrentUser()),
-            password: "",
-        };
+        const { user: fetchedUser, billingEnabled } = await this.userController.getCurrentUser();
+        const user = { ...fetchedUser, password: "" };
         this.currentUser = user;
+        this.billingEnabled = billingEnabled;
         this.usersById.set(user.id, user);
         return user;
     }

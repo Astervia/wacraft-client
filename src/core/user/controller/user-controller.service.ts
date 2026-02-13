@@ -44,9 +44,10 @@ export class UserControllerService extends MainServerControllerService {
     }
 
     // Get current user
-    async getCurrentUser(): Promise<User> {
-        const currentUser = (await this.http.get<User>(`${ServerEndpoints.me}`)).data;
-        return currentUser;
+    async getCurrentUser(): Promise<{ user: User; billingEnabled: boolean }> {
+        const response = await this.http.get<User>(`${ServerEndpoints.me}`);
+        const billingEnabled = response.headers["x-ratelimit-limit"] !== undefined;
+        return { user: response.data, billingEnabled };
     }
 
     async contentLike(

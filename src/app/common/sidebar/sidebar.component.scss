@@ -2,6 +2,19 @@
     @apply mb-2;
 }
 
+.scrollable-on-hover {
+    scrollbar-width: none;
+
+    &:hover {
+        scrollbar-width: thin;
+        scrollbar-color: #9ca3af transparent;
+    }
+}
+
+:host-context(.dark) .scrollable-on-hover:hover {
+    scrollbar-color: #4b5563 transparent;
+}
+
 .unavailable-pro-feature {
     @apply aspect-square w-10 rounded-full bg-gray-500 opacity-50;
 }

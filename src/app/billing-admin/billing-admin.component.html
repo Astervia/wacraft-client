@@ -1,0 +1,541 @@
+<app-sidebar-layout [activePage]="RoutePath.billingAdmin">
+    <div
+        class="grow-1 mx-auto h-full w-full overflow-y-auto p-4 dark:bg-gray-900 dark:text-gray-100 sm:p-6"
+    >
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 sm:text-3xl" i18n>
+                Billing Admin
+            </h1>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400" i18n>
+                Manage plans, manual subscriptions, and endpoint weights
+            </p>
+        </div>
+
+        @if (errorMessage) {
+            <div
+                class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/50 dark:bg-red-900/20"
+            >
+                <span class="text-sm text-red-700 dark:text-red-400">{{ errorMessage }}</span>
+            </div>
+        }
+
+        <!-- Plan Management -->
+        <div class="mb-6">
+            <div class="mb-3 flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200" i18n>
+                    Plan Management
+                </h2>
+                <button
+                    (click)="openCreatePlan()"
+                    class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400"
+                    i18n
+                >
+                    Create Plan
+                </button>
+            </div>
+
+            <!-- Plan Form -->
+            @if (showPlanForm) {
+                <div
+                    class="mb-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
+                >
+                    <div class="p-6">
+                        <h3 class="mb-4 text-sm font-medium text-gray-900 dark:text-white" i18n>
+                            {{ editingPlan ? "Edit Plan" : "Create New Plan" }}
+                        </h3>
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            <div>
+                                <label
+                                    for="plan-name"
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                    >Name</label
+                                >
+                                <input
+                                    id="plan-name"
+                                    type="text"
+                                    [(ngModel)]="planForm.name"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                    placeholder="Plan name"
+                                    i18n-placeholder
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    for="plan-slug"
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                    >Slug</label
+                                >
+                                <input
+                                    id="plan-slug"
+                                    type="text"
+                                    [(ngModel)]="planForm.slug"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                    placeholder="plan-slug"
+                                    i18n-placeholder
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    for="plan-currency"
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                    >Currency</label
+                                >
+                                <input
+                                    id="plan-currency"
+                                    type="text"
+                                    [(ngModel)]="planForm.currency"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                    placeholder="USD"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    for="plan-price"
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                    >Price (cents)</label
+                                >
+                                <input
+                                    id="plan-price"
+                                    type="number"
+                                    [(ngModel)]="planForm.price_cents"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    for="plan-throughput"
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                    >Throughput Limit</label
+                                >
+                                <input
+                                    id="plan-throughput"
+                                    type="number"
+                                    [(ngModel)]="planForm.throughput_limit"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    for="plan-window"
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                    >Window (seconds)</label
+                                >
+                                <input
+                                    id="plan-window"
+                                    type="number"
+                                    [(ngModel)]="planForm.window_seconds"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    for="plan-duration"
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                    >Duration (days)</label
+                                >
+                                <input
+                                    id="plan-duration"
+                                    type="number"
+                                    [(ngModel)]="planForm.duration_days"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                />
+                            </div>
+                            <div class="sm:col-span-2 lg:col-span-3">
+                                <label
+                                    for="plan-description"
+                                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    i18n
+                                    >Description</label
+                                >
+                                <textarea
+                                    id="plan-description"
+                                    [(ngModel)]="planForm.description"
+                                    rows="2"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                    placeholder="Plan description"
+                                    i18n-placeholder
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        @if (editingPlan) {
+                            <div class="mt-4 flex items-center gap-4">
+                                <label
+                                    class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        [(ngModel)]="planForm.active"
+                                        class="rounded border-gray-300"
+                                    />
+                                    <span i18n>Active</span>
+                                </label>
+                                <label
+                                    class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        [(ngModel)]="planForm.is_default"
+                                        class="rounded border-gray-300"
+                                    />
+                                    <span i18n>Default</span>
+                                </label>
+                                <label
+                                    class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        [(ngModel)]="planForm.is_custom"
+                                        class="rounded border-gray-300"
+                                    />
+                                    <span i18n>Custom</span>
+                                </label>
+                            </div>
+                        }
+
+                        <div class="mt-4 flex items-center gap-2">
+                            <button
+                                (click)="savePlan()"
+                                [disabled]="loading"
+                                class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                                i18n
+                            >
+                                {{ loading ? "Saving..." : "Save" }}
+                            </button>
+                            <button
+                                (click)="showPlanForm = false"
+                                class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                                i18n
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Plan List -->
+            <div
+                class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
+            >
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead
+                            class="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
+                        >
+                            <tr>
+                                <th class="px-4 py-3" i18n>Name</th>
+                                <th class="px-4 py-3" i18n>Slug</th>
+                                <th class="px-4 py-3" i18n>Price</th>
+                                <th class="px-4 py-3" i18n>Throughput</th>
+                                <th class="px-4 py-3" i18n>Duration</th>
+                                <th class="px-4 py-3" i18n>Status</th>
+                                <th class="px-4 py-3" i18n>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (plan of planStore.plans; track plan.id) {
+                                <tr class="border-b border-gray-200 dark:border-gray-700">
+                                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
+                                        {{ plan.name }}
+                                    </td>
+                                    <td class="px-4 py-3 text-gray-500 dark:text-gray-400">
+                                        {{ plan.slug }}
+                                    </td>
+                                    <td class="px-4 py-3 text-gray-500 dark:text-gray-400">
+                                        {{ formatPrice(plan.price_cents, plan.currency) }}
+                                    </td>
+                                    <td class="px-4 py-3 text-gray-500 dark:text-gray-400">
+                                        {{ formatThroughput(plan.throughput_limit) }}
+                                    </td>
+                                    <td class="px-4 py-3 text-gray-500 dark:text-gray-400">
+                                        {{ plan.duration_days }}d
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <span
+                                            class="rounded-full px-2 py-0.5 text-xs font-medium"
+                                            [ngClass]="
+                                                plan.active
+                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400'
+                                            "
+                                        >
+                                            {{ plan.active ? "Active" : "Inactive" }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center gap-2">
+                                            <button
+                                                (click)="openEditPlan(plan)"
+                                                class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                                                i18n
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                (click)="deletePlan(plan.id)"
+                                                class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                                i18n
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual Subscription -->
+        <div class="mb-6">
+            <h2 class="mb-3 text-lg font-semibold text-gray-700 dark:text-gray-200" i18n>
+                Manual Subscription
+            </h2>
+            <div
+                class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
+            >
+                <div class="p-6">
+                    <p class="mb-4 text-xs text-gray-500 dark:text-gray-400" i18n>
+                        Create a subscription manually for a user without going through checkout.
+                    </p>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div>
+                            <label
+                                for="manual-plan"
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                i18n
+                                >Plan</label
+                            >
+                            <select
+                                id="manual-plan"
+                                [(ngModel)]="manualSubForm.plan_id"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            >
+                                <option value="" disabled i18n>Select plan</option>
+                                @for (plan of planStore.plans; track plan.id) {
+                                    <option [value]="plan.id">{{ plan.name }}</option>
+                                }
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                for="manual-user-id"
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                i18n
+                                >User ID</label
+                            >
+                            <input
+                                id="manual-user-id"
+                                type="text"
+                                [(ngModel)]="manualSubForm.user_id"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                placeholder="User UUID"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="manual-scope"
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                i18n
+                                >Scope</label
+                            >
+                            <select
+                                id="manual-scope"
+                                [(ngModel)]="manualSubForm.scope"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            >
+                                <option value="user" i18n>User</option>
+                                <option value="workspace" i18n>Workspace</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                for="manual-workspace-id"
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                i18n
+                                >Workspace ID</label
+                            >
+                            <input
+                                id="manual-workspace-id"
+                                type="text"
+                                [(ngModel)]="manualSubForm.workspace_id"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                placeholder="Optional"
+                                i18n-placeholder
+                            />
+                        </div>
+                    </div>
+                    <button
+                        (click)="createManualSubscription()"
+                        [disabled]="loading || !manualSubForm.plan_id || !manualSubForm.user_id"
+                        class="mt-4 inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                        i18n
+                    >
+                        {{ loading ? "Creating..." : "Create Subscription" }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Endpoint Weights -->
+        <div class="mb-6">
+            <h2 class="mb-3 text-lg font-semibold text-gray-700 dark:text-gray-200" i18n>
+                Endpoint Weights
+            </h2>
+            <div
+                class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
+            >
+                <div class="p-6">
+                    <p class="mb-4 text-xs text-gray-500 dark:text-gray-400" i18n>
+                        Configure how much each endpoint counts toward throughput limits.
+                    </p>
+
+                    <!-- Add Weight Form -->
+                    <div class="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div>
+                            <label
+                                for="weight-method"
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                i18n
+                                >Method</label
+                            >
+                            <select
+                                id="weight-method"
+                                [(ngModel)]="weightForm.method"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            >
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="PATCH">PATCH</option>
+                                <option value="DELETE">DELETE</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                for="weight-path"
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                i18n
+                                >Path Pattern</label
+                            >
+                            <input
+                                id="weight-path"
+                                type="text"
+                                [(ngModel)]="weightForm.path_pattern"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                placeholder="/api/v1/*"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="weight-value"
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                i18n
+                                >Weight</label
+                            >
+                            <input
+                                id="weight-value"
+                                type="number"
+                                [(ngModel)]="weightForm.weight"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                min="0"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="weight-description"
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                i18n
+                                >Description</label
+                            >
+                            <input
+                                id="weight-description"
+                                type="text"
+                                [(ngModel)]="weightForm.description"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                placeholder="Optional"
+                                i18n-placeholder
+                            />
+                        </div>
+                    </div>
+                    <button
+                        (click)="createWeight()"
+                        [disabled]="loading || !weightForm.path_pattern"
+                        class="mb-4 inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                        i18n
+                    >
+                        {{ loading ? "Adding..." : "Add Weight" }}
+                    </button>
+
+                    <!-- Weights Table -->
+                    @if (weightStore.weights.length > 0) {
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead
+                                    class="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
+                                >
+                                    <tr>
+                                        <th class="px-4 py-3" i18n>Method</th>
+                                        <th class="px-4 py-3" i18n>Path Pattern</th>
+                                        <th class="px-4 py-3" i18n>Weight</th>
+                                        <th class="px-4 py-3" i18n>Description</th>
+                                        <th class="px-4 py-3" i18n>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (w of weightStore.weights; track w.id) {
+                                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                                            <td
+                                                class="px-4 py-3 font-medium text-gray-900 dark:text-white"
+                                            >
+                                                <span
+                                                    class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
+                                                    >{{ w.method }}</span
+                                                >
+                                            </td>
+                                            <td
+                                                class="px-4 py-3 font-mono text-gray-500 dark:text-gray-400"
+                                            >
+                                                {{ w.path_pattern }}
+                                            </td>
+                                            <td class="px-4 py-3 text-gray-500 dark:text-gray-400">
+                                                {{ w.weight }}
+                                            </td>
+                                            <td class="px-4 py-3 text-gray-500 dark:text-gray-400">
+                                                {{ w.description || "-" }}
+                                            </td>
+                                            <td class="px-4 py-3">
+                                                <button
+                                                    (click)="deleteWeight(w.id)"
+                                                    class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                                    i18n
+                                                >
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    } @else {
+                        <p class="text-sm text-gray-500 dark:text-gray-400" i18n>
+                            No endpoint weights configured.
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</app-sidebar-layout>
