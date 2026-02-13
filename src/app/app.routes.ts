@@ -21,6 +21,10 @@ import { AcceptInvitationComponent } from "./accept-invitation/accept-invitation
 import { VerifyEmailRequiredComponent } from "./verify-email-required/verify-email-required.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { TermsOfServiceComponent } from "./terms-of-service/terms-of-service.component";
+import { BillingComponent } from "./billing/billing.component";
+import { BillingAdminComponent } from "./billing-admin/billing-admin.component";
+import { BillingSuccessComponent } from "./billing-success/billing-success.component";
+import { BillingCancelComponent } from "./billing-cancel/billing-cancel.component";
 import { environment } from "../environments/environment";
 
 export enum RoutePath {
@@ -44,6 +48,10 @@ export enum RoutePath {
     verifyEmailRequired = "verify-email-required",
     privacyPolicy = "privacy-policy",
     termsOfService = "terms-of-service",
+    billing = "billing",
+    billingAdmin = "billing-admin",
+    billingSuccess = "billing-success",
+    billingCancel = "billing-cancel",
 }
 
 export const routes: Routes = [
@@ -129,6 +137,26 @@ export const routes: Routes = [
     {
         path: RoutePath.phoneConfigs,
         component: PhoneConfigsComponent,
+        canActivate: [emailVerifiedGuard],
+    },
+    {
+        path: RoutePath.billing,
+        component: BillingComponent,
+        canActivate: [emailVerifiedGuard],
+    },
+    {
+        path: RoutePath.billingAdmin,
+        component: BillingAdminComponent,
+        canActivate: [userGuard, adminGuard, emailVerifiedGuard],
+    },
+    {
+        path: RoutePath.billingSuccess,
+        component: BillingSuccessComponent,
+        canActivate: [emailVerifiedGuard],
+    },
+    {
+        path: RoutePath.billingCancel,
+        component: BillingCancelComponent,
         canActivate: [emailVerifiedGuard],
     },
     environment.isLite

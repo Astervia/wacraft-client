@@ -76,6 +76,8 @@ export class SidebarComponent implements OnInit {
             RoutePath.phoneConfigs,
             RoutePath.workspaceMembers,
             RoutePath.workspaceSettings,
+            RoutePath.billing,
+            RoutePath.billingAdmin,
         ].includes(this.activePage as RoutePath);
     }
 
@@ -125,6 +127,10 @@ export class SidebarComponent implements OnInit {
                 route: ["/", RoutePath.phoneConfigs],
                 visible: () =>
                     this.isEmailVerified && this.workspaceStore.hasPolicy(Policy.phone_config_read),
+            },
+            {
+                route: ["/", RoutePath.billing],
+                visible: () => this.isEmailVerified && this.userStore.billingEnabled,
             },
             {
                 route: ["/", RoutePath.account],

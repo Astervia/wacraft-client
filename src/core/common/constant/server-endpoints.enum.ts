@@ -44,4 +44,12 @@ export enum ServerEndpoints {
     resend_verification = "resend-verification",
     auth = "auth",
     test = "test",
+
+    billing = "billing",
+    billing_plan = "plan",
+    billing_subscription = "subscription",
+    billing_usage = "usage",
+    billing_endpoint_weight = "endpoint-weight",
+    billing_checkout = "checkout",
+    billing_manual = "manual",
 }

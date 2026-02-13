@@ -24,6 +24,11 @@ export enum Policy {
     // Webhook
     webhook_read = "webhook.read",
     webhook_manage = "webhook.manage",
+
+    // Billing
+    billing_read = "billing.read",
+    billing_manage = "billing.manage",
+    billing_admin = "billing.admin",
 }
 
 export const AdminPolicies: Policy[] = Object.values(Policy);
@@ -39,6 +44,7 @@ export const MemberPolicies: Policy[] = [
     Policy.webhook_read,
     Policy.webhook_manage,
     Policy.phone_config_read,
+    Policy.billing_read,
 ];
 
 export const ViewerPolicies: Policy[] = [
@@ -46,6 +52,7 @@ export const ViewerPolicies: Policy[] = [
     Policy.contact_read,
     Policy.campaign_read,
     Policy.phone_config_read,
+    Policy.billing_read,
 ];
 
 export function hasPolicy(policies: Policy[], required: Policy): boolean {
