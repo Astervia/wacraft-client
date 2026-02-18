@@ -67,4 +67,14 @@ export class BillingSubscriptionControllerService extends MainServerControllerSe
             )
         ).data;
     }
+
+    async sync(id: string): Promise<Subscription> {
+        return (
+            await this.http.post<Subscription>(
+                `${ServerEndpoints.billing_subscription}/${ServerEndpoints.billing_sync}`,
+                null,
+                { params: { id } },
+            )
+        ).data;
+    }
 }

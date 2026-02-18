@@ -31,6 +31,7 @@ export class BillingComponent implements OnInit {
     // Checkout state
     checkoutScope: "user" | "workspace" = "user";
     checkoutLoading = false;
+    syncingSubscriptionId: string | null = null;
 
     async ngOnInit() {
         await Promise.all([
@@ -195,5 +196,21 @@ export class BillingComponent implements OnInit {
     async reactivateSubscription(sub: Subscription): Promise<void> {
         if (!confirm("Reactivate this subscription? Auto-renewal will resume.")) return;
         await this.subscriptionStore.reactivate(sub.id);
+    }
+
+    canSync(sub: Subscription): boolean {
+        return sub.payment_mode === "subscription" && !!sub.stripe_subscription_id;
+    }
+
+    async syncSubscription(sub: Subscription): Promise<void> {
+        this.syncingSubscriptionId = sub.id;
+        this.errorMessage = "";
+        try {
+            await this.subscriptionStore.sync(sub.id);
+        } catch {
+            this.errorMessage = "Failed to sync subscription. Please try again.";
+        } finally {
+            this.syncingSubscriptionId = null;
+        }
     }
 }
