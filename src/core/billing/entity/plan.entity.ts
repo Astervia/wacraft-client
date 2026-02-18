@@ -12,6 +12,8 @@ export interface PlanFields extends Audit {
     is_default: boolean;
     is_custom: boolean;
     active: boolean;
+    stripe_price_id?: string;
+    stripe_product_id?: string;
 }
 
 export type Plan = PlanFields;

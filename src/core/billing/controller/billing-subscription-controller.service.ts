@@ -50,10 +50,21 @@ export class BillingSubscriptionControllerService extends MainServerControllerSe
     }
 
     async cancel(id: string): Promise<void> {
+        console.info("cancelling");
         return (
             await this.http.delete<void>(`${ServerEndpoints.billing_subscription}`, {
                 params: { id },
             })
+        ).data;
+    }
+
+    async reactivate(id: string): Promise<void> {
+        return (
+            await this.http.post<void>(
+                `${ServerEndpoints.billing_subscription}/${ServerEndpoints.billing_reactivate}`,
+                null,
+                { params: { id } },
+            )
         ).data;
     }
 }
