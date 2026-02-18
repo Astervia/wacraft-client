@@ -8,6 +8,7 @@ import { BillingSubscriptionStoreService } from "../../core/billing/store/billin
 import { BillingUsageStoreService } from "../../core/billing/store/billing-usage-store.service";
 import { WorkspaceStoreService } from "../../core/workspace/store/workspace-store.service";
 import { Plan } from "../../core/billing/entity/plan.entity";
+import { PaymentMode, Subscription } from "../../core/billing/entity/subscription.entity";
 import { UsageInfo } from "../../core/billing/entity/usage.entity";
 
 @Component({
@@ -95,7 +96,7 @@ export class BillingComponent implements OnInit {
     }
 
     // Checkout
-    async checkout(plan: Plan): Promise<void> {
+    async checkout(plan: Plan, paymentMode: PaymentMode = "payment"): Promise<void> {
         this.checkoutLoading = true;
         this.errorMessage = "";
         try {
@@ -107,6 +108,7 @@ export class BillingComponent implements OnInit {
                 plan.id,
                 this.checkoutScope,
                 workspaceId,
+                paymentMode,
             );
             if (url) {
                 window.location.href = url;
@@ -121,21 +123,48 @@ export class BillingComponent implements OnInit {
     }
 
     // Subscription status
-    subscriptionStatus(sub: {
-        cancelled_at?: string;
-        expires_at: string;
-    }): "active" | "cancelled" | "expired" {
+    subscriptionStatus(
+        sub: Pick<Subscription, "cancelled_at" | "cancel_at_period_end" | "expires_at">,
+    ): "active" | "cancelling" | "cancelled" | "expired" {
         if (sub.cancelled_at) return "cancelled";
+        if (sub.cancel_at_period_end) return "cancelling";
         if (new Date(sub.expires_at) < new Date()) return "expired";
         return "active";
+    }
+
+    subscriptionStatusLabel(sub: Subscription): string {
+        const status = this.subscriptionStatus(sub);
+        if (status === "cancelled") return "Cancelled";
+        if (status === "cancelling") {
+            return (
+                "Cancellation pending — Active until " +
+                new Date(sub.expires_at).toLocaleDateString()
+            );
+        }
+        if (status === "expired") return "Expired";
+        if (sub.payment_mode === "subscription") {
+            return "Active — Renews on " + new Date(sub.expires_at).toLocaleDateString();
+        }
+        return "Active — Expires on " + new Date(sub.expires_at).toLocaleDateString();
+    }
+
+    canCancel(sub: Subscription): boolean {
+        return (
+            sub.payment_mode === "subscription" &&
+            !sub.cancelled_at &&
+            !sub.cancel_at_period_end &&
+            new Date(sub.expires_at) > new Date()
+        );
     }
 
     statusBadgeClass(status: string): string {
         switch (status) {
             case "active":
                 return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+            case "cancelling":
+                return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
             case "cancelled":
-                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400";
             case "expired":
                 return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
             default:
@@ -143,8 +172,28 @@ export class BillingComponent implements OnInit {
         }
     }
 
-    async cancelSubscription(id: string): Promise<void> {
-        if (!confirm("Are you sure you want to cancel this subscription?")) return;
-        await this.subscriptionStore.cancel(id);
+    canReactivate(sub: Subscription): boolean {
+        return (
+            sub.payment_mode === "subscription" &&
+            sub.cancel_at_period_end &&
+            !sub.cancelled_at &&
+            new Date(sub.expires_at) > new Date()
+        );
+    }
+
+    async cancelSubscription(sub: Subscription): Promise<void> {
+        const expiresAt = new Date(sub.expires_at).toLocaleDateString();
+        if (
+            !confirm(
+                `Are you sure you want to cancel this subscription? It will remain active until ${expiresAt} and you will not be charged again.`,
+            )
+        )
+            return;
+        await this.subscriptionStore.cancel(sub.id);
+    }
+
+    async reactivateSubscription(sub: Subscription): Promise<void> {
+        if (!confirm("Reactivate this subscription? Auto-renewal will resume.")) return;
+        await this.subscriptionStore.reactivate(sub.id);
     }
 }

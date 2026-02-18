@@ -1,6 +1,8 @@
 import { Audit } from "../../common/model/audit.model";
 import { PlanFields } from "./plan.entity";
 
+export type PaymentMode = "payment" | "subscription";
+
 export interface SubscriptionFields extends Audit {
     plan_id: string;
     scope: "user" | "workspace";
@@ -12,6 +14,9 @@ export interface SubscriptionFields extends Audit {
     cancelled_at?: string;
     payment_provider: string;
     payment_external_id?: string;
+    payment_mode: PaymentMode;
+    stripe_subscription_id?: string;
+    cancel_at_period_end: boolean;
     plan?: PlanFields;
 }
 

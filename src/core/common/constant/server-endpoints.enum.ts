@@ -52,4 +52,5 @@ export enum ServerEndpoints {
     billing_endpoint_weight = "endpoint-weight",
     billing_checkout = "checkout",
     billing_manual = "manual",
+    billing_reactivate = "reactivate",
 }

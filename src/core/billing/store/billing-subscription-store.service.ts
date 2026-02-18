@@ -1,6 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { NGXLogger } from "ngx-logger";
-import { Subscription } from "../entity/subscription.entity";
+import { PaymentMode, Subscription } from "../entity/subscription.entity";
 import { BillingSubscriptionControllerService } from "../controller/billing-subscription-controller.service";
 import { WorkspaceStoreService } from "../../workspace/store/workspace-store.service";
 import { DateOrderEnum } from "../../common/model/date-order.model";
@@ -41,6 +41,7 @@ export class BillingSubscriptionStoreService {
         planId: string,
         scope: "user" | "workspace",
         workspaceId?: string,
+        paymentMode?: PaymentMode,
         successUrl?: string,
         cancelUrl?: string,
     ): Promise<string | null> {
@@ -49,6 +50,7 @@ export class BillingSubscriptionStoreService {
                 plan_id: planId,
                 scope,
                 workspace_id: workspaceId,
+                payment_mode: paymentMode,
                 success_url: successUrl || `${window.location.origin}/billing-success`,
                 cancel_url: cancelUrl || `${window.location.origin}/billing-cancel`,
             });
@@ -65,6 +67,15 @@ export class BillingSubscriptionStoreService {
             await this.load();
         } catch (error) {
             this.logger.error("Error cancelling subscription", error);
+        }
+    }
+
+    async reactivate(id: string): Promise<void> {
+        try {
+            await this.subscriptionController.reactivate(id);
+            await this.load();
+        } catch (error) {
+            this.logger.error("Error reactivating subscription", error);
         }
     }
 }
