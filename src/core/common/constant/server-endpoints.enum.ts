@@ -53,4 +53,5 @@ export enum ServerEndpoints {
     billing_checkout = "checkout",
     billing_manual = "manual",
     billing_reactivate = "reactivate",
+    billing_sync = "sync",
 }

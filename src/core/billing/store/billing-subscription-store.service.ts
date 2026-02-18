@@ -78,4 +78,17 @@ export class BillingSubscriptionStoreService {
             this.logger.error("Error reactivating subscription", error);
         }
     }
+
+    async sync(id: string): Promise<void> {
+        try {
+            const updated = await this.subscriptionController.sync(id);
+            const index = this.subscriptions.findIndex((s) => s.id === id);
+            if (index !== -1) {
+                this.subscriptions[index] = updated;
+            }
+        } catch (error) {
+            this.logger.error("Error syncing subscription", error);
+            throw error;
+        }
+    }
 }
