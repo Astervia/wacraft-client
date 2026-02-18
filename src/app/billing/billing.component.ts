@@ -8,7 +8,11 @@ import { BillingSubscriptionStoreService } from "../../core/billing/store/billin
 import { BillingUsageStoreService } from "../../core/billing/store/billing-usage-store.service";
 import { WorkspaceStoreService } from "../../core/workspace/store/workspace-store.service";
 import { Plan } from "../../core/billing/entity/plan.entity";
-import { PaymentMode, Subscription } from "../../core/billing/entity/subscription.entity";
+import {
+    PaymentMode,
+    Subscription,
+    SubscriptionStatus,
+} from "../../core/billing/entity/subscription.entity";
 import { UsageInfo } from "../../core/billing/entity/usage.entity";
 
 @Component({
@@ -125,9 +129,10 @@ export class BillingComponent implements OnInit {
 
     // Subscription status
     subscriptionStatus(
-        sub: Pick<Subscription, "cancelled_at" | "cancel_at_period_end" | "expires_at">,
-    ): "active" | "cancelling" | "cancelled" | "expired" {
-        if (sub.cancelled_at) return "cancelled";
+        sub: Pick<Subscription, "status" | "cancelled_at" | "cancel_at_period_end" | "expires_at">,
+    ): "pending" | "active" | "cancelling" | "cancelled" | "expired" {
+        if (sub.status === "pending") return "pending";
+        if (sub.status === "cancelled" || sub.cancelled_at) return "cancelled";
         if (sub.cancel_at_period_end) return "cancelling";
         if (new Date(sub.expires_at) < new Date()) return "expired";
         return "active";
@@ -135,6 +140,7 @@ export class BillingComponent implements OnInit {
 
     subscriptionStatusLabel(sub: Subscription): string {
         const status = this.subscriptionStatus(sub);
+        if (status === "pending") return "Awaiting payment confirmation";
         if (status === "cancelled") return "Cancelled";
         if (status === "cancelling") {
             return (
@@ -151,6 +157,7 @@ export class BillingComponent implements OnInit {
 
     canCancel(sub: Subscription): boolean {
         return (
+            sub.status === "active" &&
             sub.payment_mode === "subscription" &&
             !sub.cancelled_at &&
             !sub.cancel_at_period_end &&
@@ -160,6 +167,8 @@ export class BillingComponent implements OnInit {
 
     statusBadgeClass(status: string): string {
         switch (status) {
+            case "pending":
+                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
             case "active":
                 return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
             case "cancelling":
@@ -175,6 +184,7 @@ export class BillingComponent implements OnInit {
 
     canReactivate(sub: Subscription): boolean {
         return (
+            sub.status === "active" &&
             sub.payment_mode === "subscription" &&
             sub.cancel_at_period_end &&
             !sub.cancelled_at &&
@@ -199,7 +209,17 @@ export class BillingComponent implements OnInit {
     }
 
     canSync(sub: Subscription): boolean {
-        return sub.payment_mode === "subscription" && !!sub.stripe_subscription_id;
+        if (sub.status === "pending") return true;
+        return (
+            sub.status === "active" &&
+            sub.payment_mode === "subscription" &&
+            !!sub.stripe_subscription_id
+        );
+    }
+
+    syncButtonLabel(sub: Subscription): string {
+        if (sub.status === "pending") return "Check payment status";
+        return "Sync";
     }
 
     async syncSubscription(sub: Subscription): Promise<void> {

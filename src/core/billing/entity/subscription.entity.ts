@@ -2,8 +2,10 @@ import { Audit } from "../../common/model/audit.model";
 import { PlanFields } from "./plan.entity";
 
 export type PaymentMode = "payment" | "subscription";
+export type SubscriptionStatus = "pending" | "active" | "cancelled";
 
 export interface SubscriptionFields extends Audit {
+    status: SubscriptionStatus;
     plan_id: string;
     scope: "user" | "workspace";
     user_id: string;

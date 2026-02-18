@@ -422,7 +422,7 @@
                                                             d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15.36-5.36M20 15a9 9 0 0 1-15.36 5.36"
                                                         />
                                                     </svg>
-                                                    Sync
+                                                    {{ syncButtonLabel(sub) }}
                                                 </button>
                                             }
                                             @if (canCancel(sub)) {
@@ -447,32 +447,49 @@
                                     </div>
 
                                     <div class="mt-3 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
-                                        <div>
-                                            <span
-                                                class="text-xs text-gray-500 dark:text-gray-400"
-                                                i18n
-                                                >Starts</span
-                                            >
-                                            <p class="font-medium text-gray-900 dark:text-white">
-                                                {{ sub.starts_at | date: "mediumDate" }}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <span
-                                                class="text-xs text-gray-500 dark:text-gray-400"
-                                            >
-                                                {{
-                                                    sub.payment_mode === "subscription" &&
-                                                    !sub.cancelled_at &&
-                                                    !sub.cancel_at_period_end
-                                                        ? "Renews"
-                                                        : "Expires"
-                                                }}
-                                            </span>
-                                            <p class="font-medium text-gray-900 dark:text-white">
-                                                {{ sub.expires_at | date: "mediumDate" }}
-                                            </p>
-                                        </div>
+                                        @if (sub.status === "pending") {
+                                            <div class="col-span-2 sm:col-span-4">
+                                                <p
+                                                    class="text-sm text-yellow-700 dark:text-yellow-400"
+                                                    i18n
+                                                >
+                                                    Payment is being processed. If you completed
+                                                    checkout, click "Check payment status" to
+                                                    confirm.
+                                                </p>
+                                            </div>
+                                        } @else {
+                                            <div>
+                                                <span
+                                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                                    i18n
+                                                    >Starts</span
+                                                >
+                                                <p
+                                                    class="font-medium text-gray-900 dark:text-white"
+                                                >
+                                                    {{ sub.starts_at | date: "mediumDate" }}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <span
+                                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                                >
+                                                    {{
+                                                        sub.payment_mode === "subscription" &&
+                                                        !sub.cancelled_at &&
+                                                        !sub.cancel_at_period_end
+                                                            ? "Renews"
+                                                            : "Expires"
+                                                    }}
+                                                </span>
+                                                <p
+                                                    class="font-medium text-gray-900 dark:text-white"
+                                                >
+                                                    {{ sub.expires_at | date: "mediumDate" }}
+                                                </p>
+                                            </div>
+                                        }
                                         @if (sub.throughput_override) {
                                             <div>
                                                 <span
