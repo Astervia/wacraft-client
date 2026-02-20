@@ -167,10 +167,10 @@
                 } @else {
                     <!-- Scope Selector -->
                     <div class="mb-5">
-                        <label
+                        <span
                             class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                             i18n
-                            >Subscribe as:</label
+                            >Subscribe as:</span
                         >
                         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                             <button
@@ -188,19 +188,14 @@
                                     [ngClass]="{
                                         'text-blue-700 dark:text-blue-300':
                                             checkoutScope === 'user',
-                                        'text-gray-900 dark:text-white':
-                                            checkoutScope !== 'user',
+                                        'text-gray-900 dark:text-white': checkoutScope !== 'user',
                                     }"
                                     i18n
                                     >User</span
                                 >
-                                <p
-                                    class="mt-1 text-xs text-gray-500 dark:text-gray-400"
-                                    i18n
-                                >
-                                    Budget for your personal account. Used
-                                    directly or as fallback when a workspace
-                                    budget runs out.
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400" i18n>
+                                    Budget for your personal account. Used directly or as fallback
+                                    when a workspace budget runs out.
                                 </p>
                             </button>
                             <button
@@ -224,13 +219,9 @@
                                     i18n
                                     >Workspace</span
                                 >
-                                <p
-                                    class="mt-1 text-xs text-gray-500 dark:text-gray-400"
-                                    i18n
-                                >
-                                    Shared budget across workspace members.
-                                    Charged first; cascades to user budget when
-                                    exhausted.
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400" i18n>
+                                    Shared budget across workspace members. Charged first; cascades
+                                    to user budget when exhausted.
                                 </p>
                             </button>
                         </div>
@@ -311,9 +302,7 @@
                                                 i18n
                                             >
                                                 {{
-                                                    checkoutLoading
-                                                        ? "Processing..."
-                                                        : "Subscribe"
+                                                    checkoutLoading ? "Processing..." : "Subscribe"
                                                 }}
                                             </button>
                                         </div>
@@ -409,7 +398,9 @@
                                                 >
                                                     <svg
                                                         class="h-4 w-4"
-                                                        [class.animate-spin]="syncingSubscriptionId === sub.id"
+                                                        [class.animate-spin]="
+                                                            syncingSubscriptionId === sub.id
+                                                        "
                                                         xmlns="http://www.w3.org/2000/svg"
                                                         fill="none"
                                                         viewBox="0 0 24 24"
