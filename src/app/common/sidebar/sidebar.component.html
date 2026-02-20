@@ -191,19 +191,21 @@
             </a>
         }
 
-        <a
-            [routerLink]="['/', RoutePath.billing]"
-            [queryParams]="queryParamsService.globalQueryParams"
-            queryParamsHandling="replace"
-            class="navigator"
-        >
-            <app-small-button
-                [active]="activePage === RoutePath.billing"
-                matTooltip="Billing"
-                matIcon="payment"
-                i18n-matTooltip
-            ></app-small-button>
-        </a>
+        @if (userStore.billingEnabled) {
+            <a
+                [routerLink]="['/', RoutePath.billing]"
+                [queryParams]="queryParamsService.globalQueryParams"
+                queryParamsHandling="replace"
+                class="navigator"
+            >
+                <app-small-button
+                    [active]="activePage === RoutePath.billing"
+                    matTooltip="Billing"
+                    matIcon="payment"
+                    i18n-matTooltip
+                ></app-small-button>
+            </a>
+        }
 
         <!-- Admin Section -->
         @if (userStore.currentUser.role === Role.admin) {
