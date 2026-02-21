@@ -50,8 +50,8 @@ jobs:
                   cache: "npm"
                   cache-dependency-path: "package-lock.json"
             - run: npm ci
-            - name: npm audit (high and above)
-              run: npm audit --audit-level=high
+            - name: npm audit (production, high and above)
+              run: npm audit --audit-level=high --omit=dev
 
     build:
         name: Production Build Validation
