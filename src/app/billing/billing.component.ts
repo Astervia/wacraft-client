@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { SidebarLayoutComponent } from "../common/sidebar-layout/sidebar-layout.component";
 import { RoutePath } from "../app.routes";
 import { BillingPlanStoreService } from "../../core/billing/store/billing-plan-store.service";
@@ -13,7 +14,7 @@ import { UsageInfo } from "../../core/billing/entity/usage.entity";
 
 @Component({
     selector: "app-billing",
-    imports: [CommonModule, FormsModule, SidebarLayoutComponent],
+    imports: [CommonModule, FormsModule, RouterLink, SidebarLayoutComponent],
     templateUrl: "./billing.component.html",
     standalone: true,
 })
@@ -22,6 +23,8 @@ export class BillingComponent implements OnInit {
     subscriptionStore = inject(BillingSubscriptionStoreService);
     usageStore = inject(BillingUsageStoreService);
     workspaceStore = inject(WorkspaceStoreService);
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
 
     RoutePath = RoutePath;
 
@@ -34,6 +37,15 @@ export class BillingComponent implements OnInit {
     syncingSubscriptionId: string | null = null;
 
     async ngOnInit() {
+        this.route.fragment.subscribe(fragment => {
+            if (fragment === "subscriptions") this.activeTab = "subscriptions";
+            else {
+                this.activeTab = "plans";
+                if (fragment !== "plans")
+                    this.router.navigate([], { fragment: "plans", replaceUrl: true });
+            }
+        });
+
         await Promise.all([
             this.planStore.load(),
             this.subscriptionStore.load(),

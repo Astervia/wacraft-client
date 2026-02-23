@@ -23,8 +23,9 @@
         <!-- Tabs -->
         <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
             <nav class="-mb-px flex space-x-6">
-                <button
-                    (click)="activeTab = 'plans'"
+                <a
+                    [routerLink]="[]"
+                    fragment="plans"
                     [ngClass]="{
                         'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400':
                             activeTab === 'plans',
@@ -35,9 +36,10 @@
                     i18n
                 >
                     Plans & Usage
-                </button>
-                <button
-                    (click)="activeTab = 'subscriptions'"
+                </a>
+                <a
+                    [routerLink]="[]"
+                    fragment="subscriptions"
                     [ngClass]="{
                         'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400':
                             activeTab === 'subscriptions',
@@ -48,7 +50,7 @@
                     i18n
                 >
                     Subscriptions
-                </button>
+                </a>
             </nav>
         </div>
 
