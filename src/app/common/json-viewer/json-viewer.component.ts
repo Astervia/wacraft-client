@@ -78,10 +78,6 @@ export class JsonViewerComponent {
         return (node.type === "object" || node.type === "array") && (node.length ?? 0) > 0;
     }
 
-    isCopyable(node: JsonNode): boolean {
-        return node.type === "object" || node.type === "array";
-    }
-
     async copyNode(node: JsonNode, event: Event): Promise<void> {
         event.stopPropagation();
         try {
