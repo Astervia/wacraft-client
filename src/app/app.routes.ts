@@ -2,7 +2,6 @@ import { Routes } from "@angular/router";
 import { LoginComponent } from "./login/login.component";
 import { userGuard } from "./../core/auth/guard/user.guard";
 import { adminGuard } from "./../core/auth/guard/admin.guard";
-import { emailVerifiedGuard } from "./../core/auth/guard/email-verified.guard";
 import { HomeComponent } from "./home/home.component";
 import { PluginsManagerService } from "../plugins/common/service/plugins-manager.service";
 import { AccountComponent } from "./account/account.component";
@@ -97,7 +96,7 @@ export const routes: Routes = [
     {
         path: RoutePath.home,
         component: HomeComponent,
-        canActivate: [emailVerifiedGuard],
+        canActivate: [userGuard],
     },
     {
         path: RoutePath.account,
@@ -107,57 +106,57 @@ export const routes: Routes = [
     {
         path: RoutePath.webhooks,
         component: WebhooksComponent,
-        canActivate: [emailVerifiedGuard],
+        canActivate: [userGuard],
     },
     {
         path: RoutePath.users,
         component: UsersComponent,
-        canActivate: [userGuard, adminGuard, emailVerifiedGuard],
+        canActivate: [userGuard, adminGuard],
     },
     {
         path: RoutePath.workspaceSettings,
         component: WorkspaceSettingsComponent,
-        canActivate: [emailVerifiedGuard],
+        canActivate: [userGuard],
     },
     {
         path: RoutePath.workspaceMembers,
         component: WorkspaceMembersComponent,
-        canActivate: [emailVerifiedGuard],
+        canActivate: [userGuard],
     },
     {
         path: RoutePath.phoneConfigNew,
         component: PhoneConfigDetailComponent,
-        canActivate: [emailVerifiedGuard],
+        canActivate: [userGuard],
     },
     {
         path: RoutePath.phoneConfigDetail,
         component: PhoneConfigDetailComponent,
-        canActivate: [emailVerifiedGuard],
+        canActivate: [userGuard],
     },
     {
         path: RoutePath.phoneConfigs,
         component: PhoneConfigsComponent,
-        canActivate: [emailVerifiedGuard],
+        canActivate: [userGuard],
     },
     {
         path: RoutePath.billing,
         component: BillingComponent,
-        canActivate: [emailVerifiedGuard],
+        canActivate: [userGuard],
     },
     {
         path: RoutePath.billingAdmin,
         component: BillingAdminComponent,
-        canActivate: [userGuard, adminGuard, emailVerifiedGuard],
+        canActivate: [userGuard, adminGuard],
     },
     {
         path: RoutePath.billingSuccess,
         component: BillingSuccessComponent,
-        canActivate: [emailVerifiedGuard],
+        canActivate: [userGuard],
     },
     {
         path: RoutePath.billingCancel,
         component: BillingCancelComponent,
-        canActivate: [emailVerifiedGuard],
+        canActivate: [userGuard],
     },
     environment.isLite
         ? {
@@ -167,7 +166,7 @@ export const routes: Routes = [
         : {
               path: RoutePath.automation,
               component: AutomationComponent,
-              canActivate: [emailVerifiedGuard],
+              canActivate: [userGuard],
           },
     {
         path: "",
