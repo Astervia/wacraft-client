@@ -19,6 +19,7 @@ export class MainServerControllerService {
     prefix = `http${environment.mainServerSecurity ? "s" : ""}://${environment.mainServerUrl}`;
     path: ServerEndpoints[] = [];
     private billingRedirectInProgress = false;
+    private verifyEmailRedirectInProgress = false;
 
     http: AxiosInstance = axios.create({
         baseURL: [this.prefix, ...this.path].join("/"),
@@ -32,6 +33,7 @@ export class MainServerControllerService {
         this.watchToken();
         this.watchWorkspace();
         this.watchBillingRedirect();
+        this.watchVerifyEmailRedirect();
     }
 
     setPath(...path: ServerEndpoints[]): void {
@@ -66,6 +68,16 @@ export class MainServerControllerService {
                 this.billingRedirectInProgress = true;
                 this.router.navigate([`/${RoutePath.billing}`]);
             }
+            if (
+                error?.response?.status === 403 &&
+                error?.response?.data?.message === "Email verification required" &&
+                !this.verifyEmailRedirectInProgress &&
+                !this.router.url.startsWith(`/${RoutePath.verifyEmailRequired}`) &&
+                !this.router.url.startsWith(`/${RoutePath.auth}`)
+            ) {
+                this.verifyEmailRedirectInProgress = true;
+                this.router.navigate([`/${RoutePath.verifyEmailRequired}`]);
+            }
             return Promise.reject(error);
         });
     }
@@ -73,6 +85,12 @@ export class MainServerControllerService {
     private watchBillingRedirect(): void {
         this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
             this.billingRedirectInProgress = false;
+        });
+    }
+
+    private watchVerifyEmailRedirect(): void {
+        this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+            this.verifyEmailRedirectInProgress = false;
         });
     }
 
