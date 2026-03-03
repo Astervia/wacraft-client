@@ -16,6 +16,7 @@ import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/tim
 import { isHttpError } from "../../../core/common/model/http-error-shape.model";
 import { TestWebhookResponse } from "../../../core/webhook/model/test.model";
 import { JsonViewerComponent } from "../../common/json-viewer/json-viewer.component";
+import { CopyButtonComponent } from "../../common/copy-button/copy-button.component";
 
 @Component({
     selector: "app-webhook-details",
@@ -27,6 +28,7 @@ import { JsonViewerComponent } from "../../common/json-viewer/json-viewer.compon
         MatTooltipModule,
         TimeoutErrorModalComponent,
         JsonViewerComponent,
+        CopyButtonComponent,
     ],
     templateUrl: "./webhook-details.component.html",
     styleUrl: "./webhook-details.component.scss",
@@ -241,12 +243,6 @@ export class WebhookDetailsComponent implements OnInit {
             preserveFragment: true,
             queryParamsHandling: "replace",
         });
-    }
-
-    // Copy the given value to the clipboard
-    async copyToClipboard(value?: string) {
-        if (!value) return;
-        await navigator.clipboard.writeText(value);
     }
 
     // Toggle Section Management

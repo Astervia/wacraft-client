@@ -12,6 +12,7 @@ import { NGXLogger } from "ngx-logger";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
 import { isHttpError } from "../../../core/common/model/http-error-shape.model";
+import { CopyButtonComponent } from "../../common/copy-button/copy-button.component";
 
 @Component({
     selector: "app-user-details",
@@ -21,6 +22,7 @@ import { isHttpError } from "../../../core/common/model/http-error-shape.model";
         MatIconModule,
         MatTooltipModule,
         TimeoutErrorModalComponent,
+        CopyButtonComponent,
     ],
     templateUrl: "./user-details.component.html",
     styleUrl: "./user-details.component.scss",
@@ -165,13 +167,6 @@ export class UserDetailsComponent implements OnInit {
             preserveFragment: true,
             queryParamsHandling: "replace",
         });
-    }
-
-    // Copy the given value to the clipboard
-    async copyToClipboard(value?: string) {
-        if (value) {
-            await navigator.clipboard.writeText(value);
-        }
     }
 
     showPassword = false;
