@@ -103,13 +103,12 @@
                 id="footer"
             >
                 <span class="text-sm font-normal text-white">{{ selectedRow.title }}</span>
-                <button
-                    type=""
-                    class="absolute bottom-8 right-6 flex aspect-square w-16 items-center justify-center rounded-full bg-blue-700 dark:bg-blue-800"
-                    (click)="copyText(selectedRow.id)"
-                >
-                    <mat-icon class="material-icons-outlined">copy</mat-icon>
-                </button>
+                <app-copy-button
+                    buttonClass="absolute bottom-8 right-6 flex aspect-square w-16 items-center justify-center rounded-full bg-blue-700 dark:bg-blue-800 text-white"
+                    defaultIconClass="h-6 w-6"
+                    copiedIconClass="h-6 w-6"
+                    [textToCopy]="selectedRow.id"
+                ></app-copy-button>
             </div>
         }
     </div>

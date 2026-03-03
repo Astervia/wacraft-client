@@ -28,19 +28,9 @@ export class MessageInfoDataComponent {
 
     @Input() message: unknown;
     @Output() closeModal = new EventEmitter<void>();
-    copied = false;
 
     close() {
         this.closeModal.emit();
-    }
-
-    async copyToClipboard() {
-        try {
-            await navigator.clipboard.writeText(this.jsonPipe.transform(this.message));
-            this.copied = true;
-        } catch (err) {
-            this.logger.error("Failed to copy message: ", err);
-        }
     }
 
     @HostListener("document:click", ["$event"])

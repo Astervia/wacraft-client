@@ -5,10 +5,11 @@ import { SidebarLayoutComponent } from "../common/sidebar-layout/sidebar-layout.
 import { RoutePath } from "../app.routes";
 import { WorkspaceStoreService } from "../../core/workspace/store/workspace-store.service";
 import { WorkspaceControllerService } from "../../core/workspace/controller/workspace-controller.service";
+import { CopyButtonComponent } from "../common/copy-button/copy-button.component";
 
 @Component({
     selector: "app-workspace-settings",
-    imports: [CommonModule, FormsModule, SidebarLayoutComponent],
+    imports: [CommonModule, FormsModule, SidebarLayoutComponent, CopyButtonComponent],
     templateUrl: "./workspace-settings.component.html",
     standalone: true,
 })
@@ -63,17 +64,6 @@ export class WorkspaceSettingsComponent implements OnInit {
     cancel(): void {
         this.isEditing = false;
         this.resetEditData();
-    }
-
-    idCopied = false;
-
-    copyWorkspaceId(): void {
-        const ws = this.workspaceStore.currentWorkspace;
-        if (!ws) return;
-        navigator.clipboard.writeText(ws.id).then(() => {
-            this.idCopied = true;
-            setTimeout(() => (this.idCopied = false), 2000);
-        });
     }
 
     async deleteWorkspace(): Promise<void> {
