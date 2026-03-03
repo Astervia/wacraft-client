@@ -16,6 +16,7 @@ import {
 import { environment } from "../../../environments/environment";
 import { WhatsAppError } from "../../../core/common/model/whatsapp-error.model";
 import { isHttpError } from "../../../core/common/model/http-error-shape.model";
+import { CopyButtonComponent } from "../../common/copy-button/copy-button.component";
 
 @Component({
     selector: "app-phone-config-detail",
@@ -24,6 +25,7 @@ import { isHttpError } from "../../../core/common/model/http-error-shape.model";
         SidebarLayoutComponent,
         PhoneConfigFormComponent,
         PhoneConfigRegistrationComponent,
+        CopyButtonComponent,
     ],
     templateUrl: "./phone-config-detail.component.html",
     standalone: true,
@@ -43,8 +45,6 @@ export class PhoneConfigDetailComponent implements OnInit {
     loading = false;
     errorMessage = "";
     whatsappError: WhatsAppError | null = null;
-
-    copiedField: string | null = null;
 
     async ngOnInit(): Promise<void> {
         const id = this.route.snapshot.paramMap.get("id");
@@ -146,15 +146,5 @@ export class PhoneConfigDetailComponent implements OnInit {
         if (!this.config) return "";
         const protocol = environment.mainServerSecurity ? "https" : "http";
         return `${protocol}://${environment.mainServerUrl}/webhook-in/${this.config.waba_id}`;
-    }
-
-    async copyToClipboard(value: string, field: string): Promise<void> {
-        await navigator.clipboard.writeText(value);
-        this.copiedField = field;
-        setTimeout(() => {
-            if (this.copiedField === field) {
-                this.copiedField = null;
-            }
-        }, 2000);
     }
 }

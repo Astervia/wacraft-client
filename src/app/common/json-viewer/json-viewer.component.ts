@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { CopyButtonComponent } from "../copy-button/copy-button.component";
 
 interface JsonNode {
     key: string;
@@ -12,7 +13,7 @@ interface JsonNode {
 
 @Component({
     selector: "app-json-viewer",
-    imports: [CommonModule],
+    imports: [CommonModule, CopyButtonComponent],
     templateUrl: "./json-viewer.component.html",
     standalone: true,
 })
@@ -66,7 +67,9 @@ export class JsonViewerComponent {
         return { key, value, type, expanded };
     }
 
-    copiedNode: JsonNode | null = null;
+    getJsonString(node: JsonNode): string {
+        return JSON.stringify(node.value, null, 2);
+    }
 
     toggleNode(node: JsonNode): void {
         if (node.type === "object" || node.type === "array") {
@@ -76,20 +79,6 @@ export class JsonViewerComponent {
 
     isExpandable(node: JsonNode): boolean {
         return (node.type === "object" || node.type === "array") && (node.length ?? 0) > 0;
-    }
-
-    async copyNode(node: JsonNode, event: Event): Promise<void> {
-        event.stopPropagation();
-        try {
-            const jsonString = JSON.stringify(node.value, null, 2);
-            await navigator.clipboard.writeText(jsonString);
-            this.copiedNode = node;
-            setTimeout(() => {
-                this.copiedNode = null;
-            }, 1500);
-        } catch (err) {
-            console.error("Failed to copy:", err);
-        }
     }
 
     getDisplayValue(node: JsonNode): string {

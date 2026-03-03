@@ -11,6 +11,7 @@ import { NGXLogger } from "ngx-logger";
 import { isHttpError } from "../../../core/common/model/http-error-shape.model";
 import { TemplateStatusBadgeComponent } from "../template-status-badge/template-status-badge.component";
 import { TemplateCategoryBadgeComponent } from "../template-category-badge/template-category-badge.component";
+import { CopyButtonComponent } from "../../common/copy-button/copy-button.component";
 
 @Component({
     selector: "app-template-details",
@@ -22,6 +23,7 @@ import { TemplateCategoryBadgeComponent } from "../template-category-badge/templ
         TimeoutErrorModalComponent,
         TemplateStatusBadgeComponent,
         TemplateCategoryBadgeComponent,
+        CopyButtonComponent,
     ],
     templateUrl: "./template-details.component.html",
     styleUrl: "./template-details.component.scss",
@@ -57,13 +59,6 @@ export class TemplateDetailsComponent implements OnInit {
         } catch (error) {
             this.handleErr("Error loading template", error);
             return;
-        }
-    }
-
-    // Copy the given value to the clipboard
-    async copyToClipboard(value?: string) {
-        if (value) {
-            await navigator.clipboard.writeText(value);
         }
     }
 
