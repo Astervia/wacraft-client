@@ -17,6 +17,7 @@ import { VerifyEmailComponent } from "./verify-email/verify-email.component";
 import { ForgotPasswordComponent } from "./forgot-password/forgot-password.component";
 import { ResetPasswordComponent } from "./reset-password/reset-password.component";
 import { AcceptInvitationComponent } from "./accept-invitation/accept-invitation.component";
+import { InvitationComponent } from "./invitation/invitation.component";
 import { VerifyEmailRequiredComponent } from "./verify-email-required/verify-email-required.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { TermsOfServiceComponent } from "./terms-of-service/terms-of-service.component";
@@ -44,6 +45,7 @@ export enum RoutePath {
     forgotPassword = "forgot-password",
     resetPassword = "reset-password",
     acceptInvitation = "accept-invitation",
+    invitation = "invitation",
     verifyEmailRequired = "verify-email-required",
     privacyPolicy = "privacy-policy",
     termsOfService = "terms-of-service",
@@ -78,6 +80,10 @@ export const routes: Routes = [
     {
         path: `${RoutePath.auth}/${RoutePath.acceptInvitation}`,
         component: AcceptInvitationComponent,
+    },
+    {
+        path: RoutePath.invitation,
+        component: InvitationComponent,
     },
     {
         path: `${RoutePath.auth}/${RoutePath.privacyPolicy}`,
