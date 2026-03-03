@@ -8,10 +8,11 @@ import { PhoneConfigControllerService } from "../../core/phone-config/controller
 import { WorkspaceStoreService } from "../../core/workspace/store/workspace-store.service";
 import { PhoneConfig } from "../../core/phone-config/entity/phone-config.entity";
 import { environment } from "../../environments/environment";
+import { CopyButtonComponent } from "../common/copy-button/copy-button.component";
 
 @Component({
     selector: "app-phone-configs",
-    imports: [CommonModule, SidebarLayoutComponent],
+    imports: [CommonModule, SidebarLayoutComponent, CopyButtonComponent],
     templateUrl: "./phone-configs.component.html",
     standalone: true,
 })
@@ -63,7 +64,6 @@ export class PhoneConfigsComponent implements OnInit {
         this.router.navigate(["/" + RoutePath.phoneConfigNew]);
     }
 
-    copiedField: { configId: string; field: string } | null = null;
     expandedWebhook = new Set<string>();
 
     toggleWebhookInfo(event: Event, configId: string): void {
@@ -78,22 +78,6 @@ export class PhoneConfigsComponent implements OnInit {
     getWebhookUrl(config: PhoneConfig): string {
         const protocol = environment.mainServerSecurity ? "https" : "http";
         return `${protocol}://${environment.mainServerUrl}/webhook-in/${config.waba_id}`;
-    }
-
-    async copyToClipboard(
-        event: Event,
-        value: string,
-        configId: string,
-        field: string,
-    ): Promise<void> {
-        event.stopPropagation();
-        await navigator.clipboard.writeText(value);
-        this.copiedField = { configId, field };
-        setTimeout(() => {
-            if (this.copiedField?.configId === configId && this.copiedField?.field === field) {
-                this.copiedField = null;
-            }
-        }, 2000);
     }
 
     async deleteConfig(event: Event, config: PhoneConfig): Promise<void> {

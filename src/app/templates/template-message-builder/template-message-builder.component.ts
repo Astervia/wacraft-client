@@ -34,6 +34,7 @@ import { UserConversationsStoreService } from "../../../core/message/store/user-
 import { TemplateComponentTypeConverterPipe } from "../../../core/template/pipe/template-component-type-converter.pipe";
 import { TemplateModule } from "../../../core/template/template.module";
 import { ButtonSubtype } from "../../../core/message/model/button-subtype.model";
+import { CopyButtonComponent } from "../../common/copy-button/copy-button.component";
 
 @Component({
     selector: "app-template-message-builder",
@@ -47,6 +48,7 @@ import { ButtonSubtype } from "../../../core/message/model/button-subtype.model"
         TemplateModule,
         MatIconModule,
         MediaMessageFileUploadComponent,
+        CopyButtonComponent,
     ],
     templateUrl: "./template-message-builder.component.html",
     styleUrl: "./template-message-builder.component.scss",
@@ -417,8 +419,8 @@ export class TemplateMessageBuilderComponent {
         this.mediaByUrl = event === "true";
     }
 
-    copySenderData() {
-        navigator.clipboard.writeText(JSON.stringify(this.message?.sender_data, null, 4));
+    getSenderDataJson(): string {
+        return JSON.stringify(this.message?.sender_data, null, 4);
     }
 
     // Helper function to flatten nested objects, handling arrays as JSON strings

@@ -37,15 +37,11 @@
                             >
                                 {{ template.name }}
                             </div>
-                            <button
-                                mat-icon-button
-                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-gray-400 opacity-0 transition-all hover:bg-gray-200 hover:text-gray-700 group-hover:opacity-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                (click)="copyToClipboard(template.name)"
-                                matTooltip="Copy template name"
-                                i18n-matTooltip
-                            >
-                                <mat-icon class="!h-4 !w-4 !text-base">content_copy</mat-icon>
-                            </button>
+                            <app-copy-button
+                                class="absolute right-2 top-1/2 -translate-y-1/2"
+                                buttonClass="rounded p-1 h-6 w-6 opacity-0 group-hover:opacity-100"
+                                [textToCopy]="template.name"
+                            ></app-copy-button>
                         </div>
                     </div>
 
@@ -77,15 +73,11 @@
                             >
                                 {{ template.id }}
                             </div>
-                            <button
-                                mat-icon-button
-                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-gray-400 opacity-0 transition-all hover:bg-gray-200 hover:text-gray-700 group-hover:opacity-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                (click)="copyToClipboard(template.id)"
-                                matTooltip="Copy template ID"
-                                i18n-matTooltip
-                            >
-                                <mat-icon class="!h-4 !w-4 !text-base">content_copy</mat-icon>
-                            </button>
+                            <app-copy-button
+                                class="absolute right-2 top-1/2 -translate-y-1/2"
+                                buttonClass="rounded p-1 h-6 w-6 opacity-0 group-hover:opacity-100"
+                                [textToCopy]="template.id"
+                            ></app-copy-button>
                         </div>
                     </div>
                 </div>

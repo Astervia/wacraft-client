@@ -169,16 +169,11 @@
                                 placeholder="https://example.com/webhook"
                                 class="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 py-3 pr-12 font-mono text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-900"
                             />
-                            <button
-                                type="button"
-                                (click)="copyToClipboard(webhook.url)"
-                                matTooltip="Copy URL"
-                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/30 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                            >
-                                <mat-icon class="material-icons-outlined text-lg"
-                                    >content_copy</mat-icon
-                                >
-                            </button>
+                            <app-copy-button
+                                class="absolute right-2 top-1/2 -translate-y-1/2"
+                                buttonClass="rounded-lg p-2 h-9 w-9 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/30 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                                [textToCopy]="webhook.url"
+                            ></app-copy-button>
                         </div>
 
                         <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
@@ -262,16 +257,11 @@
                                 placeholder="Bearer token..."
                                 class="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 py-3 pr-12 font-mono text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-900"
                             />
-                            <button
-                                type="button"
-                                (click)="copyToClipboard(webhook.authorization)"
-                                matTooltip="Copy authorization"
-                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/30 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                            >
-                                <mat-icon class="material-icons-outlined text-lg"
-                                    >content_copy</mat-icon
-                                >
-                            </button>
+                            <app-copy-button
+                                class="absolute right-2 top-1/2 -translate-y-1/2"
+                                buttonClass="rounded-lg p-2 h-9 w-9 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/30 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                                [textToCopy]="webhook.authorization || ''"
+                            ></app-copy-button>
                         </div>
                         <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
                             Optional. Include if your endpoint requires authentication.
@@ -378,16 +368,11 @@
                                             >
                                                 {{ signingSecret }}
                                             </code>
-                                            <button
-                                                type="button"
-                                                (click)="copyToClipboard(signingSecret)"
-                                                matTooltip="Copy signing secret"
-                                                class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-yellow-700 transition hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500/30 dark:text-yellow-200 dark:hover:bg-yellow-800/60"
-                                            >
-                                                <mat-icon class="material-icons-outlined text-lg"
-                                                    >content_copy</mat-icon
-                                                >
-                                            </button>
+                                            <app-copy-button
+                                                class="absolute right-2 top-1/2 -translate-y-1/2"
+                                                buttonClass="rounded-lg p-2 h-9 w-9 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500/30 dark:text-yellow-200 dark:hover:bg-yellow-800/60"
+                                                [textToCopy]="signingSecret"
+                                            ></app-copy-button>
                                         </div>
                                     </div>
                                 }

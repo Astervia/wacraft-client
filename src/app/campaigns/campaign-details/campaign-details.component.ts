@@ -14,6 +14,7 @@ import { MessagingProductControllerService } from "../../../core/messaging-produ
 import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
 import { NGXLogger } from "ngx-logger";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { CopyButtonComponent } from "../../common/copy-button/copy-button.component";
 
 @Component({
     selector: "app-campaign-details",
@@ -25,6 +26,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
         SendCampaignComponent,
         MatIconModule,
         MatTooltipModule,
+        CopyButtonComponent,
     ],
     templateUrl: "./campaign-details.component.html",
     styleUrl: "./campaign-details.component.scss",
@@ -165,13 +167,6 @@ export class CampaignDetailsComponent implements OnInit {
             preserveFragment: true,
             queryParamsHandling: "replace",
         });
-    }
-
-    // Copy the given value to the clipboard
-    async copyToClipboard(value?: string) {
-        if (value) {
-            await navigator.clipboard.writeText(value);
-        }
     }
 
     async loadMessageCount() {
