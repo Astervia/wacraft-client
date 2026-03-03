@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { SidebarLayoutComponent } from "../common/sidebar-layout/sidebar-layout.component";
+import { CopyButtonComponent } from "../common/copy-button/copy-button.component";
 import { RoutePath } from "../app.routes";
 import { WorkspaceStoreService } from "../../core/workspace/store/workspace-store.service";
 import { WorkspaceMemberStoreService } from "../../core/workspace/store/workspace-member-store.service";
@@ -14,9 +15,17 @@ import {
     ViewerPolicies,
 } from "../../core/workspace/model/policy.model";
 
+interface WorkspaceInvitation {
+    id: string;
+    email: string;
+    token: string;
+    policies: string[];
+    expires_at: string;
+}
+
 @Component({
     selector: "app-workspace-members",
-    imports: [CommonModule, FormsModule, SidebarLayoutComponent],
+    imports: [CommonModule, FormsModule, SidebarLayoutComponent, CopyButtonComponent],
     templateUrl: "./workspace-members.component.html",
     standalone: true,
 })
@@ -32,7 +41,7 @@ export class WorkspaceMembersComponent implements OnInit {
     ViewerPolicies = ViewerPolicies;
     allPolicies = Object.values(Policy);
 
-    invitations: unknown[] = [];
+    invitations: WorkspaceInvitation[] = [];
     errorMessage = "";
 
     // Invite form
@@ -56,7 +65,7 @@ export class WorkspaceMembersComponent implements OnInit {
         if (!ws) return;
         try {
             await this.memberStore.load();
-            this.invitations = await this.memberController.getInvitations(ws.id);
+            this.invitations = (await this.memberController.getInvitations(ws.id)) as WorkspaceInvitation[];
         } catch {
             this.errorMessage = "Failed to load members.";
         }
@@ -167,6 +176,10 @@ export class WorkspaceMembersComponent implements OnInit {
         } finally {
             this.inviteLoading = false;
         }
+    }
+
+    getInviteLink(token: string): string {
+        return `${window.location.origin}/invitation?token=${token}`;
     }
 
     async revokeInvitation(invitation: { id: string }): Promise<void> {

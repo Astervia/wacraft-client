@@ -50,15 +50,14 @@ export class AuthControllerService {
         ).data;
     }
 
-    async acceptInvitation(
-        token: string,
-        data?: { name?: string; password?: string },
-    ): Promise<{ message: string }> {
+    async claimInvitation(token: string): Promise<{ message: string; workspace_id: string }> {
+        const accessToken = localStorage.getItem("accessToken") || "";
         return (
-            await this.http.post<{ message: string }>(ServerEndpoints.accept_invitation, {
-                token,
-                ...data,
-            })
+            await this.http.post<{ message: string; workspace_id: string }>(
+                "invitation/claim",
+                { token },
+                { headers: { Authorization: `Bearer ${accessToken}` } },
+            )
         ).data;
     }
 

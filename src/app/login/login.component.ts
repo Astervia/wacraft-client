@@ -6,6 +6,7 @@ import { UserModule } from "../../core/user/user.module";
 import { UserStoreService } from "../../core/user/store/user-store.service";
 import { isHttpError } from "../../core/common/model/http-error-shape.model";
 import { CountdownPipe } from "../../core/common/pipe/countdown.pipe";
+import { RoutePath } from "../app.routes";
 
 @Component({
     selector: "app-login",
@@ -38,7 +39,15 @@ export class LoginComponent implements OnDestroy {
         try {
             await this.authService.login(email, password);
             await this.userStore.getCurrent();
-            this.router.navigate([""]);
+            const pendingToken = localStorage.getItem("pendingInvitationToken");
+            if (pendingToken) {
+                localStorage.removeItem("pendingInvitationToken");
+                this.router.navigate([`/${RoutePath.invitation}`], {
+                    queryParams: { token: pendingToken },
+                });
+            } else {
+                this.router.navigate([""]);
+            }
         } catch (error: unknown) {
             const response = (
                 error as { response?: { status?: number; headers?: Record<string, string> } }
