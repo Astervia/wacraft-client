@@ -65,7 +65,9 @@ export class WorkspaceMembersComponent implements OnInit {
         if (!ws) return;
         try {
             await this.memberStore.load();
-            this.invitations = (await this.memberController.getInvitations(ws.id)) as WorkspaceInvitation[];
+            this.invitations = (await this.memberController.getInvitations(
+                ws.id,
+            )) as WorkspaceInvitation[];
         } catch {
             this.errorMessage = "Failed to load members.";
         }
