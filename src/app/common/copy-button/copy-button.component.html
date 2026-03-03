@@ -1,15 +1,14 @@
 <button
     type="button"
-    class="flex items-center justify-center rounded text-gray-400 transition-all hover:bg-gray-200 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
-    [ngClass]="buttonClass"
+    class="flex items-center justify-center rounded text-gray-400 transition-all hover:bg-gray-200 hover:text-gray-600 focus:outline-none dark:hover:bg-gray-700 dark:hover:text-gray-300"
+    [ngClass]="[sizeButtonClass, buttonClass, copied ? copiedTextClass : '']"
     [class.opacity-100]="copied"
-    [ngClass]="copied ? copiedTextClass : ''"
     (click)="copy($event)"
     [title]="copied ? 'Copied!' : 'Copy to clipboard'"
 >
     <svg
         *ngIf="!copied"
-        [ngClass]="defaultIconClass"
+        [ngClass]="effectiveDefaultIconClass"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -23,7 +22,7 @@
     </svg>
     <svg
         *ngIf="copied"
-        [ngClass]="copiedIconClass"
+        [ngClass]="effectiveCopiedIconClass"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
