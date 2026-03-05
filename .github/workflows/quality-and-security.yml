@@ -72,10 +72,14 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
+
+            - name: Install conftest
+              run: |
+                  VERSION="0.66.0"
+                  wget -q "https://github.com/open-policy-agent/conftest/releases/download/v${VERSION}/conftest_${VERSION}_Linux_x86_64.tar.gz"
+                  tar xzf "conftest_${VERSION}_Linux_x86_64.tar.gz"
+                  sudo mv conftest /usr/local/bin/
 
             - name: Run Conftest (OPA)
-              uses: instrumenta/conftest-action@master
-              with:
-                  files: Dockerfile
-                  policy: policy/
+              run: conftest test Dockerfile --policy policy/
