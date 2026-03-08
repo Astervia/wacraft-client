@@ -7,9 +7,12 @@ import { BillingPlanStoreService } from "../../core/billing/store/billing-plan-s
 import { BillingSubscriptionStoreService } from "../../core/billing/store/billing-subscription-store.service";
 import { BillingEndpointWeightStoreService } from "../../core/billing/store/billing-endpoint-weight-store.service";
 import { BillingPlanControllerService } from "../../core/billing/controller/billing-plan-controller.service";
+import { BillingPlanPriceControllerService } from "../../core/billing/controller/billing-plan-price-controller.service";
 import { BillingSubscriptionControllerService } from "../../core/billing/controller/billing-subscription-controller.service";
 import { Plan } from "../../core/billing/entity/plan.entity";
+import { PlanPrice } from "../../core/billing/entity/plan-price.entity";
 import { CreatePlan, UpdatePlan } from "../../core/billing/model/create-plan.model";
+import { CreatePlanPrice, UpdatePlanPrice } from "../../core/billing/model/create-plan-price.model";
 import { CreateManualSubscription } from "../../core/billing/model/create-manual-subscription.model";
 import { CreateEndpointWeight } from "../../core/billing/model/create-endpoint-weight.model";
 
@@ -24,6 +27,7 @@ export class BillingAdminComponent implements OnInit {
     subscriptionStore = inject(BillingSubscriptionStoreService);
     weightStore = inject(BillingEndpointWeightStoreService);
     private planController = inject(BillingPlanControllerService);
+    private planPriceController = inject(BillingPlanPriceControllerService);
     private subscriptionController = inject(BillingSubscriptionControllerService);
 
     RoutePath = RoutePath;
@@ -40,9 +44,17 @@ export class BillingAdminComponent implements OnInit {
         throughput_limit: 0,
         window_seconds: 60,
         duration_days: 30,
-        price_cents: 0,
-        currency: "USD",
     };
+
+    // Inline prices during plan creation
+    planFormPrices: CreatePlanPrice[] = [];
+    planFormPriceDraft: CreatePlanPrice = { currency: "", price_cents: 0, is_default: false };
+
+    // Plan price management (accordion on existing plans)
+    managingPricesPlan: Plan | null = null;
+    priceForm: CreatePlanPrice = { currency: "", price_cents: 0, is_default: false };
+    editingPrice: PlanPrice | null = null;
+    editPriceForm: UpdatePlanPrice = {};
 
     // Manual subscription
     manualSubForm: CreateManualSubscription = {
@@ -84,10 +96,37 @@ export class BillingAdminComponent implements OnInit {
             throughput_limit: 0,
             window_seconds: 60,
             duration_days: 30,
-            price_cents: 0,
-            currency: "USD",
         };
+        this.planFormPrices = [];
+        this.planFormPriceDraft = { currency: "", price_cents: 0, is_default: false };
         this.showPlanForm = true;
+    }
+
+    addPlanFormPrice(): void {
+        if (!this.planFormPriceDraft.currency) return;
+        // Enforce a single default across the draft list
+        if (this.planFormPriceDraft.is_default) {
+            this.planFormPrices.forEach(p => (p.is_default = false));
+        }
+        // Auto-set first price as default if none yet
+        if (this.planFormPrices.length === 0) {
+            this.planFormPriceDraft.is_default = true;
+        }
+        this.planFormPrices.push({ ...this.planFormPriceDraft });
+        this.planFormPriceDraft = { currency: "", price_cents: 0, is_default: false };
+    }
+
+    removePlanFormPrice(index: number): void {
+        const wasDefault = this.planFormPrices[index].is_default;
+        this.planFormPrices.splice(index, 1);
+        // Promote first remaining entry as default if the removed one was default
+        if (wasDefault && this.planFormPrices.length > 0) {
+            this.planFormPrices[0].is_default = true;
+        }
+    }
+
+    setPlanFormPriceDefault(index: number): void {
+        this.planFormPrices.forEach((p, i) => (p.is_default = i === index));
     }
 
     openEditPlan(plan: Plan): void {
@@ -99,13 +138,81 @@ export class BillingAdminComponent implements OnInit {
             throughput_limit: plan.throughput_limit,
             window_seconds: plan.window_seconds,
             duration_days: plan.duration_days,
-            price_cents: plan.price_cents,
-            currency: plan.currency,
             is_default: plan.is_default,
             is_custom: plan.is_custom,
             active: plan.active,
         };
         this.showPlanForm = true;
+    }
+
+    openManagePrices(plan: Plan): void {
+        this.managingPricesPlan = plan;
+        this.priceForm = { currency: "", price_cents: 0, is_default: false };
+        this.editingPrice = null;
+    }
+
+    closeManagePrices(): void {
+        this.managingPricesPlan = null;
+        this.editingPrice = null;
+    }
+
+    openEditPrice(price: PlanPrice): void {
+        this.editingPrice = price;
+        this.editPriceForm = { price_cents: price.price_cents, is_default: price.is_default };
+    }
+
+    async addPrice(): Promise<void> {
+        if (!this.managingPricesPlan) return;
+        this.loading = true;
+        this.errorMessage = "";
+        try {
+            await this.planPriceController.create(this.managingPricesPlan.id, this.priceForm);
+            this.priceForm = { currency: "", price_cents: 0, is_default: false };
+            await this.planStore.load();
+            this.managingPricesPlan =
+                this.planStore.plans.find(p => p.id === this.managingPricesPlan!.id) ?? null;
+        } catch {
+            this.errorMessage = "Failed to add price.";
+        } finally {
+            this.loading = false;
+        }
+    }
+
+    async savePrice(): Promise<void> {
+        if (!this.managingPricesPlan || !this.editingPrice) return;
+        this.loading = true;
+        this.errorMessage = "";
+        try {
+            await this.planPriceController.update(
+                this.managingPricesPlan.id,
+                this.editingPrice.id,
+                this.editPriceForm,
+            );
+            this.editingPrice = null;
+            await this.planStore.load();
+            this.managingPricesPlan =
+                this.planStore.plans.find(p => p.id === this.managingPricesPlan!.id) ?? null;
+        } catch {
+            this.errorMessage = "Failed to update price.";
+        } finally {
+            this.loading = false;
+        }
+    }
+
+    async deletePrice(price: PlanPrice): Promise<void> {
+        if (!this.managingPricesPlan) return;
+        if (!confirm(`Delete ${price.currency.toUpperCase()} price?`)) return;
+        this.loading = true;
+        try {
+            await this.planPriceController.delete(this.managingPricesPlan.id, price.id);
+            await this.planStore.load();
+            this.managingPricesPlan =
+                this.planStore.plans.find(p => p.id === this.managingPricesPlan!.id) ?? null;
+        } catch {
+            this.errorMessage = "Failed to delete price.";
+        } finally {
+            this.loading = false;
+        }
     }
 
     async savePlan(): Promise<void> {
@@ -115,7 +222,10 @@ export class BillingAdminComponent implements OnInit {
             if (this.editingPlan) {
                 await this.planController.update(this.editingPlan.id, this.planForm as UpdatePlan);
             } else {
-                await this.planController.create(this.planForm);
+                await this.planController.create({
+                    ...this.planForm,
+                    prices: this.planFormPrices.length > 0 ? this.planFormPrices : undefined,
+                });
             }
             this.showPlanForm = false;
             await this.planStore.load();

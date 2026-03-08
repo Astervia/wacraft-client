@@ -2,6 +2,7 @@ import { PaymentMode } from "../entity/subscription.entity";
 
 export interface CheckoutRequest {
     plan_id: string;
+    currency?: string;
     scope: "user" | "workspace";
     workspace_id?: string;
     payment_mode?: PaymentMode;

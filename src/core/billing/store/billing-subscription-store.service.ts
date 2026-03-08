@@ -42,12 +42,14 @@ export class BillingSubscriptionStoreService {
         scope: "user" | "workspace",
         workspaceId?: string,
         paymentMode?: PaymentMode,
+        currency?: string,
         successUrl?: string,
         cancelUrl?: string,
     ): Promise<string | null> {
         try {
             const response = await this.subscriptionController.checkout({
                 plan_id: planId,
+                currency,
                 scope,
                 workspace_id: workspaceId,
                 payment_mode: paymentMode,

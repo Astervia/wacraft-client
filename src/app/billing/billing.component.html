@@ -167,6 +167,29 @@
                         </p>
                     </div>
                 } @else {
+                    <!-- Currency Selector -->
+                    @if (availableCurrencies.length > 1) {
+                        <div class="mb-5 flex flex-wrap items-center gap-3">
+                            <span class="text-sm text-gray-500 dark:text-gray-400" i18n>Currency:</span>
+                            <div class="flex flex-wrap gap-1.5">
+                                @for (currency of availableCurrencies; track currency) {
+                                    <button
+                                        (click)="setPreferredCurrency(currency)"
+                                        class="rounded-full px-3 py-1 text-xs font-semibold uppercase transition-colors"
+                                        [ngClass]="{
+                                            'bg-blue-600 text-white dark:bg-blue-500':
+                                                preferredCurrency === currency,
+                                            'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600':
+                                                preferredCurrency !== currency,
+                                        }"
+                                    >
+                                        {{ currency }}
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    }
+
                     <!-- Scope Selector -->
                     <div class="mb-5">
                         <span
@@ -261,15 +284,35 @@
                                         }
 
                                         <div class="mt-4">
-                                            <span
-                                                class="text-3xl font-bold text-gray-900 dark:text-white"
-                                                >{{
-                                                    formatPrice(plan.price_cents, plan.currency)
-                                                }}</span
-                                            >
-                                            <span class="text-sm text-gray-500 dark:text-gray-400">
-                                                / {{ plan.duration_days }} days
-                                            </span>
+                                            @if (plan.prices.length > 0) {
+                                                <div class="flex items-baseline gap-2">
+                                                    <span
+                                                        class="text-3xl font-bold text-gray-900 dark:text-white"
+                                                    >
+                                                        {{ formatSelectedPrice(plan) }}
+                                                    </span>
+                                                    <span
+                                                        class="text-sm text-gray-500 dark:text-gray-400"
+                                                    >
+                                                        / {{ plan.duration_days }} days
+                                                    </span>
+                                                </div>
+                                                @if (isUsingFallback(plan)) {
+                                                    <p
+                                                        class="mt-1 text-xs text-amber-600 dark:text-amber-400"
+                                                    >
+                                                        {{ preferredCurrency.toUpperCase() }} not
+                                                        available — shown in
+                                                        {{ selectedPrice(plan)?.currency?.toUpperCase() }}
+                                                    </p>
+                                                }
+                                            } @else {
+                                                <span
+                                                    class="text-sm text-gray-400 dark:text-gray-500"
+                                                    i18n
+                                                    >No pricing available</span
+                                                >
+                                            }
                                         </div>
 
                                         <ul
