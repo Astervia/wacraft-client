@@ -1,7 +1,7 @@
 import { EnvironmentConfig } from "./config.model";
 
 export const environment: EnvironmentConfig = {
-    isLite: true,
+    isLite: false,
 
     env: "development",
 
