@@ -170,7 +170,9 @@
                     <!-- Currency Selector -->
                     @if (availableCurrencies.length > 1) {
                         <div class="mb-5 flex flex-wrap items-center gap-3">
-                            <span class="text-sm text-gray-500 dark:text-gray-400" i18n>Currency:</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-400" i18n
+                                >Currency:</span
+                            >
                             <div class="flex flex-wrap gap-1.5">
                                 @for (currency of availableCurrencies; track currency) {
                                     <button
@@ -303,7 +305,11 @@
                                                     >
                                                         {{ preferredCurrency.toUpperCase() }} not
                                                         available — shown in
-                                                        {{ selectedPrice(plan)?.currency?.toUpperCase() }}
+                                                        {{
+                                                            selectedPrice(
+                                                                plan
+                                                            )?.currency?.toUpperCase()
+                                                        }}
                                                     </p>
                                                 }
                                             } @else {
