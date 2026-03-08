@@ -238,11 +238,13 @@
                                 <div class="flex flex-wrap items-end gap-3">
                                     <div>
                                         <label
+                                            for="draft-price-currency"
                                             class="mb-1 block text-xs text-gray-500 dark:text-gray-400"
                                             i18n
                                             >Currency</label
                                         >
                                         <input
+                                            id="draft-price-currency"
                                             type="text"
                                             [(ngModel)]="planFormPriceDraft.currency"
                                             placeholder="usd"
@@ -252,11 +254,13 @@
                                     </div>
                                     <div>
                                         <label
+                                            for="draft-price-cents"
                                             class="mb-1 block text-xs text-gray-500 dark:text-gray-400"
                                             i18n
                                             >Price (cents)</label
                                         >
                                         <input
+                                            id="draft-price-cents"
                                             type="number"
                                             [(ngModel)]="planFormPriceDraft.price_cents"
                                             min="0"
@@ -691,11 +695,13 @@
                                                 <div class="flex flex-wrap items-end gap-3">
                                                     <div>
                                                         <label
+                                                            for="accordion-price-currency"
                                                             class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
                                                             i18n
                                                             >Currency (ISO 4217)</label
                                                         >
                                                         <input
+                                                            id="accordion-price-currency"
                                                             type="text"
                                                             [(ngModel)]="priceForm.currency"
                                                             placeholder="usd"
@@ -705,11 +711,13 @@
                                                     </div>
                                                     <div>
                                                         <label
+                                                            for="accordion-price-cents"
                                                             class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
                                                             i18n
                                                             >Price (cents)</label
                                                         >
                                                         <input
+                                                            id="accordion-price-cents"
                                                             type="number"
                                                             [(ngModel)]="priceForm.price_cents"
                                                             min="0"
