@@ -1,3 +1,4 @@
+import { getCurrency } from "locale-currency";
 import { Component, inject, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -9,6 +10,7 @@ import { BillingSubscriptionStoreService } from "../../core/billing/store/billin
 import { BillingUsageStoreService } from "../../core/billing/store/billing-usage-store.service";
 import { WorkspaceStoreService } from "../../core/workspace/store/workspace-store.service";
 import { Plan } from "../../core/billing/entity/plan.entity";
+import { PlanPrice } from "../../core/billing/entity/plan-price.entity";
 import { PaymentMode, Subscription } from "../../core/billing/entity/subscription.entity";
 import { UsageInfo } from "../../core/billing/entity/usage.entity";
 
@@ -36,6 +38,21 @@ export class BillingComponent implements OnInit {
     checkoutLoading = false;
     syncingSubscriptionId: string | null = null;
 
+    // Preferred currency — single global selection, persisted
+    preferredCurrency = "";
+
+    private readonly STORAGE_KEY = "preferred_currency";
+
+    // All distinct currencies offered across active plans
+    get availableCurrencies(): string[] {
+        const seen = new Set<string>();
+        for (const plan of this.planStore.plans) {
+            if (!plan.active) continue;
+            for (const p of plan.prices) seen.add(p.currency.toLowerCase());
+        }
+        return [...seen].sort();
+    }
+
     async ngOnInit() {
         this.route.fragment.subscribe(fragment => {
             if (fragment === "subscriptions") this.activeTab = "subscriptions";
@@ -51,6 +68,53 @@ export class BillingComponent implements OnInit {
             this.subscriptionStore.load(),
             this.usageStore.load(),
         ]);
+
+        this.initPreferredCurrency();
+    }
+
+    private initPreferredCurrency(): void {
+        const available = this.availableCurrencies;
+        if (available.length === 0) return;
+
+        // 1. Restore from localStorage
+        const saved = localStorage.getItem(this.STORAGE_KEY);
+        if (saved && available.includes(saved)) {
+            this.preferredCurrency = saved;
+            return;
+        }
+
+        // 2. Auto-detect from browser locale
+        const detected = this.detectLocaleCurrency();
+        if (detected && available.includes(detected)) {
+            this.preferredCurrency = detected;
+            return;
+        }
+
+        // 3. Fall back to the most common currency across plans (highest occurrence)
+        const counts = new Map<string, number>();
+        for (const plan of this.planStore.plans) {
+            if (!plan.active) continue;
+            for (const p of plan.prices) {
+                const c = p.currency.toLowerCase();
+                counts.set(c, (counts.get(c) ?? 0) + 1);
+            }
+        }
+        const top = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
+        if (top) this.preferredCurrency = top[0];
+    }
+
+    private detectLocaleCurrency(): string | null {
+        try {
+            const code = getCurrency(navigator.language);
+            return code ? code.toLowerCase() : null;
+        } catch {
+            return null;
+        }
+    }
+
+    setPreferredCurrency(currency: string): void {
+        this.preferredCurrency = currency;
+        localStorage.setItem(this.STORAGE_KEY, currency);
     }
 
     // Usage helpers
@@ -99,8 +163,34 @@ export class BillingComponent implements OnInit {
     formatPrice(cents: number, currency: string): string {
         return (cents / 100).toLocaleString(undefined, {
             style: "currency",
-            currency: currency,
+            currency: currency.toUpperCase(),
         });
+    }
+
+    private defaultPrice(plan: Plan): PlanPrice | undefined {
+        return plan.prices.find(p => p.is_default) ?? plan.prices[0];
+    }
+
+    selectedPrice(plan: Plan): PlanPrice | undefined {
+        if (this.preferredCurrency) {
+            const match = plan.prices.find(
+                p => p.currency.toLowerCase() === this.preferredCurrency,
+            );
+            if (match) return match;
+        }
+        return this.defaultPrice(plan);
+    }
+
+    // True when the shown price is the plan default, not the user's preferred currency
+    isUsingFallback(plan: Plan): boolean {
+        if (!this.preferredCurrency || plan.prices.length === 0) return false;
+        return !plan.prices.some(p => p.currency.toLowerCase() === this.preferredCurrency);
+    }
+
+    formatSelectedPrice(plan: Plan): string {
+        const price = this.selectedPrice(plan);
+        if (!price) return "—";
+        return this.formatPrice(price.price_cents, price.currency);
     }
 
     formatThroughput(limit: number): string {
@@ -117,11 +207,13 @@ export class BillingComponent implements OnInit {
                 this.checkoutScope === "workspace"
                     ? this.workspaceStore.currentWorkspace?.id
                     : undefined;
+            const price = this.selectedPrice(plan);
             const url = await this.subscriptionStore.checkout(
                 plan.id,
                 this.checkoutScope,
                 workspaceId,
                 paymentMode,
+                price?.currency,
             );
             if (url) {
                 window.location.href = url;

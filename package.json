@@ -42,6 +42,7 @@
         "intl-tel-input": "^19.5.7",
         "leaflet": "^1.9.4",
         "libphonenumber-js": "^1.12.8",
+        "locale-currency": "^1.0.0",
         "ng-apexcharts": "^2.0.3",
         "ngx-bootstrap": "^20.0.2",
         "ngx-cookie-service": "^20.1.1",

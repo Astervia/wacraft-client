@@ -1,3 +1,5 @@
+import { CreatePlanPrice } from "./create-plan-price.model";
+
 export interface CreatePlan {
     name: string;
     slug: string;
@@ -5,11 +7,10 @@ export interface CreatePlan {
     throughput_limit: number;
     window_seconds: number;
     duration_days: number;
-    price_cents: number;
-    currency: string;
     is_default?: boolean;
     is_custom?: boolean;
     active?: boolean;
+    prices?: CreatePlanPrice[];
 }
 
-export type UpdatePlan = Partial<CreatePlan>;
+export type UpdatePlan = Partial<Omit<CreatePlan, "prices">>;
