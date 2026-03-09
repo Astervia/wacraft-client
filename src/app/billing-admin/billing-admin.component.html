@@ -1,5 +1,7 @@
 <app-sidebar-layout [activePage]="RoutePath.billingAdmin">
-    <div class="grow-1 mx-auto h-full w-full overflow-y-auto p-4 dark:bg-gray-900 dark:text-gray-100 sm:p-6">
+    <div
+        class="grow-1 mx-auto h-full w-full overflow-y-auto p-4 dark:bg-gray-900 dark:text-gray-100 sm:p-6"
+    >
         <!-- Page Header -->
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 sm:text-3xl" i18n>
@@ -11,10 +13,11 @@
         </div>
 
         @if (errorMessage) {
-        <div
-            class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/50 dark:bg-red-900/20">
-            <span class="text-sm text-red-700 dark:text-red-400">{{ errorMessage }}</span>
-        </div>
+            <div
+                class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/50 dark:bg-red-900/20"
+            >
+                <span class="text-sm text-red-700 dark:text-red-400">{{ errorMessage }}</span>
+            </div>
         }
 
         <!-- ─── Plan Management ─────────────────────────────────── -->
@@ -23,519 +26,734 @@
                 <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200" i18n>
                     Plan Management
                 </h2>
-                <button (click)="openCreatePlan()"
+                <button
+                    (click)="openCreatePlan()"
                     class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400"
-                    i18n>
+                    i18n
+                >
                     + Create Plan
                 </button>
             </div>
 
             <!-- Plan Form -->
             @if (showPlanForm) {
-            <div
-                class="mb-4 overflow-hidden rounded-xl border border-blue-200 bg-white shadow-sm dark:border-blue-900/50 dark:bg-gray-800">
-                <div class="border-b border-gray-100 bg-blue-50 px-6 py-3 dark:border-gray-700 dark:bg-blue-900/20">
-                    <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-300" i18n>
-                        {{ editingPlan ? "Edit Plan" : "New Plan" }}
-                    </h3>
-                </div>
-                <div class="p-6">
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        <div>
-                            <label for="plan-name"
-                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
-                                i18n>Name</label>
-                            <input id="plan-name" type="text" [(ngModel)]="planForm.name"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                                placeholder="Plan name" i18n-placeholder />
-                        </div>
-                        <div>
-                            <label for="plan-slug"
-                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
-                                i18n>Slug</label>
-                            <input id="plan-slug" type="text" [(ngModel)]="planForm.slug"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                                placeholder="plan-slug" i18n-placeholder />
-                        </div>
-                        <div>
-                            <label for="plan-throughput"
-                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
-                                i18n>Throughput Limit</label>
-                            <input id="plan-throughput" type="number" [(ngModel)]="planForm.throughput_limit"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
-                        </div>
-                        <div>
-                            <label for="plan-window"
-                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400" i18n>Window
-                                (seconds)</label>
-                            <input id="plan-window" type="number" [(ngModel)]="planForm.window_seconds"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
-                        </div>
-                        <div>
-                            <label for="plan-duration"
-                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400" i18n>Duration
-                                (days)</label>
-                            <input id="plan-duration" type="number" [(ngModel)]="planForm.duration_days"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
-                        </div>
-                        <div class="sm:col-span-2 lg:col-span-3">
-                            <label for="plan-description"
-                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
-                                i18n>Description</label>
-                            <textarea id="plan-description" [(ngModel)]="planForm.description" rows="2"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                                placeholder="Plan description (optional)" i18n-placeholder></textarea>
-                        </div>
+                <div
+                    class="mb-4 overflow-hidden rounded-xl border border-blue-200 bg-white shadow-sm dark:border-blue-900/50 dark:bg-gray-800"
+                >
+                    <div
+                        class="border-b border-gray-100 bg-blue-50 px-6 py-3 dark:border-gray-700 dark:bg-blue-900/20"
+                    >
+                        <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-300" i18n>
+                            {{ editingPlan ? "Edit Plan" : "New Plan" }}
+                        </h3>
                     </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            <div>
+                                <label
+                                    for="plan-name"
+                                    class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                                    i18n
+                                    >Name</label
+                                >
+                                <input
+                                    id="plan-name"
+                                    type="text"
+                                    [(ngModel)]="planForm.name"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                    placeholder="Plan name"
+                                    i18n-placeholder
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    for="plan-slug"
+                                    class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                                    i18n
+                                    >Slug</label
+                                >
+                                <input
+                                    id="plan-slug"
+                                    type="text"
+                                    [(ngModel)]="planForm.slug"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                    placeholder="plan-slug"
+                                    i18n-placeholder
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    for="plan-throughput"
+                                    class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                                    i18n
+                                    >Throughput Limit</label
+                                >
+                                <input
+                                    id="plan-throughput"
+                                    type="number"
+                                    [(ngModel)]="planForm.throughput_limit"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    for="plan-window"
+                                    class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                                    i18n
+                                    >Window (seconds)</label
+                                >
+                                <input
+                                    id="plan-window"
+                                    type="number"
+                                    [(ngModel)]="planForm.window_seconds"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    for="plan-duration"
+                                    class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                                    i18n
+                                    >Duration (days)</label
+                                >
+                                <input
+                                    id="plan-duration"
+                                    type="number"
+                                    [(ngModel)]="planForm.duration_days"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                />
+                            </div>
+                            <div class="sm:col-span-2 lg:col-span-3">
+                                <label
+                                    for="plan-description"
+                                    class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                                    i18n
+                                    >Description</label
+                                >
+                                <textarea
+                                    id="plan-description"
+                                    [(ngModel)]="planForm.description"
+                                    rows="2"
+                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                    placeholder="Plan description (optional)"
+                                    i18n-placeholder
+                                ></textarea>
+                            </div>
+                        </div>
 
-                    <!-- Inline price builder (create only) -->
-                    @if (!editingPlan) {
-                    <div class="mt-5">
-                        <p class="mb-2 text-xs font-medium text-gray-500 dark:text-gray-400" i18n>
-                            Prices
-                            <span class="font-normal text-gray-400 dark:text-gray-500">(optional — can be added
-                                later)</span>
-                        </p>
+                        <!-- Inline price builder (create only) -->
+                        @if (!editingPlan) {
+                            <div class="mt-5">
+                                <p
+                                    class="mb-2 text-xs font-medium text-gray-500 dark:text-gray-400"
+                                    i18n
+                                >
+                                    Prices
+                                    <span class="font-normal text-gray-400 dark:text-gray-500"
+                                        >(optional — can be added later)</span
+                                    >
+                                </p>
 
-                        <!-- Added price rows -->
-                        @if (planFormPrices.length > 0) {
-                        <div class="mb-3 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
-                            <table class="w-full text-left text-sm">
-                                <thead
-                                    class="bg-gray-50 text-xs uppercase text-gray-400 dark:bg-gray-700/50 dark:text-gray-500">
-                                    <tr>
-                                        <th class="px-3 py-2" i18n>Currency</th>
-                                        <th class="px-3 py-2" i18n>Amount</th>
-                                        <th class="px-3 py-2" i18n>Default</th>
-                                        <th class="px-3 py-2"></th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                                    @for (p of planFormPrices; track $index) {
-                                    <tr class="bg-white dark:bg-gray-800">
-                                        <td class="px-3 py-2">
-                                            <span
-                                                class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs font-semibold uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                                {{ p.currency }}
-                                            </span>
-                                        </td>
-                                        <td class="px-3 py-2 text-gray-700 dark:text-gray-300">
-                                            {{
-                                            formatPrice(
-                                            p.price_cents,
-                                            p.currency
-                                            )
-                                            }}
-                                        </td>
-                                        <td class="px-3 py-2">
-                                            @if (p.is_default) {
-                                            <span
-                                                class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400"
-                                                i18n>
-                                                Default
-                                            </span>
-                                            } @else {
-                                            <button type="button" (click)="
+                                <!-- Added price rows -->
+                                @if (planFormPrices.length > 0) {
+                                    <div
+                                        class="mb-3 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700"
+                                    >
+                                        <table class="w-full text-left text-sm">
+                                            <thead
+                                                class="bg-gray-50 text-xs uppercase text-gray-400 dark:bg-gray-700/50 dark:text-gray-500"
+                                            >
+                                                <tr>
+                                                    <th class="px-3 py-2" i18n>Currency</th>
+                                                    <th class="px-3 py-2" i18n>Amount</th>
+                                                    <th class="px-3 py-2" i18n>Default</th>
+                                                    <th class="px-3 py-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody
+                                                class="divide-y divide-gray-100 dark:divide-gray-700"
+                                            >
+                                                @for (p of planFormPrices; track $index) {
+                                                    <tr class="bg-white dark:bg-gray-800">
+                                                        <td class="px-3 py-2">
+                                                            <span
+                                                                class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs font-semibold uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+                                                            >
+                                                                {{ p.currency }}
+                                                            </span>
+                                                        </td>
+                                                        <td
+                                                            class="px-3 py-2 text-gray-700 dark:text-gray-300"
+                                                        >
+                                                            {{
+                                                                formatPrice(
+                                                                    p.price_cents,
+                                                                    p.currency
+                                                                )
+                                                            }}
+                                                        </td>
+                                                        <td class="px-3 py-2">
+                                                            @if (p.is_default) {
+                                                                <span
+                                                                    class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                                                    i18n
+                                                                >
+                                                                    Default
+                                                                </span>
+                                                            } @else {
+                                                                <button
+                                                                    type="button"
+                                                                    (click)="
                                                                         setPlanFormPriceDefault(
                                                                             $index
                                                                         )
                                                                     "
-                                                class="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
-                                                i18n>
-                                                Set default
-                                            </button>
-                                            }
-                                        </td>
-                                        <td class="px-3 py-2 text-right">
-                                            <button type="button" (click)="
+                                                                    class="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                                                                    i18n
+                                                                >
+                                                                    Set default
+                                                                </button>
+                                                            }
+                                                        </td>
+                                                        <td class="px-3 py-2 text-right">
+                                                            <button
+                                                                type="button"
+                                                                (click)="
                                                                     removePlanFormPrice($index)
                                                                 "
-                                                class="text-xs font-medium text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                                                i18n>
-                                                Remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        }
-
-                        <!-- Draft row -->
-                        <div class="flex flex-wrap items-end gap-3">
-                            <div>
-                                <label for="draft-price-currency"
-                                    class="mb-1 block text-xs text-gray-500 dark:text-gray-400" i18n>Currency</label>
-                                <input id="draft-price-currency" type="text" [(ngModel)]="planFormPriceDraft.currency"
-                                    placeholder="usd" maxlength="3"
-                                    class="w-20 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm uppercase tracking-widest text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
-                            </div>
-                            <div>
-                                <label for="draft-price-cents"
-                                    class="mb-1 block text-xs text-gray-500 dark:text-gray-400" i18n>Price
-                                    (cents)</label>
-                                <input id="draft-price-cents" type="number" [(ngModel)]="planFormPriceDraft.price_cents"
-                                    min="0"
-                                    class="w-32 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
-                            </div>
-                            <button type="button" (click)="addPlanFormPrice()" [disabled]="!planFormPriceDraft.currency"
-                                class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                                i18n>
-                                + Add price
-                            </button>
-                        </div>
-                    </div>
-                    }
-
-                    @if (editingPlan) {
-                    <div class="mt-4 flex flex-wrap items-center gap-5">
-                        <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                            <input type="checkbox" [(ngModel)]="planForm.active" class="rounded border-gray-300" />
-                            <span i18n>Active</span>
-                        </label>
-                        <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                            <input type="checkbox" [(ngModel)]="planForm.is_default" class="rounded border-gray-300" />
-                            <span i18n>Default plan</span>
-                        </label>
-                        <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                            <input type="checkbox" [(ngModel)]="planForm.is_custom" class="rounded border-gray-300" />
-                            <span i18n>Custom plan</span>
-                        </label>
-                    </div>
-                    }
-
-                    <div class="mt-5 flex items-center gap-2">
-                        <button (click)="savePlan()" [disabled]="loading"
-                            class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
-                            i18n>
-                            {{
-                            loading
-                            ? "Saving..."
-                            : editingPlan
-                            ? "Save changes"
-                            : "Create plan"
-                            }}
-                        </button>
-                        <button (click)="showPlanForm = false"
-                            class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                            i18n>
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            </div>
-            }
-
-            <!-- Plan List -->
-            <div
-                class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                @if (planStore.loading) {
-                <div class="px-6 py-10 text-center text-sm text-gray-500 dark:text-gray-400" i18n>
-                    Loading plans…
-                </div>
-                } @else if (planStore.plans.length === 0) {
-                <div class="px-6 py-10 text-center text-sm text-gray-500 dark:text-gray-400" i18n>
-                    No plans yet. Click "Create Plan" to add one.
-                </div>
-                } @else {
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm">
-                        <thead
-                            class="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-400">
-                            <tr>
-                                <th class="px-4 py-3" i18n>Name</th>
-                                <th class="px-4 py-3" i18n>Slug</th>
-                                <th class="px-4 py-3" i18n>Prices</th>
-                                <th class="px-4 py-3" i18n>Throughput</th>
-                                <th class="px-4 py-3" i18n>Duration</th>
-                                <th class="px-4 py-3" i18n>Status</th>
-                                <th class="px-4 py-3" i18n>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (plan of planStore.plans; track plan.id) {
-                            <!-- Plan row -->
-                            <tr class="border-b border-gray-100 transition-colors dark:border-gray-700/60" [ngClass]="{
-                                            'bg-indigo-50/60 dark:bg-indigo-900/10':
-                                                managingPricesPlan?.id === plan.id,
-                                        }">
-                                <td class="px-4 py-3">
-                                    <div class="flex flex-wrap items-center gap-1.5">
-                                        <span class="font-medium text-gray-900 dark:text-white">
-                                            {{ plan.name }}
-                                        </span>
-                                        @if (plan.is_default) {
-                                        <span
-                                            class="rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/40 dark:text-blue-400"
-                                            i18n>Default</span>
-                                        }
-                                        @if (plan.is_custom) {
-                                        <span
-                                            class="rounded-full bg-purple-100 px-1.5 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/40 dark:text-purple-400"
-                                            i18n>Custom</span>
-                                        }
-                                    </div>
-                                </td>
-                                <td class="px-4 py-3 font-mono text-xs text-gray-500 dark:text-gray-400">
-                                    {{ plan.slug }}
-                                </td>
-                                <td class="px-4 py-3">
-                                    @if (plan.prices.length === 0) {
-                                    <span class="text-xs italic text-gray-400 dark:text-gray-500" i18n>None</span>
-                                    } @else {
-                                    <div class="flex flex-wrap gap-1">
-                                        @for (p of plan.prices; track p.id) {
-                                        <span class="rounded-full px-2 py-0.5 text-xs font-medium" [ngClass]="
-                                                                p.is_default
-                                                                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
-                                                            ">
-                                            {{
-                                            formatPrice(
-                                            p.price_cents,
-                                            p.currency
-                                            )
-                                            }}
-                                        </span>
-                                        }
-                                    </div>
-                                    }
-                                </td>
-                                <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
-                                    {{ formatThroughput(plan.throughput_limit) }}
-                                </td>
-                                <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
-                                    {{ plan.duration_days }}d
-                                </td>
-                                <td class="px-4 py-3">
-                                    <span class="rounded-full px-2 py-0.5 text-xs font-medium" [ngClass]="
-                                                    plan.active
-                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
-                                                ">
-                                        {{ plan.active ? "Active" : "Inactive" }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3">
-                                    <div class="flex items-center gap-3">
-                                        <button (click)="openEditPlan(plan)"
-                                            class="text-xs font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                                            i18n>
-                                            Edit
-                                        </button>
-                                        <button (click)="
-                                                        managingPricesPlan?.id === plan.id
-                                                            ? closeManagePrices()
-                                                            : openManagePrices(plan)
-                                                    " class="text-xs font-medium transition-colors" [ngClass]="
-                                                        managingPricesPlan?.id === plan.id
-                                                            ? 'text-indigo-700 dark:text-indigo-300'
-                                                            : 'text-indigo-500 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300'
-                                                    " i18n>
-                                            {{
-                                            managingPricesPlan?.id === plan.id
-                                            ? "▲ Prices"
-                                            : "▼ Prices"
-                                            }}
-                                        </button>
-                                        <button (click)="deletePlan(plan.id)"
-                                            class="text-xs font-medium text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                                            i18n>
-                                            Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Price accordion row -->
-                            @if (
-                            managingPricesPlan !== null &&
-                            managingPricesPlan.id === plan.id
-                            ) {
-                            <tr
-                                class="border-b border-indigo-100 bg-indigo-50/40 dark:border-indigo-900/30 dark:bg-indigo-900/10">
-                                <td colspan="7" class="px-6 py-5">
-                                    <p
-                                        class="mb-3 text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">
-                                        <span i18n>Prices —</span>
-                                        {{ plan.name }}
-                                    </p>
-
-                                    <!-- Prices table -->
-                                    @if (managingPricesPlan.prices.length > 0) {
-                                    <div
-                                        class="mb-4 overflow-hidden rounded-lg border border-indigo-100 dark:border-indigo-900/40">
-                                        <table class="w-full text-left text-sm">
-                                            <thead
-                                                class="bg-indigo-50 text-xs uppercase text-indigo-500 dark:bg-indigo-900/20 dark:text-indigo-400">
-                                                <tr>
-                                                    <th class="px-3 py-2" i18n>
-                                                        Currency
-                                                    </th>
-                                                    <th class="px-3 py-2" i18n>
-                                                        Amount
-                                                    </th>
-                                                    <th class="px-3 py-2" i18n>
-                                                        Default
-                                                    </th>
-                                                    <th class="px-3 py-2" i18n>
-                                                        Actions
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="divide-y divide-indigo-50 dark:divide-indigo-900/30">
-                                                @for (
-                                                p of managingPricesPlan.prices;
-                                                track p.id
-                                                ) {
-                                                <tr class="bg-white dark:bg-gray-800">
-                                                    <td class="px-3 py-2.5">
-                                                        <span
-                                                            class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs font-semibold uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                                            {{ p.currency }}
-                                                        </span>
-                                                    </td>
-                                                    <td class="px-3 py-2.5 text-gray-900 dark:text-white">
-                                                        @if (
-                                                        editingPrice?.id ===
-                                                        p.id
-                                                        ) {
-                                                        <input type="number" [(ngModel)]="
-                                                                                        editPriceForm.price_cents
-                                                                                    "
-                                                            class="w-28 rounded border border-gray-300 bg-gray-50 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                                            min="0" />
-                                                        } @else {
-                                                        {{
-                                                        formatPrice(
-                                                        p.price_cents,
-                                                        p.currency
-                                                        )
-                                                        }}
-                                                        }
-                                                    </td>
-                                                    <td class="px-3 py-2.5">
-                                                        @if (
-                                                        editingPrice?.id ===
-                                                        p.id
-                                                        ) {
-                                                        <label
-                                                            class="flex cursor-pointer items-center gap-1.5 text-sm text-gray-700 dark:text-gray-300">
-                                                            <input type="checkbox" [(ngModel)]="
-                                                                                            editPriceForm.is_default
-                                                                                        "
-                                                                class="rounded border-gray-300" />
-                                                            <span i18n>Default</span>
-                                                        </label>
-                                                        } @else if (
-                                                        p.is_default
-                                                        ) {
-                                                        <span
-                                                            class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400"
-                                                            i18n>
-                                                            Default
-                                                        </span>
-                                                        } @else {
-                                                        <span class="text-xs text-gray-400">—</span>
-                                                        }
-                                                    </td>
-                                                    <td class="px-3 py-2.5">
-                                                        @if (
-                                                        editingPrice?.id ===
-                                                        p.id
-                                                        ) {
-                                                        <div class="flex gap-2">
-                                                            <button (click)="
-                                                                                            savePrice()
-                                                                                        " [disabled]="
-                                                                                            loading
-                                                                                        "
-                                                                class="text-xs font-medium text-green-600 hover:text-green-800 disabled:opacity-50 dark:text-green-400 dark:hover:text-green-300"
-                                                                i18n>
-                                                                Save
-                                                            </button>
-                                                            <button (click)="
-                                                                                            editingPrice =
-                                                                                                null
-                                                                                        "
-                                                                class="text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                                                                i18n>
-                                                                Cancel
-                                                            </button>
-                                                        </div>
-                                                        } @else {
-                                                        <div class="flex gap-2">
-                                                            <button (click)="
-                                                                                            openEditPrice(
-                                                                                                p
-                                                                                            )
-                                                                                        "
-                                                                class="text-xs font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                                                                i18n>
-                                                                Edit
-                                                            </button>
-                                                            <button (click)="
-                                                                                            deletePrice(
-                                                                                                p
-                                                                                            )
-                                                                                        "
                                                                 class="text-xs font-medium text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                                                                i18n>
-                                                                Delete
+                                                                i18n
+                                                            >
+                                                                Remove
                                                             </button>
-                                                        </div>
-                                                        }
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                    </tr>
                                                 }
                                             </tbody>
                                         </table>
                                     </div>
-                                    } @else {
-                                    <p class="mb-4 text-sm italic text-gray-400 dark:text-gray-500" i18n>
-                                        No prices configured yet.
-                                    </p>
-                                    }
+                                }
 
-                                    <!-- Add price form -->
-                                    <div class="flex flex-wrap items-end gap-3">
-                                        <div>
-                                            <label for="accordion-price-currency"
-                                                class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
-                                                i18n>Currency (ISO 4217)</label>
-                                            <input id="accordion-price-currency" type="text"
-                                                [(ngModel)]="priceForm.currency" placeholder="usd" maxlength="3"
-                                                class="w-20 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm uppercase tracking-widest text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
-                                        </div>
-                                        <div>
-                                            <label for="accordion-price-cents"
-                                                class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
-                                                i18n>Price (cents)</label>
-                                            <input id="accordion-price-cents" type="number"
-                                                [(ngModel)]="priceForm.price_cents" min="0"
-                                                class="w-32 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
-                                        </div>
-                                        <div class="flex items-center gap-2 pb-2">
-                                            <input type="checkbox" id="price-is-default"
-                                                [(ngModel)]="priceForm.is_default" class="rounded border-gray-300" />
-                                            <label for="price-is-default"
-                                                class="cursor-pointer text-sm text-gray-700 dark:text-gray-300"
-                                                i18n>Default</label>
-                                        </div>
-                                        <button (click)="addPrice()" [disabled]="loading || !priceForm.currency"
-                                            class="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
-                                            i18n>
-                                            {{ loading ? "Adding…" : "+ Add Price" }}
-                                        </button>
+                                <!-- Draft row -->
+                                <div class="flex flex-wrap items-end gap-3">
+                                    <div>
+                                        <label
+                                            for="draft-price-currency"
+                                            class="mb-1 block text-xs text-gray-500 dark:text-gray-400"
+                                            i18n
+                                            >Currency</label
+                                        >
+                                        <input
+                                            id="draft-price-currency"
+                                            type="text"
+                                            [(ngModel)]="planFormPriceDraft.currency"
+                                            placeholder="usd"
+                                            maxlength="3"
+                                            class="w-20 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm uppercase tracking-widest text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                        />
                                     </div>
-                                </td>
-                            </tr>
-                            }
-                            }
-                        </tbody>
-                    </table>
+                                    <div>
+                                        <label
+                                            for="draft-price-cents"
+                                            class="mb-1 block text-xs text-gray-500 dark:text-gray-400"
+                                            i18n
+                                            >Price (cents)</label
+                                        >
+                                        <input
+                                            id="draft-price-cents"
+                                            type="number"
+                                            [(ngModel)]="planFormPriceDraft.price_cents"
+                                            min="0"
+                                            class="w-32 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        (click)="addPlanFormPrice()"
+                                        [disabled]="!planFormPriceDraft.currency"
+                                        class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                                        i18n
+                                    >
+                                        + Add price
+                                    </button>
+                                </div>
+                            </div>
+                        }
+
+                        @if (editingPlan) {
+                            <div class="mt-4 flex flex-wrap items-center gap-5">
+                                <label
+                                    class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        [(ngModel)]="planForm.active"
+                                        class="rounded border-gray-300"
+                                    />
+                                    <span i18n>Active</span>
+                                </label>
+                                <label
+                                    class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        [(ngModel)]="planForm.is_default"
+                                        class="rounded border-gray-300"
+                                    />
+                                    <span i18n>Default plan</span>
+                                </label>
+                                <label
+                                    class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        [(ngModel)]="planForm.is_custom"
+                                        class="rounded border-gray-300"
+                                    />
+                                    <span i18n>Custom plan</span>
+                                </label>
+                            </div>
+                        }
+
+                        <div class="mt-5 flex items-center gap-2">
+                            <button
+                                (click)="savePlan()"
+                                [disabled]="loading"
+                                class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                                i18n
+                            >
+                                {{
+                                    loading
+                                        ? "Saving..."
+                                        : editingPlan
+                                          ? "Save changes"
+                                          : "Create plan"
+                                }}
+                            </button>
+                            <button
+                                (click)="showPlanForm = false"
+                                class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                                i18n
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
                 </div>
+            }
+
+            <!-- Plan List -->
+            <div
+                class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
+            >
+                @if (planStore.loading) {
+                    <div
+                        class="px-6 py-10 text-center text-sm text-gray-500 dark:text-gray-400"
+                        i18n
+                    >
+                        Loading plans…
+                    </div>
+                } @else if (planStore.plans.length === 0) {
+                    <div
+                        class="px-6 py-10 text-center text-sm text-gray-500 dark:text-gray-400"
+                        i18n
+                    >
+                        No plans yet. Click "Create Plan" to add one.
+                    </div>
+                } @else {
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead
+                                class="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-400"
+                            >
+                                <tr>
+                                    <th class="px-4 py-3" i18n>Name</th>
+                                    <th class="px-4 py-3" i18n>Slug</th>
+                                    <th class="px-4 py-3" i18n>Prices</th>
+                                    <th class="px-4 py-3" i18n>Throughput</th>
+                                    <th class="px-4 py-3" i18n>Duration</th>
+                                    <th class="px-4 py-3" i18n>Status</th>
+                                    <th class="px-4 py-3" i18n>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (plan of planStore.plans; track plan.id) {
+                                    <!-- Plan row -->
+                                    <tr
+                                        class="border-b border-gray-100 transition-colors dark:border-gray-700/60"
+                                        [ngClass]="{
+                                            'bg-indigo-50/60 dark:bg-indigo-900/10':
+                                                managingPricesPlan?.id === plan.id,
+                                        }"
+                                    >
+                                        <td class="px-4 py-3">
+                                            <div class="flex flex-wrap items-center gap-1.5">
+                                                <span
+                                                    class="font-medium text-gray-900 dark:text-white"
+                                                >
+                                                    {{ plan.name }}
+                                                </span>
+                                                @if (plan.is_default) {
+                                                    <span
+                                                        class="rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/40 dark:text-blue-400"
+                                                        i18n
+                                                        >Default</span
+                                                    >
+                                                }
+                                                @if (plan.is_custom) {
+                                                    <span
+                                                        class="rounded-full bg-purple-100 px-1.5 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/40 dark:text-purple-400"
+                                                        i18n
+                                                        >Custom</span
+                                                    >
+                                                }
+                                            </div>
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 font-mono text-xs text-gray-500 dark:text-gray-400"
+                                        >
+                                            {{ plan.slug }}
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            @if (plan.prices.length === 0) {
+                                                <span
+                                                    class="text-xs italic text-gray-400 dark:text-gray-500"
+                                                    i18n
+                                                    >None</span
+                                                >
+                                            } @else {
+                                                <div class="flex flex-wrap gap-1">
+                                                    @for (p of plan.prices; track p.id) {
+                                                        <span
+                                                            class="rounded-full px-2 py-0.5 text-xs font-medium"
+                                                            [ngClass]="
+                                                                p.is_default
+                                                                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'
+                                                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                                                            "
+                                                        >
+                                                            {{
+                                                                formatPrice(
+                                                                    p.price_cents,
+                                                                    p.currency
+                                                                )
+                                                            }}
+                                                        </span>
+                                                    }
+                                                </div>
+                                            }
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
+                                            {{ formatThroughput(plan.throughput_limit) }}
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
+                                            {{ plan.duration_days }}d
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <span
+                                                class="rounded-full px-2 py-0.5 text-xs font-medium"
+                                                [ngClass]="
+                                                    plan.active
+                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                                                "
+                                            >
+                                                {{ plan.active ? "Active" : "Inactive" }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-3">
+                                                <button
+                                                    (click)="openEditPlan(plan)"
+                                                    class="text-xs font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                                                    i18n
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    (click)="
+                                                        managingPricesPlan?.id === plan.id
+                                                            ? closeManagePrices()
+                                                            : openManagePrices(plan)
+                                                    "
+                                                    class="text-xs font-medium transition-colors"
+                                                    [ngClass]="
+                                                        managingPricesPlan?.id === plan.id
+                                                            ? 'text-indigo-700 dark:text-indigo-300'
+                                                            : 'text-indigo-500 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300'
+                                                    "
+                                                    i18n
+                                                >
+                                                    {{
+                                                        managingPricesPlan?.id === plan.id
+                                                            ? "▲ Prices"
+                                                            : "▼ Prices"
+                                                    }}
+                                                </button>
+                                                <button
+                                                    (click)="deletePlan(plan.id)"
+                                                    class="text-xs font-medium text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                                                    i18n
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Price accordion row -->
+                                    @if (
+                                        managingPricesPlan !== null &&
+                                        managingPricesPlan.id === plan.id
+                                    ) {
+                                        <tr
+                                            class="border-b border-indigo-100 bg-indigo-50/40 dark:border-indigo-900/30 dark:bg-indigo-900/10"
+                                        >
+                                            <td colspan="7" class="px-6 py-5">
+                                                <p
+                                                    class="mb-3 text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400"
+                                                >
+                                                    <span i18n>Prices —</span>
+                                                    {{ plan.name }}
+                                                </p>
+
+                                                <!-- Prices table -->
+                                                @if (managingPricesPlan.prices.length > 0) {
+                                                    <div
+                                                        class="mb-4 overflow-hidden rounded-lg border border-indigo-100 dark:border-indigo-900/40"
+                                                    >
+                                                        <table class="w-full text-left text-sm">
+                                                            <thead
+                                                                class="bg-indigo-50 text-xs uppercase text-indigo-500 dark:bg-indigo-900/20 dark:text-indigo-400"
+                                                            >
+                                                                <tr>
+                                                                    <th class="px-3 py-2" i18n>
+                                                                        Currency
+                                                                    </th>
+                                                                    <th class="px-3 py-2" i18n>
+                                                                        Amount
+                                                                    </th>
+                                                                    <th class="px-3 py-2" i18n>
+                                                                        Default
+                                                                    </th>
+                                                                    <th class="px-3 py-2" i18n>
+                                                                        Actions
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody
+                                                                class="divide-y divide-indigo-50 dark:divide-indigo-900/30"
+                                                            >
+                                                                @for (
+                                                                    p of managingPricesPlan.prices;
+                                                                    track p.id
+                                                                ) {
+                                                                    <tr
+                                                                        class="bg-white dark:bg-gray-800"
+                                                                    >
+                                                                        <td class="px-3 py-2.5">
+                                                                            <span
+                                                                                class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs font-semibold uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+                                                                            >
+                                                                                {{ p.currency }}
+                                                                            </span>
+                                                                        </td>
+                                                                        <td
+                                                                            class="px-3 py-2.5 text-gray-900 dark:text-white"
+                                                                        >
+                                                                            @if (
+                                                                                editingPrice?.id ===
+                                                                                p.id
+                                                                            ) {
+                                                                                <input
+                                                                                    type="number"
+                                                                                    [(ngModel)]="
+                                                                                        editPriceForm.price_cents
+                                                                                    "
+                                                                                    class="w-28 rounded border border-gray-300 bg-gray-50 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                                                                    min="0"
+                                                                                />
+                                                                            } @else {
+                                                                                {{
+                                                                                    formatPrice(
+                                                                                        p.price_cents,
+                                                                                        p.currency
+                                                                                    )
+                                                                                }}
+                                                                            }
+                                                                        </td>
+                                                                        <td class="px-3 py-2.5">
+                                                                            @if (
+                                                                                editingPrice?.id ===
+                                                                                p.id
+                                                                            ) {
+                                                                                <label
+                                                                                    class="flex cursor-pointer items-center gap-1.5 text-sm text-gray-700 dark:text-gray-300"
+                                                                                >
+                                                                                    <input
+                                                                                        type="checkbox"
+                                                                                        [(ngModel)]="
+                                                                                            editPriceForm.is_default
+                                                                                        "
+                                                                                        class="rounded border-gray-300"
+                                                                                    />
+                                                                                    <span i18n
+                                                                                        >Default</span
+                                                                                    >
+                                                                                </label>
+                                                                            } @else if (
+                                                                                p.is_default
+                                                                            ) {
+                                                                                <span
+                                                                                    class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                                                                    i18n
+                                                                                >
+                                                                                    Default
+                                                                                </span>
+                                                                            } @else {
+                                                                                <span
+                                                                                    class="text-xs text-gray-400"
+                                                                                    >—</span
+                                                                                >
+                                                                            }
+                                                                        </td>
+                                                                        <td class="px-3 py-2.5">
+                                                                            @if (
+                                                                                editingPrice?.id ===
+                                                                                p.id
+                                                                            ) {
+                                                                                <div
+                                                                                    class="flex gap-2"
+                                                                                >
+                                                                                    <button
+                                                                                        (click)="
+                                                                                            savePrice()
+                                                                                        "
+                                                                                        [disabled]="
+                                                                                            loading
+                                                                                        "
+                                                                                        class="text-xs font-medium text-green-600 hover:text-green-800 disabled:opacity-50 dark:text-green-400 dark:hover:text-green-300"
+                                                                                        i18n
+                                                                                    >
+                                                                                        Save
+                                                                                    </button>
+                                                                                    <button
+                                                                                        (click)="
+                                                                                            editingPrice =
+                                                                                                null
+                                                                                        "
+                                                                                        class="text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                                                                                        i18n
+                                                                                    >
+                                                                                        Cancel
+                                                                                    </button>
+                                                                                </div>
+                                                                            } @else {
+                                                                                <div
+                                                                                    class="flex gap-2"
+                                                                                >
+                                                                                    <button
+                                                                                        (click)="
+                                                                                            openEditPrice(
+                                                                                                p
+                                                                                            )
+                                                                                        "
+                                                                                        class="text-xs font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                                                                                        i18n
+                                                                                    >
+                                                                                        Edit
+                                                                                    </button>
+                                                                                    <button
+                                                                                        (click)="
+                                                                                            deletePrice(
+                                                                                                p
+                                                                                            )
+                                                                                        "
+                                                                                        class="text-xs font-medium text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                                                                                        i18n
+                                                                                    >
+                                                                                        Delete
+                                                                                    </button>
+                                                                                </div>
+                                                                            }
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                } @else {
+                                                    <p
+                                                        class="mb-4 text-sm italic text-gray-400 dark:text-gray-500"
+                                                        i18n
+                                                    >
+                                                        No prices configured yet.
+                                                    </p>
+                                                }
+
+                                                <!-- Add price form -->
+                                                <div class="flex flex-wrap items-end gap-3">
+                                                    <div>
+                                                        <label
+                                                            for="accordion-price-currency"
+                                                            class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                                                            i18n
+                                                            >Currency (ISO 4217)</label
+                                                        >
+                                                        <input
+                                                            id="accordion-price-currency"
+                                                            type="text"
+                                                            [(ngModel)]="priceForm.currency"
+                                                            placeholder="usd"
+                                                            maxlength="3"
+                                                            class="w-20 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm uppercase tracking-widest text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label
+                                                            for="accordion-price-cents"
+                                                            class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                                                            i18n
+                                                            >Price (cents)</label
+                                                        >
+                                                        <input
+                                                            id="accordion-price-cents"
+                                                            type="number"
+                                                            [(ngModel)]="priceForm.price_cents"
+                                                            min="0"
+                                                            class="w-32 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                                        />
+                                                    </div>
+                                                    <div class="flex items-center gap-2 pb-2">
+                                                        <input
+                                                            type="checkbox"
+                                                            id="price-is-default"
+                                                            [(ngModel)]="priceForm.is_default"
+                                                            class="rounded border-gray-300"
+                                                        />
+                                                        <label
+                                                            for="price-is-default"
+                                                            class="cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                                                            i18n
+                                                            >Default</label
+                                                        >
+                                                    </div>
+                                                    <button
+                                                        (click)="addPrice()"
+                                                        [disabled]="loading || !priceForm.currency"
+                                                        class="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                                                        i18n
+                                                    >
+                                                        {{ loading ? "Adding…" : "+ Add Price" }}
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 }
             </div>
         </div>
@@ -546,55 +764,85 @@
                 Manual Subscription
             </h2>
             <div
-                class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
+            >
                 <div class="p-6">
                     <p class="mb-4 text-xs text-gray-500 dark:text-gray-400" i18n>
                         Create a subscription for a user without going through checkout.
                     </p>
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <div>
-                            <label for="manual-plan"
+                            <label
+                                for="manual-plan"
                                 class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
-                                i18n>Plan</label>
-                            <select id="manual-plan" [(ngModel)]="manualSubForm.plan_id"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                                i18n
+                                >Plan</label
+                            >
+                            <select
+                                id="manual-plan"
+                                [(ngModel)]="manualSubForm.plan_id"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            >
                                 <option value="" disabled i18n>Select plan</option>
                                 @for (plan of planStore.plans; track plan.id) {
-                                <option [value]="plan.id">{{ plan.name }}</option>
+                                    <option [value]="plan.id">{{ plan.name }}</option>
                                 }
                             </select>
                         </div>
                         <div>
-                            <label for="manual-user-id"
-                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400" i18n>User
-                                ID</label>
-                            <input id="manual-user-id" type="text" [(ngModel)]="manualSubForm.user_id"
+                            <label
+                                for="manual-user-id"
+                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                                i18n
+                                >User ID</label
+                            >
+                            <input
+                                id="manual-user-id"
+                                type="text"
+                                [(ngModel)]="manualSubForm.user_id"
                                 class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                                placeholder="User UUID" />
+                                placeholder="User UUID"
+                            />
                         </div>
                         <div>
-                            <label for="manual-scope"
+                            <label
+                                for="manual-scope"
                                 class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
-                                i18n>Scope</label>
-                            <select id="manual-scope" [(ngModel)]="manualSubForm.scope"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                                i18n
+                                >Scope</label
+                            >
+                            <select
+                                id="manual-scope"
+                                [(ngModel)]="manualSubForm.scope"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            >
                                 <option value="user" i18n>User</option>
                                 <option value="workspace" i18n>Workspace</option>
                             </select>
                         </div>
                         <div>
-                            <label for="manual-workspace-id"
-                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400" i18n>Workspace
-                                ID</label>
-                            <input id="manual-workspace-id" type="text" [(ngModel)]="manualSubForm.workspace_id"
+                            <label
+                                for="manual-workspace-id"
+                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                                i18n
+                                >Workspace ID</label
+                            >
+                            <input
+                                id="manual-workspace-id"
+                                type="text"
+                                [(ngModel)]="manualSubForm.workspace_id"
                                 class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                                placeholder="Optional" i18n-placeholder />
+                                placeholder="Optional"
+                                i18n-placeholder
+                            />
                         </div>
                     </div>
-                    <button (click)="createManualSubscription()"
+                    <button
+                        (click)="createManualSubscription()"
                         [disabled]="loading || !manualSubForm.plan_id || !manualSubForm.user_id"
                         class="mt-4 inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
-                        i18n>
+                        i18n
+                    >
                         {{ loading ? "Creating…" : "Create Subscription" }}
                     </button>
                 </div>
@@ -607,7 +855,8 @@
                 Endpoint Weights
             </h2>
             <div
-                class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
+            >
                 <div class="p-6">
                     <p class="mb-4 text-xs text-gray-500 dark:text-gray-400" i18n>
                         Configure how much each endpoint counts toward throughput limits.
@@ -616,11 +865,17 @@
                     <!-- Add Weight Form -->
                     <div class="mb-4 flex flex-wrap items-end gap-3">
                         <div>
-                            <label for="weight-method"
+                            <label
+                                for="weight-method"
                                 class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
-                                i18n>Method</label>
-                            <select id="weight-method" [(ngModel)]="weightForm.method"
-                                class="rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                                i18n
+                                >Method</label
+                            >
+                            <select
+                                id="weight-method"
+                                [(ngModel)]="weightForm.method"
+                                class="rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            >
                                 <option value="GET">GET</option>
                                 <option value="POST">POST</option>
                                 <option value="PUT">PUT</option>
@@ -629,83 +884,116 @@
                             </select>
                         </div>
                         <div class="flex-1" style="min-width: 160px">
-                            <label for="weight-path"
-                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400" i18n>Path
-                                Pattern</label>
-                            <input id="weight-path" type="text" [(ngModel)]="weightForm.path_pattern"
+                            <label
+                                for="weight-path"
+                                class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                                i18n
+                                >Path Pattern</label
+                            >
+                            <input
+                                id="weight-path"
+                                type="text"
+                                [(ngModel)]="weightForm.path_pattern"
                                 class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                                placeholder="/api/v1/*" />
+                                placeholder="/api/v1/*"
+                            />
                         </div>
                         <div>
-                            <label for="weight-value"
+                            <label
+                                for="weight-value"
                                 class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
-                                i18n>Weight</label>
-                            <input id="weight-value" type="number" [(ngModel)]="weightForm.weight"
+                                i18n
+                                >Weight</label
+                            >
+                            <input
+                                id="weight-value"
+                                type="number"
+                                [(ngModel)]="weightForm.weight"
                                 class="w-20 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                min="0" />
+                                min="0"
+                            />
                         </div>
                         <div class="flex-1" style="min-width: 120px">
-                            <label for="weight-description"
+                            <label
+                                for="weight-description"
                                 class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400"
-                                i18n>Description</label>
-                            <input id="weight-description" type="text" [(ngModel)]="weightForm.description"
+                                i18n
+                                >Description</label
+                            >
+                            <input
+                                id="weight-description"
+                                type="text"
+                                [(ngModel)]="weightForm.description"
                                 class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                                placeholder="Optional" i18n-placeholder />
+                                placeholder="Optional"
+                                i18n-placeholder
+                            />
                         </div>
-                        <button (click)="createWeight()" [disabled]="loading || !weightForm.path_pattern"
+                        <button
+                            (click)="createWeight()"
+                            [disabled]="loading || !weightForm.path_pattern"
                             class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
-                            i18n>
+                            i18n
+                        >
                             {{ loading ? "Adding…" : "+ Add" }}
                         </button>
                     </div>
 
                     <!-- Weights Table -->
                     @if (weightStore.weights.length > 0) {
-                    <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
-                        <table class="w-full text-left text-sm">
-                            <thead
-                                class="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-400">
-                                <tr>
-                                    <th class="px-4 py-3" i18n>Method</th>
-                                    <th class="px-4 py-3" i18n>Path Pattern</th>
-                                    <th class="px-4 py-3" i18n>Weight</th>
-                                    <th class="px-4 py-3" i18n>Description</th>
-                                    <th class="px-4 py-3" i18n>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700/60">
-                                @for (w of weightStore.weights; track w.id) {
-                                <tr class="bg-white dark:bg-gray-800">
-                                    <td class="px-4 py-3">
-                                        <span
-                                            class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-300">{{
-                                            w.method }}</span>
-                                    </td>
-                                    <td class="px-4 py-3 font-mono text-xs text-gray-600 dark:text-gray-400">
-                                        {{ w.path_pattern }}
-                                    </td>
-                                    <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
-                                        {{ w.weight }}
-                                    </td>
-                                    <td class="px-4 py-3 text-gray-500 dark:text-gray-400">
-                                        {{ w.description || "—" }}
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <button (click)="deleteWeight(w.id)"
-                                            class="text-xs font-medium text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                                            i18n>
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                        <div
+                            class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700"
+                        >
+                            <table class="w-full text-left text-sm">
+                                <thead
+                                    class="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-400"
+                                >
+                                    <tr>
+                                        <th class="px-4 py-3" i18n>Method</th>
+                                        <th class="px-4 py-3" i18n>Path Pattern</th>
+                                        <th class="px-4 py-3" i18n>Weight</th>
+                                        <th class="px-4 py-3" i18n>Description</th>
+                                        <th class="px-4 py-3" i18n>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 dark:divide-gray-700/60">
+                                    @for (w of weightStore.weights; track w.id) {
+                                        <tr class="bg-white dark:bg-gray-800">
+                                            <td class="px-4 py-3">
+                                                <span
+                                                    class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+                                                    >{{ w.method }}</span
+                                                >
+                                            </td>
+                                            <td
+                                                class="px-4 py-3 font-mono text-xs text-gray-600 dark:text-gray-400"
+                                            >
+                                                {{ w.path_pattern }}
+                                            </td>
+                                            <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
+                                                {{ w.weight }}
+                                            </td>
+                                            <td class="px-4 py-3 text-gray-500 dark:text-gray-400">
+                                                {{ w.description || "—" }}
+                                            </td>
+                                            <td class="px-4 py-3">
+                                                <button
+                                                    (click)="deleteWeight(w.id)"
+                                                    class="text-xs font-medium text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                                                    i18n
+                                                >
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     } @else {
-                    <p class="text-sm italic text-gray-400 dark:text-gray-500" i18n>
-                        No endpoint weights configured.
-                    </p>
+                        <p class="text-sm italic text-gray-400 dark:text-gray-500" i18n>
+                            No endpoint weights configured.
+                        </p>
                     }
                 </div>
             </div>
