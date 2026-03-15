@@ -1,6 +1,15 @@
-<div class="">
-    <div class="mb-4 flex flex-col gap-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
-        <p class="">
+<div
+    class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+>
+    <!-- Info banner -->
+    <div
+        class="mb-5 flex gap-3 rounded-lg border border-blue-200 bg-blue-50 p-3.5 dark:border-blue-800/50 dark:bg-blue-900/20"
+    >
+        <mat-icon
+            class="material-icons-outlined mt-0.5 !h-4 !w-4 shrink-0 !text-base !leading-none text-blue-600 dark:text-blue-400"
+            >info</mat-icon
+        >
+        <p class="text-sm text-blue-800 dark:text-blue-300">
             <span i18n>
                 Upload new messages using a file. Only template messages can initiate a conversation
                 (lasting 24 hours). If you attempt to send another type of message, it may take too
@@ -13,25 +22,30 @@
                     sender_data object from the templates section to create a new message.
                 </span>
             }
-
             @if (uploadFileType !== "json") {
-                <span i18n
-                    >Upload a CSV file with message specifications. Download the CSV template to
-                    complete it in the templates section.</span
-                >
+                <span i18n>
+                    Upload a CSV file with message specifications. Download the CSV template to
+                    complete it in the templates section.
+                </span>
             }
         </p>
+    </div>
 
-        <!-- File Upload -->
-        <label class="block text-sm font-medium">
+    <div class="flex flex-col gap-4">
+        <!-- Format select -->
+        <div>
+            <span
+                class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                i18n
+            >
+                Format
+            </span>
             <select
                 id="media-mode"
-                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-400"
                 name="uploadMode"
                 i18n-matTooltip
-                [matTooltip]=""
-                =""
-                ="
+                [matTooltip]="
                     uploadFileType === 'json'
                         ? 'Upload a JSON file with message specifications. The JSON is an array of objects like the sender_data used to send raw messages. Copy a sender_data object from the templates section to create a new message.'
                         : 'Upload a CSV file with message specifications. Download the CSV to fill in the templates section.'
@@ -41,8 +55,9 @@
                 <option value="json">JSON</option>
                 <option value="csv">CSV</option>
             </select>
-        </label>
+        </div>
 
+        <!-- File upload -->
         <app-file-upload
             name="fileInput"
             id="file-input"
@@ -51,43 +66,70 @@
             i18n
         ></app-file-upload>
 
+        <!-- Upload results -->
         @if (errors + successes) {
-            <div class="text-bold grid grid-cols-12">
-                <span class="col-span-6 grid text-green-600" i18n>
-                    Successes: {{ successes }}
-                </span>
-                <span class="col-span-6 grid text-red-600" i18n>
-                    Errors due to invalid object: {{ errors }}
-                </span>
+            <div class="flex flex-wrap gap-3">
+                <div
+                    class="inline-flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-3.5 py-2.5 dark:border-green-800/50 dark:bg-green-900/20"
+                >
+                    <mat-icon
+                        class="material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none text-green-600 dark:text-green-400"
+                        >check_circle</mat-icon
+                    >
+                    <span class="text-sm font-medium text-green-800 dark:text-green-300" i18n>
+                        {{ successes }} added successfully
+                    </span>
+                </div>
+                @if (errors > 0) {
+                    <div
+                        class="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3.5 py-2.5 dark:border-red-800/50 dark:bg-red-900/20"
+                    >
+                        <mat-icon
+                            class="material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none text-red-600 dark:text-red-400"
+                            >cancel</mat-icon
+                        >
+                        <span class="text-sm font-medium text-red-800 dark:text-red-300" i18n>
+                            {{ errors }} invalid
+                        </span>
+                    </div>
+                }
             </div>
         }
 
+        <!-- Error message -->
         @if (error) {
-            <span class="w-full text-red-600">
-                {{ error }}
-            </span>
+            <div
+                class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-3.5 dark:border-red-800/50 dark:bg-red-900/20"
+            >
+                <mat-icon
+                    class="material-icons-outlined mt-0.5 !h-4 !w-4 shrink-0 !text-base !leading-none text-red-600 dark:text-red-400"
+                    >error</mat-icon
+                >
+                <span class="text-sm text-red-800 dark:text-red-300">{{ error }}</span>
+            </div>
         }
 
+        <!-- Actions -->
         @if (selectedFile) {
-            <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-6 flex flex-col items-center">
-                    <button
-                        (click)="cancel()"
-                        class="rounded bg-red-600 p-2 font-bold text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
-                        i18n
+            <div class="flex gap-3">
+                <button
+                    (click)="cancel()"
+                    class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                    i18n
+                >
+                    Cancel
+                </button>
+                <button
+                    (click)="add()"
+                    class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    i18n
+                >
+                    <mat-icon
+                        class="material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none"
+                        >upload</mat-icon
                     >
-                        Cancel
-                    </button>
-                </div>
-                <div class="col-span-6 flex flex-col items-center">
-                    <button
-                        (click)="add()"
-                        class="rounded bg-blue-600 p-2 font-bold text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-                        i18n
-                    >
-                        Add
-                    </button>
-                </div>
+                    Add messages
+                </button>
             </div>
         }
     </div>
