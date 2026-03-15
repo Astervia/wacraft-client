@@ -45,3 +45,6 @@ Thumbs.db
 /src/environments/environment.ts
 /src/plugins-config/plugins-config.ts
 .env
+
+# Development
+/debug
