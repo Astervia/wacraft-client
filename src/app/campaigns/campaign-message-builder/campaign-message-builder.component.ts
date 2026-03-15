@@ -3,6 +3,7 @@ import { CampaignMessageControllerService } from "../../../core/campaign/control
 import { ActivatedRoute } from "@angular/router";
 
 import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import * as Papa from "papaparse";
 import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
@@ -13,7 +14,13 @@ import { SenderData } from "../../../core/message/model/sender-data.model";
 
 @Component({
     selector: "app-campaign-message-builder",
-    imports: [FormsModule, MatTooltipModule, TimeoutErrorModalComponent, FileUploadComponent],
+    imports: [
+        FormsModule,
+        MatIconModule,
+        MatTooltipModule,
+        TimeoutErrorModalComponent,
+        FileUploadComponent,
+    ],
     templateUrl: "./campaign-message-builder.component.html",
     styleUrl: "./campaign-message-builder.component.scss",
     standalone: true,

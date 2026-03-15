@@ -118,7 +118,11 @@ export class CampaignDetailsComponent implements OnInit {
             return;
         }
         this.isEditing = false;
-        this.campaign = await this.campaignStore.getById(this.campaignId);
+        try {
+            this.campaign = await this.campaignStore.getById(this.campaignId);
+        } catch (error) {
+            this.logger.error("Error loading campaign", error);
+        }
     }
 
     toggleEdit() {
