@@ -1,0 +1,33 @@
+<app-sidebar-layout [activePage]="RoutePath.devtools">
+    <div class="flex h-full w-full dark:bg-gray-800">
+        <!-- Tool selector panel -->
+        <div
+            class="flex w-52 shrink-0 flex-col border-r border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900/40"
+        >
+            <div class="border-b border-gray-200 px-4 py-4 dark:border-gray-700">
+                <p
+                    class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500"
+                >
+                    DevTools
+                </p>
+            </div>
+            <nav class="flex flex-col gap-1 p-2">
+                @for (tool of tools; track tool.path) {
+                    <a
+                        [routerLink]="['/', RoutePath.devtools, tool.path]"
+                        routerLinkActive="bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 font-medium"
+                        class="flex items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-600 transition-colors hover:bg-white hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-100"
+                    >
+                        <span class="material-icons text-base leading-none">{{ tool.icon }}</span>
+                        {{ tool.label }}
+                    </a>
+                }
+            </nav>
+        </div>
+
+        <!-- Tool content area -->
+        <div class="flex-1 overflow-y-auto p-8">
+            <router-outlet />
+        </div>
+    </div>
+</app-sidebar-layout>

@@ -25,7 +25,10 @@ import { BillingComponent } from "./billing/billing.component";
 import { BillingAdminComponent } from "./billing-admin/billing-admin.component";
 import { BillingSuccessComponent } from "./billing-success/billing-success.component";
 import { BillingCancelComponent } from "./billing-cancel/billing-cancel.component";
+import { DevtoolsComponent } from "./devtools/devtools.component";
+import { TokenReplacerComponent } from "./devtools/tools/token-replacer/token-replacer.component";
 import { environment } from "../environments/environment";
+import { devtoolsGuard } from "../core/auth/guard/devtools.guard";
 
 export enum RoutePath {
     home = "home",
@@ -53,6 +56,7 @@ export enum RoutePath {
     billingAdmin = "billing-admin",
     billingSuccess = "billing-success",
     billingCancel = "billing-cancel",
+    devtools = "devtools",
 }
 
 export const routes: Routes = [
@@ -174,6 +178,15 @@ export const routes: Routes = [
               component: AutomationComponent,
               canActivate: [userGuard],
           },
+    {
+        path: RoutePath.devtools,
+        component: DevtoolsComponent,
+        canActivate: [userGuard, devtoolsGuard],
+        children: [
+            { path: "token-replacer", component: TokenReplacerComponent },
+            { path: "", redirectTo: "token-replacer", pathMatch: "full" },
+        ],
+    },
     {
         path: "",
         redirectTo: RoutePath.home,

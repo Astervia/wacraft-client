@@ -240,6 +240,23 @@
                 ></app-small-button>
             </a>
         }
+        @if (isDevEnv && queryParamsService.devMode) {
+            <hr class="my-3 w-8 border-b border-yellow-500 dark:border-yellow-600" />
+
+            <a
+                [routerLink]="['/', RoutePath.devtools]"
+                [queryParams]="queryParamsService.globalQueryParams"
+                queryParamsHandling="replace"
+                class="navigator"
+            >
+                <app-small-button
+                    [active]="activePage === RoutePath.devtools"
+                    matTooltip="DevTools"
+                    matSymbol="developer_mode"
+                    i18n-matTooltip
+                ></app-small-button>
+            </a>
+        }
     </div>
 
     <div class="mt-4 flex shrink-0 flex-col items-center justify-center">
