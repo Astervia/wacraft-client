@@ -54,10 +54,18 @@ export class SidebarComponent implements OnInit {
         this.watchQueryParams();
     }
 
+    readonly DEV_ENVS = ["development", "dev", "local"];
+    get isDevEnv(): boolean {
+        return this.DEV_ENVS.includes(environment.env);
+    }
+
     watchQueryParams() {
         this.route.queryParams.subscribe(async params => {
             // Watch for sidebar query param and update.
             this.queryParamsService.sidebarOpen = params["sidebar_open"] !== "false";
+
+            // Watch for dev query param and update.
+            this.queryParamsService.devMode = params["dev"] === "true";
 
             // Watch for workspace.id query param and sync with local storage.
             const urlWorkspaceId = params["workspace.id"];
@@ -78,6 +86,7 @@ export class SidebarComponent implements OnInit {
             RoutePath.workspaceSettings,
             RoutePath.billing,
             RoutePath.billingAdmin,
+            RoutePath.devtools,
         ].includes(this.activePage as RoutePath);
     }
 
@@ -150,6 +159,13 @@ export class SidebarComponent implements OnInit {
         }
         const t = e.target as HTMLElement;
         if (t?.tagName === "INPUT" || t?.tagName === "TEXTAREA" || t?.isContentEditable) {
+            return;
+        }
+
+        // Ctrl+` toggles dev mode (only in dev environments)
+        if (e.key === ";" && (e.ctrlKey || e.metaKey) && this.isDevEnv) {
+            e.preventDefault();
+            this.queryParamsService.toggleDevMode();
             return;
         }
 

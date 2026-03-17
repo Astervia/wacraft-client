@@ -1,0 +1,82 @@
+<div class="flex max-w-2xl flex-col gap-6">
+    <div>
+        <h2 class="mb-1 text-lg font-semibold text-gray-800 dark:text-gray-100">Token Replacer</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            Replace stored auth tokens to impersonate another session without re-logging in. The
+            page reloads automatically after applying.
+        </p>
+    </div>
+
+    <!-- Current tokens -->
+    <div
+        class="flex flex-col gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50"
+    >
+        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+            Current tokens
+        </p>
+        <div>
+            <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">Access token</p>
+            <code class="break-all font-mono text-xs text-gray-700 dark:text-gray-300">{{
+                currentAccessToken
+            }}</code>
+        </div>
+        <div>
+            <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">Refresh token</p>
+            <code class="break-all font-mono text-xs text-gray-700 dark:text-gray-300">{{
+                currentRefreshToken
+            }}</code>
+        </div>
+    </div>
+
+    <!-- New tokens input -->
+    <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+            <label
+                for="new-access-token"
+                class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >New access token</label
+            >
+            <textarea
+                id="new-access-token"
+                [(ngModel)]="newAccessToken"
+                placeholder="Paste access token here…"
+                rows="3"
+                class="w-full resize-none rounded-md border border-gray-300 bg-white px-3 py-2 font-mono text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-500"
+            ></textarea>
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label
+                for="new-refresh-token"
+                class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >New refresh token</label
+            >
+            <textarea
+                id="new-refresh-token"
+                [(ngModel)]="newRefreshToken"
+                placeholder="Paste refresh token here…"
+                rows="3"
+                class="w-full resize-none rounded-md border border-gray-300 bg-white px-3 py-2 font-mono text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-500"
+            ></textarea>
+        </div>
+
+        <p class="text-xs text-gray-400 dark:text-gray-500">
+            Leave a field empty to keep the current token.
+        </p>
+    </div>
+
+    <!-- Action -->
+    <div class="flex items-center gap-4">
+        <button
+            (click)="apply()"
+            [disabled]="applied || (!newAccessToken && !newRefreshToken)"
+            class="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+            @if (applied) {
+                Reloading…
+            } @else {
+                Apply & reload
+            }
+        </button>
+    </div>
+</div>

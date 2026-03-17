@@ -30,10 +30,22 @@ export class QueryParamsService {
         });
     }
 
+    public devMode = false; // Handled by query params.
+    toggleDevMode() {
+        this.router.navigate([], {
+            queryParams: {
+                dev: this.devMode ? null : true,
+            },
+            preserveFragment: true,
+            queryParamsHandling: "merge",
+        });
+    }
+
     get globalQueryParams() {
         return {
             sidebar_open: this.sidebarOpen,
             "workspace.id": this.workspaceContext.currentWorkspaceId,
+            dev: this.devMode ? true : null,
         };
     }
 }
