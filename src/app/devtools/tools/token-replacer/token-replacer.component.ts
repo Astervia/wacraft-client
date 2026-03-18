@@ -36,6 +36,9 @@ export class TokenReplacerComponent {
             localStorage.setItem("refreshToken", this.newRefreshToken.trim());
         }
         this.applied = true;
-        setTimeout(() => window.location.reload(), 600);
+        setTimeout(
+            () => (window.location.href = window.location.origin + window.location.pathname),
+            600,
+        );
     }
 }
