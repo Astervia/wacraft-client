@@ -368,16 +368,45 @@
 
         <!-- Tab: Subscriptions -->
         @if (activeTab === "subscriptions") {
-            <div class="mb-6">
-                <h2 class="mb-3 text-lg font-semibold text-gray-700 dark:text-gray-200" i18n>
-                    Your Subscriptions
-                </h2>
+            <!-- Subscription Scope Selector -->
+            <div class="mb-5">
+                <div class="flex gap-2">
+                    <button
+                        (click)="selectSubscriptionScope('user')"
+                        class="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                        [ngClass]="{
+                            'bg-blue-600 text-white dark:bg-blue-500': subscriptionScope === 'user',
+                            'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600':
+                                subscriptionScope !== 'user',
+                        }"
+                        i18n
+                    >
+                        My Subscriptions
+                    </button>
+                    @if (canViewWorkspaceSubscriptions) {
+                        <button
+                            (click)="selectSubscriptionScope('workspace')"
+                            class="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                            [ngClass]="{
+                                'bg-blue-600 text-white dark:bg-blue-500':
+                                    subscriptionScope === 'workspace',
+                                'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600':
+                                    subscriptionScope !== 'workspace',
+                            }"
+                            i18n
+                        >
+                            Workspace Subscriptions
+                        </button>
+                    }
+                </div>
+            </div>
 
+            <div class="mb-6">
                 @if (subscriptionStore.loading) {
                     <div class="text-sm text-gray-500 dark:text-gray-400" i18n>
                         Loading subscriptions...
                     </div>
-                } @else if (subscriptionStore.subscriptions.length === 0) {
+                } @else if (activeSubscriptions.length === 0) {
                     <div
                         class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
                     >
@@ -387,7 +416,7 @@
                     </div>
                 } @else {
                     <div class="space-y-4">
-                        @for (sub of subscriptionStore.subscriptions; track sub.id) {
+                        @for (sub of activeSubscriptions; track sub.id) {
                             <div
                                 class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
                             >
