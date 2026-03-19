@@ -19,6 +19,7 @@ Execute these steps in order. After each major step, verify before moving on.
 Run `npm run build 2>&1 | grep "No translation found"` to get all missing translation warnings. Parse out the translation IDs and source texts.
 
 Also scan HTML templates for bad i18n annotation patterns:
+
 - `i18n` on elements where the **only** content is a dynamic interpolation with a fallback (e.g., `<span i18n>{{ value || "Fallback" }}</span>`) — the dynamic value is NOT translatable, only the fallback is
 - `i18n` on elements with ternary expressions as the sole content
 - `i18n` on elements mixing static text with complex expressions that should be split
@@ -30,19 +31,21 @@ Use `grep -rn` patterns across `src/app/**/*.html` to find these.
 For each problematic annotation, restructure the HTML. The goal is to separate dynamic (non-translatable) content from static (translatable) content.
 
 **Pattern: Dynamic value with fallback**
+
 ```html
 <!-- BAD -->
 <span i18n>{{ name || "Unknown" }}</span>
 
 <!-- GOOD: Split into dynamic vs translatable fallback -->
 @if (name) {
-    <span>{{ name }}</span>
+<span>{{ name }}</span>
 } @else {
-    <span i18n>Unknown</span>
+<span i18n>Unknown</span>
 }
 ```
 
 **Pattern: Count with text (simple interpolation is OK)**
+
 ```html
 <!-- OK as-is — Angular handles interpolations as {$INTERPOLATION} placeholders -->
 <span i18n>{{ count }} contacts</span>
@@ -52,12 +55,14 @@ For each problematic annotation, restructure the HTML. The goal is to separate d
 ```
 
 **Pattern: Indexed labels like "Contact {{ i + 1 }}"**
+
 ```html
 <!-- OK — interpolation works, but add description for translators -->
 <h3 i18n="@@contactIndex">Contact {{ i + 1 }}</h3>
 ```
 
 **Pattern: Static text mixed with dynamic pipe output**
+
 ```html
 <!-- OK if the structure is clear — Angular extracts interpolations as placeholders -->
 <!-- Just ensure the translatable static parts are clear -->
@@ -65,6 +70,7 @@ For each problematic annotation, restructure the HTML. The goal is to separate d
 ```
 
 **General rules:**
+
 - Use `@if`/`@else` to separate dynamic values from translatable fallbacks
 - Keep `i18n` on elements with static text content (interpolations as placeholders are fine)
 - Remove `i18n` from elements whose entire content is a dynamic variable (not translatable)
@@ -106,15 +112,18 @@ This uses `ng-extract-i18n-merge` which automatically merges new entries into `m
 ### Step 5: Add translations
 
 Open `src/locale/messages.pt-BR.xlf` and `src/locale/messages.es-CL.xlf`. Find all `<trans-unit>` entries that either:
+
 - Have `state="new"` on the `<target>` element
 - Are missing a `<target>` element entirely
 - Have a `<target>` that just copies the English `<source>`
 
 For each one, provide an accurate translation:
+
 - **pt-BR**: Brazilian Portuguese
 - **es-CL**: Chilean Spanish
 
 Translation format in the XLF file:
+
 ```xml
 <trans-unit id="1234567890" datatype="html">
     <source>Original English text</source>
@@ -123,6 +132,7 @@ Translation format in the XLF file:
 ```
 
 **Important:**
+
 - Preserve `{$INTERPOLATION}`, `{$START_TAG_*}`, `{$CLOSE_TAG_*}` placeholders exactly as they appear in `<source>`
 - Translate only the human-readable text around the placeholders
 - Remove `state="new"` and replace with `state="translated"` (or remove the state attribute)
