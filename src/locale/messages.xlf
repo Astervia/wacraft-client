@@ -158,14 +158,14 @@
       <trans-unit id="5925330782293996556" datatype="html">
         <source> Policy preset: </source>
       </trans-unit>
-      <trans-unit id="7581323695994806382" datatype="html">
-        <source> Campaign settings </source>
+      <trans-unit id="8798339822214338210" datatype="html">
+        <source> Campaign Settings </source>
       </trans-unit>
       <trans-unit id="8149605815986033050" datatype="html">
         <source> Sign in to your account </source>
       </trans-unit>
-      <trans-unit id="816133379157038472" datatype="html">
-        <source>Total messages</source>
+      <trans-unit id="5651153804819666268" datatype="html">
+        <source> Total messages </source>
       </trans-unit>
       <trans-unit id="8196282299459505762" datatype="html">
         <source> Payment Cancelled </source>
@@ -185,14 +185,17 @@
       <trans-unit id="8290829574069942535" datatype="html">
         <source> Manage your plans, subscriptions, and usage </source>
       </trans-unit>
-      <trans-unit id="1237454417488072736" datatype="html">
-        <source>Messages sent</source>
+      <trans-unit id="362866310729221769" datatype="html">
+        <source> Messages sent </source>
       </trans-unit>
       <trans-unit id="5672905512603073660" datatype="html">
         <source> Workspace Settings </source>
       </trans-unit>
-      <trans-unit id="5673230718654324625" datatype="html">
-        <source>Unsent messages</source>
+      <trans-unit id="4365125546014786313" datatype="html">
+        <source> Unsent messages </source>
+      </trans-unit>
+      <trans-unit id="4374773844264668292" datatype="html">
+        <source> Workspace Subscriptions </source>
       </trans-unit>
       <trans-unit id="6660925946511264619" datatype="html">
         <source> Delete </source>
@@ -200,17 +203,14 @@
       <trans-unit id="7829256976896065562" datatype="html">
         <source>Path Pattern</source>
       </trans-unit>
-      <trans-unit id="7838270342502908017" datatype="html">
-        <source>Send campaign</source>
+      <trans-unit id="4747511198862209558" datatype="html">
+        <source> Send campaign </source>
       </trans-unit>
-      <trans-unit id="2417883846838761423" datatype="html">
-        <source>Add messages to campaign</source>
+      <trans-unit id="4817460679030375794" datatype="html">
+        <source> Add messages to campaign </source>
       </trans-unit>
       <trans-unit id="2438803034455350509" datatype="html">
         <source> Revoke </source>
-      </trans-unit>
-      <trans-unit id="2442881070988854319" datatype="html">
-        <source> Your Subscriptions </source>
       </trans-unit>
       <trans-unit id="2457780377373989409" datatype="html">
         <source> Your Details </source>
@@ -224,8 +224,8 @@
       <trans-unit id="6451229580988011171" datatype="html">
         <source> Manage your WhatsApp Business API phone numbers and settings </source>
       </trans-unit>
-      <trans-unit id="6452372740127749380" datatype="html">
-        <source>Messages</source>
+      <trans-unit id="550657153701691331" datatype="html">
+        <source> Messages </source>
       </trans-unit>
       <trans-unit id="6667243164818342579" datatype="html">
         <source> Upload new messages using a file. Only template messages can initiate a conversation (lasting 24 hours). If you attempt to send another type of message, it may take too long and result in an error. </source>
@@ -236,8 +236,11 @@
       <trans-unit id="4448087870578974349" datatype="html">
         <source> Upload a JSON file containing message specifications. The JSON should be an array of objects similar to the sender_data used to send raw messages. Copy a sender_data object from the templates section to create a new message. </source>
       </trans-unit>
-      <trans-unit id="5041945428247238943" datatype="html">
-        <source>Upload a CSV file with message specifications. Download the CSV template to complete it in the templates section.</source>
+      <trans-unit id="8631615360824224691" datatype="html">
+        <source> Upload a CSV file with message specifications. Download the CSV template to complete it in the templates section. </source>
+      </trans-unit>
+      <trans-unit id="5050307465636924350" datatype="html">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none&quot; &gt;"/>delete<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Delete </source>
       </trans-unit>
       <trans-unit id="506872377170898991" datatype="html">
         <source><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4&quot; [class.animate-spin]=&quot; syncingSubscriptionId === sub.id &quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; d=&quot;M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15.36-5.36M20 15a9 9 0 0 1-15.36 5.36&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; d=&quot;M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15.36-5.36M20 15a9 9 0 0 1-15.36 5.36&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> <x id="INTERPOLATION" equiv-text="{{ syncButtonLabel(sub) }}"/> </source>
@@ -245,17 +248,8 @@
       <trans-unit id="5075759937009452880" datatype="html">
         <source> Set default </source>
       </trans-unit>
-      <trans-unit id="4149946407013624127" datatype="html">
-        <source> Successes: <x id="INTERPOLATION" equiv-text="{{ successes }}"/> </source>
-      </trans-unit>
-      <trans-unit id="7863725525046685709" datatype="html">
-        <source> Errors due to invalid object: <x id="INTERPOLATION" equiv-text="{{ errors }}"/> </source>
-      </trans-unit>
       <trans-unit id="7894965399766463752" datatype="html">
         <source> Phone Number ID from Meta </source>
-      </trans-unit>
-      <trans-unit id="577038887888857351" datatype="html">
-        <source> Add </source>
       </trans-unit>
       <trans-unit id="7530965177276291749" datatype="html">
         <source> Campaigns </source>
@@ -386,14 +380,17 @@
       <trans-unit id="2509051005178444658" datatype="html">
         <source> Plans &amp; Usage </source>
       </trans-unit>
-      <trans-unit id="2516560504700166210" datatype="html">
-        <source> Loading plans... </source>
+      <trans-unit id="2156480759345164060" datatype="html">
+        <source>Loading plans...</source>
       </trans-unit>
       <trans-unit id="2520992826005008677" datatype="html">
         <source>Interactive message body...</source>
       </trans-unit>
       <trans-unit id="2575216557756164032" datatype="html">
         <source>Plan description (optional)</source>
+      </trans-unit>
+      <trans-unit id="2595569930424727971" datatype="html">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;material-icons-outlined text-red-500 dark:text-red-400&quot; &gt;"/>close<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Remove file </source>
       </trans-unit>
       <trans-unit id="4636291172448223646" datatype="html">
         <source>Footer</source>
@@ -464,8 +461,11 @@
       <trans-unit id="5696578547712505713" datatype="html">
         <source>Name (optional)</source>
       </trans-unit>
-      <trans-unit id="2001352041099719872" datatype="html">
-        <source> No plans available. </source>
+      <trans-unit id="8906833980656786486" datatype="html">
+        <source>No plans available.</source>
+      </trans-unit>
+      <trans-unit id="2004379127092864352" datatype="html">
+        <source>Email not available</source>
       </trans-unit>
       <trans-unit id="2035918186996562587" datatype="html">
         <source> Display Phone </source>
@@ -539,6 +539,9 @@
       <trans-unit id="471816275243265264" datatype="html">
         <source>Location</source>
       </trans-unit>
+      <trans-unit id="4726094360890358555" datatype="html">
+        <source> My Subscriptions </source>
+      </trans-unit>
       <trans-unit id="4737494755730155702" datatype="html">
         <source> 2. Verify Code </source>
       </trans-unit>
@@ -557,8 +560,11 @@
       <trans-unit id="5433675495457939071" datatype="html">
         <source>Templates</source>
       </trans-unit>
+      <trans-unit id="8807629248259603334" datatype="html">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none&quot; &gt;"/>upload<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Add messages </source>
+      </trans-unit>
       <trans-unit id="8839873962115196847" datatype="html">
-        <source> Prices <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-normal text-gray-400 dark:text-gray-500&quot;&gt;"/>(optional — can be added later)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <source> Prices <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-normal text-gray-400 dark:text-gray-500&quot; &gt;"/>(optional — can be added later)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/></source>
       </trans-unit>
       <trans-unit id="8864288285279476751" datatype="html">
         <source>Method</source>
@@ -577,6 +583,9 @@
       </trans-unit>
       <trans-unit id="3888993997380000721" datatype="html">
         <source>Webhooks</source>
+      </trans-unit>
+      <trans-unit id="3890605055119200881" datatype="html">
+        <source>Phone number not available</source>
       </trans-unit>
       <trans-unit id="389350307745876110" datatype="html">
         <source> + Create Plan </source>
@@ -692,8 +701,8 @@
       <trans-unit id="122114774689391224" datatype="html">
         <source>role</source>
       </trans-unit>
-      <trans-unit id="7561273264199874409" datatype="html">
-        <source>Frequetly forwarded</source>
+      <trans-unit id="5115768163288830571" datatype="html">
+        <source>Frequently forwarded</source>
       </trans-unit>
       <trans-unit id="1357848114610913352" datatype="html">
         <source>Add section</source>
@@ -746,9 +755,6 @@
       <trans-unit id="1614991601298392832" datatype="html">
         <source>File uploaded:</source>
       </trans-unit>
-      <trans-unit id="6597755120494388551" datatype="html">
-        <source> Remove file </source>
-      </trans-unit>
       <trans-unit id="1826215573205981970" datatype="html">
         <source>Company</source>
       </trans-unit>
@@ -764,11 +770,11 @@
       <trans-unit id="2883859734114302285" datatype="html">
         <source>URLs</source>
       </trans-unit>
-      <trans-unit id="29767780071958964" datatype="html">
-        <source> and <x id="INTERPOLATION" equiv-text="{{ contacts.length - 1 }}"/> more contacts</source>
-      </trans-unit>
       <trans-unit id="2996246445609738488" datatype="html">
         <source> Billing </source>
+      </trans-unit>
+      <trans-unit id="2999730589827720060" datatype="html">
+        <source>DevTools</source>
       </trans-unit>
       <trans-unit id="3076687427621376223" datatype="html">
         <source>Organization</source>
@@ -797,9 +803,6 @@
       <trans-unit id="3955967824702499842" datatype="html">
         <source>Department</source>
       </trans-unit>
-      <trans-unit id="412337078276683092" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ contacts.length }}"/> contacts</source>
-      </trans-unit>
       <trans-unit id="4407559560004943843" datatype="html">
         <source>Last Name</source>
       </trans-unit>
@@ -808,6 +811,9 @@
       </trans-unit>
       <trans-unit id="4456600014400387676" datatype="html">
         <source>Formatted Name</source>
+      </trans-unit>
+      <trans-unit id="4467323362722952678" datatype="html">
+        <source>Unknown</source>
       </trans-unit>
       <trans-unit id="4467990164108770021" datatype="html">
         <source>Add Contact</source>
@@ -844,6 +850,9 @@
       </trans-unit>
       <trans-unit id="6824013555388846033" datatype="html">
         <source> Please verify your email to continue. </source>
+      </trans-unit>
+      <trans-unit id="6842362324545365303" datatype="html">
+        <source> Format </source>
       </trans-unit>
       <trans-unit id="6895515122441665158" datatype="html">
         <source> + Add price </source>
@@ -989,6 +998,9 @@
       <trans-unit id="100101491346315222" datatype="html">
         <source> Send Invitation </source>
       </trans-unit>
+      <trans-unit id="100129122612400407" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ successes }}"/> added successfully </source>
+      </trans-unit>
       <trans-unit id="1004672047329697606" datatype="html">
         <source> Policies: </source>
       </trans-unit>
@@ -1027,6 +1039,9 @@
       </trans-unit>
       <trans-unit id="6257928832200603790" datatype="html">
         <source>Open message options</source>
+      </trans-unit>
+      <trans-unit id="7044500098947919751" datatype="html">
+        <source><x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container&gt;"/><x id="INTERPOLATION" equiv-text="{{ contacts.length }}"/><x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container&gt;"/> contacts </source>
       </trans-unit>
       <trans-unit id="7054231182944686314" datatype="html">
         <source>Message options</source>
@@ -1088,9 +1103,6 @@
       <trans-unit id="7858060057068625943" datatype="html">
         <source>Message:</source>
       </trans-unit>
-      <trans-unit id="187187500641108332" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ messagingProductContact.contact.name || &quot;Unknown&quot; }}"/></source>
-      </trans-unit>
       <trans-unit id="1888826072615405410" datatype="html">
         <source>Verify Token</source>
       </trans-unit>
@@ -1100,8 +1112,11 @@
       <trans-unit id="3263703488420683331" datatype="html">
         <source>A valid email is required.</source>
       </trans-unit>
-      <trans-unit id="4432159389957994340" datatype="html">
-        <source> Loading usage... </source>
+      <trans-unit id="7946935041397533259" datatype="html">
+        <source>Loading usage...</source>
+      </trans-unit>
+      <trans-unit id="7973140450571597836" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ errors }}"/> invalid </source>
       </trans-unit>
       <trans-unit id="4444753420973870540" datatype="html">
         <source>Name is required.</source>
@@ -1120,6 +1135,9 @@
       </trans-unit>
       <trans-unit id="1221596867309460035" datatype="html">
         <source>New Password</source>
+      </trans-unit>
+      <trans-unit id="1228683296994237263" datatype="html">
+        <source> and <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container&gt;"/><x id="INTERPOLATION" equiv-text="{{ contacts.length - 1 }}"/><x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container&gt;"/> more contacts </source>
       </trans-unit>
       <trans-unit id="1271997362648249823" datatype="html">
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot;&gt;"/>edit<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Edit </source>
