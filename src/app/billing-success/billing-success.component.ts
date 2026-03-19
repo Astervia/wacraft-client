@@ -16,6 +16,6 @@ export class BillingSuccessComponent implements OnInit {
     RoutePath = RoutePath;
 
     async ngOnInit() {
-        await this.subscriptionStore.load();
+        await this.subscriptionStore.loadUserSubscriptions();
     }
 }

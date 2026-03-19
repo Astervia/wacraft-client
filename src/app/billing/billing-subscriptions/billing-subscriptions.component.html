@@ -1,0 +1,219 @@
+<div class="h-full" (scroll)="onScroll($event)">
+    @if (errorMessage) {
+        <div
+            class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/50 dark:bg-red-900/20"
+        >
+            <span class="text-sm text-red-700 dark:text-red-400">{{ errorMessage }}</span>
+        </div>
+    }
+
+    <!-- Subscription Scope Selector -->
+    <div class="mb-5">
+        <div class="flex gap-2">
+            <button
+                (click)="selectSubscriptionScope('user')"
+                class="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                [ngClass]="{
+                    'bg-blue-600 text-white dark:bg-blue-500': subscriptionScope === 'user',
+                    'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600':
+                        subscriptionScope !== 'user',
+                }"
+                i18n
+            >
+                My Subscriptions
+            </button>
+            @if (canViewWorkspaceSubscriptions) {
+                <button
+                    (click)="selectSubscriptionScope('workspace')"
+                    class="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                    [ngClass]="{
+                        'bg-blue-600 text-white dark:bg-blue-500':
+                            subscriptionScope === 'workspace',
+                        'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600':
+                            subscriptionScope !== 'workspace',
+                    }"
+                    i18n
+                >
+                    Workspace Subscriptions
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="mb-6">
+        @if (subscriptionStore.loading) {
+            <div class="text-sm text-gray-500 dark:text-gray-400" i18n>
+                Loading subscriptions...
+            </div>
+        } @else if (activeSubscriptions.length === 0) {
+            <div
+                class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+            >
+                <p class="text-sm text-gray-500 dark:text-gray-400" i18n>
+                    No active subscriptions.
+                </p>
+            </div>
+        } @else {
+            <div class="space-y-4">
+                @for (sub of activeSubscriptions; track sub.id) {
+                    <div
+                        class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
+                    >
+                        <div class="p-5">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <h3
+                                        class="text-base font-semibold text-gray-900 dark:text-white"
+                                    >
+                                        {{ sub.plan?.name || "Plan" }}
+                                    </h3>
+                                    <div
+                                        class="mt-1 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
+                                    >
+                                        <span
+                                            class="rounded-full px-2 py-0.5 text-xs font-medium"
+                                            [ngClass]="statusBadgeClass(subscriptionStatus(sub))"
+                                        >
+                                            {{ subscriptionStatusLabel(sub) }}
+                                        </span>
+                                        <span
+                                            class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                                        >
+                                            {{ sub.scope }}
+                                        </span>
+                                        <span
+                                            class="rounded-full px-2 py-0.5 text-xs font-medium"
+                                            [ngClass]="
+                                                sub.payment_mode === 'subscription'
+                                                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                                            "
+                                        >
+                                            {{
+                                                sub.payment_mode === "subscription"
+                                                    ? "Recurring"
+                                                    : "One-time"
+                                            }}
+                                        </span>
+                                        @if (sub.payment_provider) {
+                                            <span
+                                                class="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800 dark:bg-purple-900/30 dark:text-purple-400"
+                                            >
+                                                {{ sub.payment_provider }}
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    @if (canSync(sub)) {
+                                        <button
+                                            (click)="syncSubscription(sub)"
+                                            [disabled]="syncingSubscriptionId === sub.id"
+                                            class="inline-flex items-center gap-1.5 rounded-lg border border-orange-300 bg-white px-3 py-1.5 text-sm font-medium text-orange-700 transition-colors hover:bg-orange-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-orange-800 dark:bg-orange-900/30 dark:text-orange-400 dark:hover:bg-orange-900/50"
+                                            i18n
+                                        >
+                                            <svg
+                                                class="h-4 w-4"
+                                                [class.animate-spin]="
+                                                    syncingSubscriptionId === sub.id
+                                                "
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15.36-5.36M20 15a9 9 0 0 1-15.36 5.36"
+                                                />
+                                            </svg>
+                                            {{ syncButtonLabel(sub) }}
+                                        </button>
+                                    }
+                                    @if (canCancel(sub)) {
+                                        <button
+                                            (click)="cancelSubscription(sub)"
+                                            class="inline-flex items-center rounded-lg border border-red-300 bg-white px-3 py-1.5 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-800 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
+                                            i18n
+                                        >
+                                            Cancel
+                                        </button>
+                                    }
+                                    @if (canReactivate(sub)) {
+                                        <button
+                                            (click)="reactivateSubscription(sub)"
+                                            class="inline-flex items-center rounded-lg border border-green-300 bg-white px-3 py-1.5 text-sm font-medium text-green-700 transition-colors hover:bg-green-100 dark:border-green-800 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50"
+                                            i18n
+                                        >
+                                            Reactivate
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="mt-3 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
+                                @if (sub.status === "pending") {
+                                    <div class="col-span-2 sm:col-span-4">
+                                        <p
+                                            class="text-sm text-yellow-700 dark:text-yellow-400"
+                                            i18n
+                                        >
+                                            Payment is being processed. If you completed checkout,
+                                            click "Check payment status" to confirm.
+                                        </p>
+                                    </div>
+                                } @else {
+                                    <div>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400" i18n
+                                            >Starts</span
+                                        >
+                                        <p class="font-medium text-gray-900 dark:text-white">
+                                            {{ sub.starts_at | date: "mediumDate" }}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">
+                                            {{
+                                                sub.payment_mode === "subscription" &&
+                                                !sub.cancelled_at &&
+                                                !sub.cancel_at_period_end
+                                                    ? "Renews"
+                                                    : "Expires"
+                                            }}
+                                        </span>
+                                        <p class="font-medium text-gray-900 dark:text-white">
+                                            {{ sub.expires_at | date: "mediumDate" }}
+                                        </p>
+                                    </div>
+                                }
+                                @if (sub.throughput_override) {
+                                    <div>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400" i18n
+                                            >Throughput Override</span
+                                        >
+                                        <p class="font-medium text-gray-900 dark:text-white">
+                                            {{ sub.throughput_override }}
+                                        </p>
+                                    </div>
+                                }
+                                @if (sub.cancelled_at) {
+                                    <div>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400" i18n
+                                            >Cancelled</span
+                                        >
+                                        <p class="font-medium text-red-600 dark:text-red-400">
+                                            {{ sub.cancelled_at | date: "mediumDate" }}
+                                        </p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

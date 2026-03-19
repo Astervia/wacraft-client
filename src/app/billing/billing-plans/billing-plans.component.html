@@ -1,0 +1,289 @@
+<div class="h-full" (scroll)="onScroll($event)">
+    @if (errorMessage) {
+        <div
+            class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/50 dark:bg-red-900/20"
+        >
+            <span class="text-sm text-red-700 dark:text-red-400">{{ errorMessage }}</span>
+        </div>
+    }
+
+    <!-- Usage Section -->
+    <div class="mb-6">
+        <h2 class="mb-3 text-lg font-semibold text-gray-700 dark:text-gray-200" i18n>
+            Current Usage
+        </h2>
+
+        @if (usageStore.loading) {
+            <div class="text-sm text-gray-500 dark:text-gray-400" i18n>Loading usage...</div>
+        } @else if (usageStore.usageItems.length === 0) {
+            <div
+                class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+            >
+                <p class="text-sm text-gray-500 dark:text-gray-400" i18n>
+                    No usage data available.
+                </p>
+            </div>
+        } @else {
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                @for (
+                    usage of usageStore.usageItems;
+                    track usage.scope +
+                        (usage.fallback ? "fallback" : "") +
+                        (usage.user_id || "") +
+                        (usage.workspace_id || "")
+                ) {
+                    <div
+                        class="overflow-hidden rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+                    >
+                        <div class="mb-1 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span
+                                    class="rounded-full px-2.5 py-0.5 text-xs font-medium"
+                                    [ngClass]="usageBadgeClass(usage)"
+                                >
+                                    {{ usageLabel(usage) }}
+                                </span>
+                                @if (usage.unlimited) {
+                                    <span
+                                        class="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+                                        i18n
+                                    >
+                                        Unlimited
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                        <p class="mb-3 text-xs text-gray-500 dark:text-gray-400">
+                            {{ usageDescription(usage) }}
+                        </p>
+
+                        @if (!usage.unlimited) {
+                            <div class="mb-2">
+                                <div class="flex items-baseline justify-between text-sm">
+                                    <span
+                                        [ngClass]="usageTextColor(usagePercent(usage))"
+                                        class="font-semibold"
+                                    >
+                                        {{ usage.current_usage }}
+                                    </span>
+                                    <span class="text-gray-500 dark:text-gray-400">
+                                        / {{ usage.throughput_limit }}
+                                    </span>
+                                </div>
+                                <div
+                                    class="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"
+                                >
+                                    <div
+                                        [ngClass]="usageColor(usagePercent(usage))"
+                                        class="h-2 rounded-full transition-all duration-300"
+                                        [style.width.%]="usagePercent(usage)"
+                                    ></div>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400"
+                            >
+                                <span>{{ usage.remaining }} remaining</span>
+                                <span>{{ usage.window_seconds }}s window</span>
+                            </div>
+                        } @else {
+                            <p class="text-sm text-gray-500 dark:text-gray-400" i18n>
+                                No usage limits apply.
+                            </p>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Plans Section -->
+    <div class="mb-6">
+        <h2 class="mb-3 text-lg font-semibold text-gray-700 dark:text-gray-200" i18n>
+            Available Plans
+        </h2>
+
+        @if (planStore.loading) {
+            <div class="text-sm text-gray-500 dark:text-gray-400" i18n>Loading plans...</div>
+        } @else if (planStore.plans.length === 0) {
+            <div
+                class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+            >
+                <p class="text-sm text-gray-500 dark:text-gray-400" i18n>No plans available.</p>
+            </div>
+        } @else {
+            <!-- Currency Selector -->
+            @if (availableCurrencies.length > 1) {
+                <div class="mb-5 flex flex-wrap items-center gap-3">
+                    <span class="text-sm text-gray-500 dark:text-gray-400" i18n>Currency:</span>
+                    <div class="flex flex-wrap gap-1.5">
+                        @for (currency of availableCurrencies; track currency) {
+                            <button
+                                (click)="setPreferredCurrency(currency)"
+                                class="rounded-full px-3 py-1 text-xs font-semibold uppercase transition-colors"
+                                [ngClass]="{
+                                    'bg-blue-600 text-white dark:bg-blue-500':
+                                        preferredCurrency === currency,
+                                    'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600':
+                                        preferredCurrency !== currency,
+                                }"
+                            >
+                                {{ currency }}
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Scope Selector -->
+            <div class="mb-5">
+                <span class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" i18n
+                    >Subscribe as:</span
+                >
+                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <button
+                        (click)="checkoutScope = 'user'"
+                        class="rounded-xl border p-4 text-left transition-all"
+                        [ngClass]="{
+                            'border-blue-500 bg-blue-50 ring-2 ring-blue-500 dark:bg-blue-900/20':
+                                checkoutScope === 'user',
+                            'border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600':
+                                checkoutScope !== 'user',
+                        }"
+                    >
+                        <span
+                            class="text-sm font-semibold"
+                            [ngClass]="{
+                                'text-blue-700 dark:text-blue-300': checkoutScope === 'user',
+                                'text-gray-900 dark:text-white': checkoutScope !== 'user',
+                            }"
+                            i18n
+                            >User</span
+                        >
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400" i18n>
+                            Budget for your personal account. Used directly or as fallback when a
+                            workspace budget runs out.
+                        </p>
+                    </button>
+                    <button
+                        (click)="checkoutScope = 'workspace'"
+                        class="rounded-xl border p-4 text-left transition-all"
+                        [ngClass]="{
+                            'border-blue-500 bg-blue-50 ring-2 ring-blue-500 dark:bg-blue-900/20':
+                                checkoutScope === 'workspace',
+                            'border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600':
+                                checkoutScope !== 'workspace',
+                        }"
+                    >
+                        <span
+                            class="text-sm font-semibold"
+                            [ngClass]="{
+                                'text-blue-700 dark:text-blue-300': checkoutScope === 'workspace',
+                                'text-gray-900 dark:text-white': checkoutScope !== 'workspace',
+                            }"
+                            i18n
+                            >Workspace</span
+                        >
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400" i18n>
+                            Shared budget across workspace members. Charged first; cascades to user
+                            budget when exhausted.
+                        </p>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                @for (plan of planStore.plans; track plan.id) {
+                    @if (plan.active) {
+                        <div
+                            class="relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                            [ngClass]="{
+                                'ring-2 ring-blue-500': plan.is_default,
+                            }"
+                        >
+                            @if (plan.is_default) {
+                                <div
+                                    class="bg-blue-500 px-3 py-1 text-center text-xs font-medium text-white"
+                                    i18n
+                                >
+                                    Default
+                                </div>
+                            }
+                            <div class="p-5">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                    {{ plan.name }}
+                                </h3>
+                                @if (plan.description) {
+                                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                        {{ plan.description }}
+                                    </p>
+                                }
+
+                                <div class="mt-4">
+                                    @if (plan.prices.length > 0) {
+                                        <div class="flex items-baseline gap-2">
+                                            <span
+                                                class="text-3xl font-bold text-gray-900 dark:text-white"
+                                            >
+                                                {{ formatSelectedPrice(plan) }}
+                                            </span>
+                                            <span class="text-sm text-gray-500 dark:text-gray-400">
+                                                / {{ plan.duration_days }} days
+                                            </span>
+                                        </div>
+                                        @if (isUsingFallback(plan)) {
+                                            <p
+                                                class="mt-1 text-xs text-amber-600 dark:text-amber-400"
+                                            >
+                                                {{ preferredCurrency.toUpperCase() }} not available
+                                                — shown in
+                                                {{ selectedPrice(plan)?.currency?.toUpperCase() }}
+                                            </p>
+                                        }
+                                    } @else {
+                                        <span class="text-sm text-gray-400 dark:text-gray-500" i18n
+                                            >No pricing available</span
+                                        >
+                                    }
+                                </div>
+
+                                <ul class="mt-4 space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <li class="flex items-center gap-2">
+                                        <span class="text-green-500">&#10003;</span>
+                                        {{ formatThroughput(plan.throughput_limit) }}
+                                        <span class="text-xs"
+                                            >({{ plan.window_seconds }}s window)</span
+                                        >
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="text-green-500">&#10003;</span>
+                                        {{ plan.duration_days }} days duration
+                                    </li>
+                                </ul>
+
+                                <div class="mt-5 flex gap-2">
+                                    <button
+                                        (click)="checkout(plan, 'payment')"
+                                        [disabled]="checkoutLoading"
+                                        class="flex-1 rounded-lg border border-blue-600 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20"
+                                        i18n
+                                    >
+                                        {{ checkoutLoading ? "Processing..." : "Buy Once" }}
+                                    </button>
+                                    <button
+                                        (click)="checkout(plan, 'subscription')"
+                                        [disabled]="checkoutLoading"
+                                        class="flex-1 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                                        i18n
+                                    >
+                                        {{ checkoutLoading ? "Processing..." : "Subscribe" }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>

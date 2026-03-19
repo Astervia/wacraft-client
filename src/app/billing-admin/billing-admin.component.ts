@@ -34,6 +34,7 @@ export class BillingAdminComponent implements OnInit {
 
     errorMessage = "";
     loading = false;
+    private scrolling = false;
 
     // Plan management
     showPlanForm = false;
@@ -72,6 +73,31 @@ export class BillingAdminComponent implements OnInit {
 
     async ngOnInit() {
         await Promise.all([this.planStore.load(), this.weightStore.load()]);
+    }
+
+    onScroll(event: Event): void {
+        const element = event.target as HTMLElement;
+        if (
+            !(
+                element.scrollHeight - element.scrollTop <= element.clientHeight + 100 &&
+                !this.scrolling
+            )
+        )
+            return;
+
+        this.getMore();
+    }
+
+    async getMore(): Promise<void> {
+        this.scrolling = true;
+        try {
+            const promises: Promise<void>[] = [];
+            if (!this.planStore.reachedMaxLimit) promises.push(this.planStore.get());
+            if (!this.weightStore.reachedMaxLimit) promises.push(this.weightStore.get());
+            await Promise.all(promises);
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     // Plan helpers
@@ -256,7 +282,7 @@ export class BillingAdminComponent implements OnInit {
         try {
             await this.subscriptionController.createManual(this.manualSubForm);
             this.manualSubForm = { plan_id: "", scope: "user", user_id: "" };
-            await this.subscriptionStore.load();
+            await this.subscriptionStore.loadUserSubscriptions();
         } catch {
             this.errorMessage = "Failed to create manual subscription.";
         } finally {
