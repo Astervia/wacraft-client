@@ -124,7 +124,7 @@
       </trans-unit>
       <trans-unit id="3038352088341301799" datatype="html">
         <source><x id="START_BLOCK_CASE" equiv-text="@case (MediaMode.image) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Image<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_1" equiv-text="@case (MediaMode.video) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Video<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_2" equiv-text="@case (MediaMode.audio) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Audio<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_3" equiv-text="@case (MediaMode.sticker) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Sticker<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_4" equiv-text="@case (MediaMode.document) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Document<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_DEFAULT" equiv-text="@default {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/><x id="INTERPOLATION" equiv-text="{{ mode | capitalizeFirstLetter }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_DEFAULT" equiv-text="}"/></source>
-        <target state="new"><x id="START_BLOCK_CASE" equiv-text="@case (MediaMode.image) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Image<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_1" equiv-text="@case (MediaMode.video) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Video<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_2" equiv-text="@case (MediaMode.audio) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Audio<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_3" equiv-text="@case (MediaMode.sticker) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Sticker<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_4" equiv-text="@case (MediaMode.document) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Document<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_DEFAULT" equiv-text="@default {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/><x id="INTERPOLATION" equiv-text="{{ mode | capitalizeFirstLetter }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_DEFAULT" equiv-text="}"/></target>
+        <target><x id="START_BLOCK_CASE" equiv-text="@case (MediaMode.image) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Imagem<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_1" equiv-text="@case (MediaMode.video) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Vídeo<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_2" equiv-text="@case (MediaMode.audio) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Áudio<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_3" equiv-text="@case (MediaMode.sticker) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Sticker<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_CASE_4" equiv-text="@case (MediaMode.document) {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Documento<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_CASE" equiv-text="}"/><x id="START_BLOCK_DEFAULT" equiv-text="@default {"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/><x id="INTERPOLATION" equiv-text="{{ mode | capitalizeFirstLetter }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_BLOCK_DEFAULT" equiv-text="}"/></target>
       </trans-unit>
       <trans-unit id="3047534122855383543" datatype="html">
         <source> No active subscriptions. </source>
@@ -200,7 +200,7 @@
       </trans-unit>
       <trans-unit id="7708270344948043036" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ editingPlan ? &quot;Edit Plan&quot; : &quot;New Plan&quot; }}"/> </source>
-        <target state="new"> <x id="INTERPOLATION" equiv-text="{{ messagingProductContact.contact.email || &quot;Email não disponível&quot; }}"/> </target>
+        <target> <x id="INTERPOLATION" equiv-text="{{ editingPlan ? &quot;Edit Plan&quot; : &quot;New Plan&quot; }}"/> </target>
       </trans-unit>
       <trans-unit id="5908270105319103313" datatype="html">
         <source> Auto Mark as Read </source>
@@ -210,25 +210,13 @@
         <source> Policy preset: </source>
         <target> Preset de política: </target>
       </trans-unit>
-      <trans-unit id="7581323695994806382" datatype="html">
-        <source> Campaign settings </source>
+      <trans-unit id="8798339822214338210" datatype="html">
+        <source> Campaign Settings </source>
         <target> Configurações da campanha </target>
-      </trans-unit>
-      <trans-unit id="4149946407013624127" datatype="html">
-        <source> Successes: <x id="INTERPOLATION" equiv-text="{{ successes }}"/> </source>
-        <target> Sucessos: <x id="INTERPOLATION" equiv-text="{{ successes }}"/> </target>
-      </trans-unit>
-      <trans-unit id="7863725525046685709" datatype="html">
-        <source> Errors due to invalid object: <x id="INTERPOLATION" equiv-text="{{ errors }}"/> </source>
-        <target> Erros devido a objeto inválido: <x id="INTERPOLATION" equiv-text="{{ errors }}"/> </target>
       </trans-unit>
       <trans-unit id="7894965399766463752" datatype="html">
         <source> Phone Number ID from Meta </source>
         <target> ID do número de telefone da Meta </target>
-      </trans-unit>
-      <trans-unit id="577038887888857351" datatype="html">
-        <source> Add </source>
-        <target> Adicionar </target>
       </trans-unit>
       <trans-unit id="7530965177276291749" datatype="html">
         <source> Campaigns </source>
@@ -318,9 +306,9 @@
         <source> Plans &amp; Usage </source>
         <target>Planos e uso</target>
       </trans-unit>
-      <trans-unit id="2516560504700166210" datatype="html">
-        <source> Loading plans... </source>
-        <target> Carregando planos... </target>
+      <trans-unit id="2156480759345164060" datatype="html">
+        <source>Loading plans...</source>
+        <target>Carregando planos...</target>
       </trans-unit>
       <trans-unit id="2520992826005008677" datatype="html">
         <source>Interactive message body...</source>
@@ -329,6 +317,10 @@
       <trans-unit id="2575216557756164032" datatype="html">
         <source>Plan description (optional)</source>
         <target>Descrição do plano (opcional)</target>
+      </trans-unit>
+      <trans-unit id="2595569930424727971" datatype="html">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;material-icons-outlined text-red-500 dark:text-red-400&quot; &gt;"/>close<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Remove file </source>
+        <target><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;material-icons-outlined text-red-500 dark:text-red-400&quot; &gt;"/>close<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Remover arquivo </target>
       </trans-unit>
       <trans-unit id="4636291172448223646" datatype="html">
         <source>Footer</source>
@@ -402,9 +394,13 @@
         <source>Name (optional)</source>
         <target>Nome (opcional)</target>
       </trans-unit>
-      <trans-unit id="2001352041099719872" datatype="html">
-        <source> No plans available. </source>
-        <target> Nenhum plano disponível. </target>
+      <trans-unit id="8906833980656786486" datatype="html">
+        <source>No plans available.</source>
+        <target>Nenhum plano disponível.</target>
+      </trans-unit>
+      <trans-unit id="2004379127092864352" datatype="html">
+        <source>Email not available</source>
+        <target>Email não disponível</target>
       </trans-unit>
       <trans-unit id="2035918186996562587" datatype="html">
         <source> Display Phone </source>
@@ -430,6 +426,10 @@
         <source>Location</source>
         <target>Localização</target>
       </trans-unit>
+      <trans-unit id="4726094360890358555" datatype="html">
+        <source> My Subscriptions </source>
+        <target> Minhas Assinaturas </target>
+      </trans-unit>
       <trans-unit id="4737494755730155702" datatype="html">
         <source> 2. Verify Code </source>
         <target> 2. Verificar código </target>
@@ -450,8 +450,12 @@
         <source>Templates</source>
         <target>Templates</target>
       </trans-unit>
+      <trans-unit id="8807629248259603334" datatype="html">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none&quot; &gt;"/>upload<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Add messages </source>
+        <target><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none&quot; &gt;"/>upload<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Adicionar mensagens </target>
+      </trans-unit>
       <trans-unit id="8839873962115196847" datatype="html">
-        <source> Prices <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-normal text-gray-400 dark:text-gray-500&quot;&gt;"/>(optional — can be added later)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <source> Prices <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-normal text-gray-400 dark:text-gray-500&quot; &gt;"/>(optional — can be added later)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/></source>
         <target> Preços <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-normal text-gray-400 dark:text-gray-500&quot;&gt;"/>(opcional — pode ser adicionado depois)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
       </trans-unit>
       <trans-unit id="8864288285279476751" datatype="html">
@@ -477,6 +481,10 @@
       <trans-unit id="3888993997380000721" datatype="html">
         <source>Webhooks</source>
         <target>Webhooks</target>
+      </trans-unit>
+      <trans-unit id="3890605055119200881" datatype="html">
+        <source>Phone number not available</source>
+        <target>Número de telefone não disponível</target>
       </trans-unit>
       <trans-unit id="389350307745876110" datatype="html">
         <source> + Create Plan </source>
@@ -592,7 +600,7 @@
       </trans-unit>
       <trans-unit id="4312076893369530530" datatype="html">
         <source>Photo URL</source>
-        <target state="new">URL da foto</target>
+        <target>URL da foto</target>
       </trans-unit>
       <trans-unit id="4313544752013453805" datatype="html">
         <source> Upload file </source>
@@ -612,15 +620,15 @@
       </trans-unit>
       <trans-unit id="935187492052582731" datatype="html">
         <source>Submit</source>
-        <target state="new">Salvar</target>
+        <target>Salvar</target>
       </trans-unit>
       <trans-unit id="7906458871395232033" datatype="html">
         <source>List</source>
-        <target state="new">Lista</target>
+        <target>Lista</target>
       </trans-unit>
       <trans-unit id="5945590258286868068" datatype="html">
         <source>Button <x id="INTERPOLATION" equiv-text="{{ i }}"/></source>
-        <target state="new">Botão <x id="INTERPOLATION" equiv-text="{{ i }}"/></target>
+        <target>Botão <x id="INTERPOLATION" equiv-text="{{ i }}"/></target>
       </trans-unit>
       <trans-unit id="486412321040439108" datatype="html">
         <source>Workspace Settings</source>
@@ -640,15 +648,15 @@
       </trans-unit>
       <trans-unit id="4910631867841099191" datatype="html">
         <source>Add option</source>
-        <target state="new">Add option</target>
+        <target>Adicionar opção</target>
       </trans-unit>
       <trans-unit id="420763834450076269" datatype="html">
         <source>Block</source>
-        <target state="new">Bloquear</target>
+        <target>Bloquear</target>
       </trans-unit>
       <trans-unit id="7012539269043342199" datatype="html">
         <source>Prices —</source>
-        <target state="new">Prices —</target>
+        <target>Preços —</target>
       </trans-unit>
       <trans-unit id="7022070615528435141" datatype="html">
         <source>Delete</source>
@@ -656,7 +664,7 @@
       </trans-unit>
       <trans-unit id="5028777105388019087" datatype="html">
         <source>Details</source>
-        <target state="new">Detalhes</target>
+        <target>Detalhes</target>
       </trans-unit>
       <trans-unit id="3234235495138504098" datatype="html">
         <source> Reactivate </source>
@@ -668,7 +676,7 @@
       </trans-unit>
       <trans-unit id="3250391385569692601" datatype="html">
         <source>Media</source>
-        <target state="new">Mídia</target>
+        <target>Mídia</target>
       </trans-unit>
       <trans-unit id="325115361899435747" datatype="html">
         <source> A friendly name to identify this phone configuration </source>
@@ -676,15 +684,15 @@
       </trans-unit>
       <trans-unit id="4498980736130456955" datatype="html">
         <source>Interactive message header...</source>
-        <target state="new">Cabeçalho da mensagem interativa...</target>
+        <target>Cabeçalho da mensagem interativa...</target>
       </trans-unit>
       <trans-unit id="6482859171084943979" datatype="html">
         <source> Payment is being processed. If you completed checkout, click &quot;Check payment status&quot; to confirm. </source>
-        <target state="new"> Payment is being processed. If you completed checkout, click &quot;Check payment status&quot; to confirm. </target>
+        <target> O pagamento está sendo processado. Se você concluiu o checkout, clique em &quot;Verificar status do pagamento&quot; para confirmar. </target>
       </trans-unit>
       <trans-unit id="6490688569532630280" datatype="html">
         <source>Send</source>
-        <target state="new">Enviar</target>
+        <target>Enviar</target>
       </trans-unit>
       <trans-unit id="6490944808117746562" datatype="html">
         <source>Display Phone Number</source>
@@ -704,11 +712,11 @@
       </trans-unit>
       <trans-unit id="1781426626227834604" datatype="html">
         <source>Select contacts</source>
-        <target state="new">Contatos selecionados</target>
+        <target>Contatos selecionados</target>
       </trans-unit>
       <trans-unit id="2347724151568473592" datatype="html">
         <source>language</source>
-        <target state="new">idioma</target>
+        <target>idioma</target>
       </trans-unit>
       <trans-unit id="2350264350075334011" datatype="html">
         <source>Rate limit reached. Try again in <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ rateLimitSeconds | countdown }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
@@ -720,15 +728,15 @@
       </trans-unit>
       <trans-unit id="7522557240209303660" datatype="html">
         <source>content</source>
-        <target state="new">conteúdo</target>
+        <target>conteúdo</target>
       </trans-unit>
       <trans-unit id="8149605815986033050" datatype="html">
         <source> Sign in to your account </source>
         <target> Entre na sua conta </target>
       </trans-unit>
-      <trans-unit id="816133379157038472" datatype="html">
-        <source>Total messages</source>
-        <target state="new">Total de mensagens</target>
+      <trans-unit id="5651153804819666268" datatype="html">
+        <source> Total messages </source>
+        <target> Total de mensagens </target>
       </trans-unit>
       <trans-unit id="8196282299459505762" datatype="html">
         <source> Payment Cancelled </source>
@@ -754,17 +762,21 @@
         <source> Manage your plans, subscriptions, and usage </source>
         <target> Gerencie seus planos, assinaturas e uso </target>
       </trans-unit>
-      <trans-unit id="1237454417488072736" datatype="html">
-        <source>Messages sent</source>
-        <target state="new">Mensagens enviadas</target>
+      <trans-unit id="362866310729221769" datatype="html">
+        <source> Messages sent </source>
+        <target> Mensagens enviadas </target>
       </trans-unit>
       <trans-unit id="5672905512603073660" datatype="html">
         <source> Workspace Settings </source>
         <target>Configurações do espaço de trabalho</target>
       </trans-unit>
-      <trans-unit id="5673230718654324625" datatype="html">
-        <source>Unsent messages</source>
-        <target state="new">Mensagens não enviadas</target>
+      <trans-unit id="4365125546014786313" datatype="html">
+        <source> Unsent messages </source>
+        <target> Mensagens não enviadas </target>
+      </trans-unit>
+      <trans-unit id="4374773844264668292" datatype="html">
+        <source> Workspace Subscriptions </source>
+        <target> Assinaturas do Workspace </target>
       </trans-unit>
       <trans-unit id="6660925946511264619" datatype="html">
         <source> Delete </source>
@@ -774,21 +786,17 @@
         <source>Path Pattern</source>
         <target>Padrão de caminho</target>
       </trans-unit>
-      <trans-unit id="7838270342502908017" datatype="html">
-        <source>Send campaign</source>
-        <target state="new">Enviar campanha</target>
+      <trans-unit id="4747511198862209558" datatype="html">
+        <source> Send campaign </source>
+        <target> Enviar campanha </target>
       </trans-unit>
-      <trans-unit id="2417883846838761423" datatype="html">
-        <source>Add messages to campaign</source>
-        <target>Adicionar mensagens à campanha</target>
+      <trans-unit id="4817460679030375794" datatype="html">
+        <source> Add messages to campaign </source>
+        <target> Adicionar mensagens à campanha </target>
       </trans-unit>
       <trans-unit id="2438803034455350509" datatype="html">
         <source> Revoke </source>
         <target> Revogar </target>
-      </trans-unit>
-      <trans-unit id="2442881070988854319" datatype="html">
-        <source> Your Subscriptions </source>
-        <target> Suas assinaturas </target>
       </trans-unit>
       <trans-unit id="2457780377373989409" datatype="html">
         <source> Your Details </source>
@@ -796,7 +804,7 @@
       </trans-unit>
       <trans-unit id="246133225546359393" datatype="html">
         <source> No plans yet. Click &quot;Create Plan&quot; to add one. </source>
-        <target state="new"> No plans yet. Click &quot;Create Plan&quot; to add one. </target>
+        <target> Nenhum plano ainda. Clique em &quot;Criar Plano&quot; para adicionar um. </target>
       </trans-unit>
       <trans-unit id="2471245485501904642" datatype="html">
         <source> Token used to verify webhook endpoint </source>
@@ -806,13 +814,13 @@
         <source> Manage your WhatsApp Business API phone numbers and settings </source>
         <target> Gerencie seus números de telefone e configurações da API do WhatsApp Business </target>
       </trans-unit>
-      <trans-unit id="6452372740127749380" datatype="html">
-        <source>Messages</source>
-        <target state="new">Mensagens</target>
+      <trans-unit id="550657153701691331" datatype="html">
+        <source> Messages </source>
+        <target> Mensagens </target>
       </trans-unit>
       <trans-unit id="5661038859247240836" datatype="html">
         <source>Total messages to be processed:</source>
-        <target state="new">Total de mensages a serem processadas:</target>
+        <target>Total de mensages a serem processadas:</target>
       </trans-unit>
       <trans-unit id="5668074734397548124" datatype="html">
         <source> Create a subscription for a user without going through checkout. </source>
@@ -820,7 +828,7 @@
       </trans-unit>
       <trans-unit id="6667243164818342579" datatype="html">
         <source> Upload new messages using a file. Only template messages can initiate a conversation (lasting 24 hours). If you attempt to send another type of message, it may take too long and result in an error. </source>
-        <target state="new">Carregue novas mensagens usando um arquivo. Apenas mensagens de template podem iniciar uma conversa (com duração de 24 horas). Se você tentar enviar outro tipo de mensagem, pode demorar muito e resultar em um erro. </target>
+        <target>Carregue novas mensagens usando um arquivo. Apenas mensagens de template podem iniciar uma conversa (com duração de 24 horas). Se você tentar enviar outro tipo de mensagem, pode demorar muito e resultar em um erro. </target>
       </trans-unit>
       <trans-unit id="4447001938839867976" datatype="html">
         <source> Unlimited </source>
@@ -828,15 +836,19 @@
       </trans-unit>
       <trans-unit id="4448087870578974349" datatype="html">
         <source> Upload a JSON file containing message specifications. The JSON should be an array of objects similar to the sender_data used to send raw messages. Copy a sender_data object from the templates section to create a new message. </source>
-        <target state="new"> Carregue um arquivo JSON contendo especificações de mensagem. O JSON deve ser um array de objetos similar ao sender_data usado para enviar mensagens brutas. Copie um objeto sender_data da seção de templates para criar uma nova mensagem. </target>
+        <target> Carregue um arquivo JSON contendo especificações de mensagem. O JSON deve ser um array de objetos similar ao sender_data usado para enviar mensagens brutas. Copie um objeto sender_data da seção de templates para criar uma nova mensagem. </target>
       </trans-unit>
-      <trans-unit id="5041945428247238943" datatype="html">
-        <source>Upload a CSV file with message specifications. Download the CSV template to complete it in the templates section.</source>
-        <target state="new">Carregue um arquivo CSV com especificações de mensagem. Baixe o modelo CSV para preenchê-lo na seção de templates.</target>
+      <trans-unit id="8631615360824224691" datatype="html">
+        <source> Upload a CSV file with message specifications. Download the CSV template to complete it in the templates section. </source>
+        <target> Carregue um arquivo CSV com especificações de mensagem. Baixe o modelo CSV para preenchê-lo na seção de templates. </target>
+      </trans-unit>
+      <trans-unit id="5050307465636924350" datatype="html">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none&quot; &gt;"/>delete<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Delete </source>
+        <target><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none&quot; &gt;"/>delete<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Excluir </target>
       </trans-unit>
       <trans-unit id="506872377170898991" datatype="html">
         <source><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4&quot; [class.animate-spin]=&quot; syncingSubscriptionId === sub.id &quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; d=&quot;M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15.36-5.36M20 15a9 9 0 0 1-15.36 5.36&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; d=&quot;M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15.36-5.36M20 15a9 9 0 0 1-15.36 5.36&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> <x id="INTERPOLATION" equiv-text="{{ syncButtonLabel(sub) }}"/> </source>
-        <target state="new"><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4&quot; [class.animate-spin]=&quot; syncingSubscriptionId === sub.id &quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; d=&quot;M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15.36-5.36M20 15a9 9 0 0 1-15.36 5.36&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; d=&quot;M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15.36-5.36M20 15a9 9 0 0 1-15.36 5.36&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> <x id="INTERPOLATION" equiv-text="{{ syncButtonLabel(sub) }}"/> </target>
+        <target><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4&quot; [class.animate-spin]=&quot; syncingSubscriptionId === sub.id &quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; d=&quot;M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15.36-5.36M20 15a9 9 0 0 1-15.36 5.36&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; d=&quot;M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15.36-5.36M20 15a9 9 0 0 1-15.36 5.36&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> <x id="INTERPOLATION" equiv-text="{{ syncButtonLabel(sub) }}"/> </target>
       </trans-unit>
       <trans-unit id="5075759937009452880" datatype="html">
         <source> Set default </source>
@@ -848,7 +860,7 @@
       </trans-unit>
       <trans-unit id="1616968388083998795" datatype="html">
         <source>Mark as read</source>
-        <target state="new">Marcar como lido</target>
+        <target>Marcar como lido</target>
       </trans-unit>
       <trans-unit id="1628644434360680754" datatype="html">
         <source>Phone Configs</source>
@@ -860,11 +872,11 @@
       </trans-unit>
       <trans-unit id="137077169546539097" datatype="html">
         <source>Message data</source>
-        <target state="new">Dados da mensagem</target>
+        <target>Dados da mensagem</target>
       </trans-unit>
       <trans-unit id="4502286564339177240" datatype="html">
         <source>Reply</source>
-        <target state="new">Responder</target>
+        <target>Responder</target>
       </trans-unit>
       <trans-unit id="4516831669546104075" datatype="html">
         <source> Email Verification </source>
@@ -880,15 +892,15 @@
       </trans-unit>
       <trans-unit id="5747579300914625788" datatype="html">
         <source>Message details</source>
-        <target state="new">Detalhes da mensagem</target>
+        <target>Detalhes da mensagem</target>
       </trans-unit>
       <trans-unit id="720557322859638078" datatype="html">
         <source>You</source>
-        <target state="new">Você</target>
+        <target>Você</target>
       </trans-unit>
       <trans-unit id="5248717555542428023" datatype="html">
         <source>Username</source>
-        <target state="new">Nome de usuário</target>
+        <target>Nome de usuário</target>
       </trans-unit>
       <trans-unit id="5259641798309630431" datatype="html">
         <source> Long-lived access token from Meta Business </source>
@@ -912,19 +924,19 @@
       </trans-unit>
       <trans-unit id="4943998242904350511" datatype="html">
         <source> Submit </source>
-        <target state="new"> Submeter </target>
+        <target> Submeter </target>
       </trans-unit>
       <trans-unit id="205186163515786593" datatype="html">
         <source>Forwarded</source>
-        <target state="new">Encaminhada</target>
+        <target>Encaminhada</target>
       </trans-unit>
       <trans-unit id="2061243559305039090" datatype="html">
         <source>Throughput Override</source>
         <target>Substituição de taxa de transferência</target>
       </trans-unit>
-      <trans-unit id="7561273264199874409" datatype="html">
-        <source>Frequetly forwarded</source>
-        <target state="new">Encaminhada com frequência</target>
+      <trans-unit id="5115768163288830571" datatype="html">
+        <source>Frequently forwarded</source>
+        <target>Encaminhada com frequência</target>
       </trans-unit>
       <trans-unit id="4250467317941972098" datatype="html">
         <source> Log out </source>
@@ -932,19 +944,19 @@
       </trans-unit>
       <trans-unit id="425634559412949745" datatype="html">
         <source>Add row</source>
-        <target state="new">Adicionar linha</target>
+        <target>Adicionar linha</target>
       </trans-unit>
       <trans-unit id="1357848114610913352" datatype="html">
         <source>Add section</source>
-        <target state="new">Adicionar seção</target>
+        <target>Adicionar seção</target>
       </trans-unit>
       <trans-unit id="3499697918872116089" datatype="html">
         <source>Defines where your message read will be registered. Used to track messages you didn&apos;t read yet.</source>
-        <target state="new">Defines where your message read will be registered. Used to track messages you didn&apos;t read yet.</target>
+        <target>Define onde a leitura da sua mensagem será registrada. Usado para rastrear mensagens que você ainda não leu.</target>
       </trans-unit>
       <trans-unit id="265658160238489310" datatype="html">
         <source>&quot;None&quot; means that will not track messages read. &quot;Server&quot; means that will track messages read at the server, synched with other users. &quot;Local&quot; means that will track messages read only in your session locally.</source>
-        <target state="new">&quot;Nenhum&quot; significa que não registrará as mensagens lidas. &quot;Servidor&quot; significa que registrará as mensagens lidas no servidor, compartilhando com outros usuários. &quot;Local&quot; significa que registrará as mensagens lidas apenas na sua sessão localmente.</target>
+        <target>&quot;Nenhum&quot; significa que não registrará as mensagens lidas. &quot;Servidor&quot; significa que registrará as mensagens lidas no servidor, compartilhando com outros usuários. &quot;Local&quot; significa que registrará as mensagens lidas apenas na sua sessão localmente.</target>
       </trans-unit>
       <trans-unit id="2691014706193835883" datatype="html">
         <source>Light theme</source>
@@ -956,11 +968,11 @@
       </trans-unit>
       <trans-unit id="1918860647725438563" datatype="html">
         <source>Read Control</source>
-        <target state="new">Controle de leitura</target>
+        <target>Controle de leitura</target>
       </trans-unit>
       <trans-unit id="626781142089573549" datatype="html">
         <source>Click to upload</source>
-        <target state="new">Clique para carregar</target>
+        <target>Clique para carregar</target>
       </trans-unit>
       <trans-unit id="8521930685000476255" datatype="html">
         <source> Leave fields blank to keep current values </source>
@@ -968,7 +980,7 @@
       </trans-unit>
       <trans-unit id="8553821068513277979" datatype="html">
         <source>or drag and drop</source>
-        <target state="new">ou segure e arraste</target>
+        <target>ou segure e arraste</target>
       </trans-unit>
       <trans-unit id="8559620245303598336" datatype="html">
         <source> 5. Deregister </source>
@@ -984,19 +996,15 @@
       </trans-unit>
       <trans-unit id="3087245697907079876" datatype="html">
         <source>📁 Upload file</source>
-        <target state="new">📁 Carregar arquivo</target>
+        <target>📁 Carregar arquivo</target>
       </trans-unit>
       <trans-unit id="3618320480978185544" datatype="html">
         <source>🔗 Send link</source>
-        <target state="new">🔗 Enviar por link</target>
+        <target>🔗 Enviar por link</target>
       </trans-unit>
       <trans-unit id="1614991601298392832" datatype="html">
         <source>File uploaded:</source>
-        <target state="new">Arquivo carregado:</target>
-      </trans-unit>
-      <trans-unit id="6597755120494388551" datatype="html">
-        <source> Remove file </source>
-        <target state="new"> Remover arquivo </target>
+        <target>Arquivo carregado:</target>
       </trans-unit>
       <trans-unit id="8742827817950158992" datatype="html">
         <source>Workspace Members</source>
@@ -1008,7 +1016,7 @@
       </trans-unit>
       <trans-unit id="8778616811237742446" datatype="html">
         <source> Name </source>
-        <target state="new"> Name </target>
+        <target> Nome </target>
       </trans-unit>
       <trans-unit id="6028371114637047813" datatype="html">
         <source>First Name</source>
@@ -1066,6 +1074,10 @@
         <source> Please verify your email to continue. </source>
         <target> Por favor, verifique seu e-mail para continuar. </target>
       </trans-unit>
+      <trans-unit id="6842362324545365303" datatype="html">
+        <source> Format </source>
+        <target> Formato </target>
+      </trans-unit>
       <trans-unit id="6895515122441665158" datatype="html">
         <source> + Add price </source>
         <target> + Adicionar preço </target>
@@ -1106,21 +1118,21 @@
         <source>Add URL</source>
         <target>Adicionar URL</target>
       </trans-unit>
+      <trans-unit id="4467323362722952678" datatype="html">
+        <source>Unknown</source>
+        <target>Desconhecido</target>
+      </trans-unit>
       <trans-unit id="4467990164108770021" datatype="html">
         <source>Add Contact</source>
         <target>Adicionar Contato</target>
-      </trans-unit>
-      <trans-unit id="29767780071958964" datatype="html">
-        <source> and <x id="INTERPOLATION" equiv-text="{{ contacts.length - 1 }}"/> more contacts</source>
-        <target> e mais <x id="INTERPOLATION" equiv-text="{{ contacts.length - 1 }}"/> contatos</target>
       </trans-unit>
       <trans-unit id="2996246445609738488" datatype="html">
         <source> Billing </source>
         <target>Cobrança</target>
       </trans-unit>
-      <trans-unit id="412337078276683092" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ contacts.length }}"/> contacts</source>
-        <target><x id="INTERPOLATION" equiv-text="{{ contacts.length }}"/> contatos</target>
+      <trans-unit id="2999730589827720060" datatype="html">
+        <source>DevTools</source>
+        <target>DevTools</target>
       </trans-unit>
       <trans-unit id="3717260339803225897" datatype="html">
         <source> Shared budget across workspace members. Charged first; cascades to user budget when exhausted. </source>
@@ -1216,7 +1228,7 @@
       </trans-unit>
       <trans-unit id="3120567507750501007" datatype="html">
         <source><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4 text-slate-400&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> WhatsApp Business API Configuration </source>
-        <target state="new"><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4 text-slate-400&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> WhatsApp Business API Configuration </target>
+        <target><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4 text-slate-400&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> Configuração da API WhatsApp Business </target>
       </trans-unit>
       <trans-unit id="3135690277375936874" datatype="html">
         <source> All credential fields are required for new configurations </source>
@@ -1224,7 +1236,7 @@
       </trans-unit>
       <trans-unit id="3136390007668036339" datatype="html">
         <source> Go to login </source>
-        <target state="new"> Go to login </target>
+        <target> Ir para o login </target>
       </trans-unit>
       <trans-unit id="3137599440665086165" datatype="html">
         <source>Focus templates list</source>
@@ -1236,7 +1248,7 @@
       </trans-unit>
       <trans-unit id="863646296243033624" datatype="html">
         <source><x id="START_BLOCK_IF" equiv-text="@if (isResending) {"/> Sending... <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Resend verification email <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></source>
-        <target state="new"><x id="START_BLOCK_IF" equiv-text="@if (isResending) {"/> Sending... <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Resend verification email <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
+        <target><x id="START_BLOCK_IF" equiv-text="@if (isResending) {"/> Enviando... <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Reenviar email de verificação <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
       </trans-unit>
       <trans-unit id="8650684650239260630" datatype="html">
         <source>Open selected template</source>
@@ -1256,7 +1268,7 @@
       </trans-unit>
       <trans-unit id="7638411720666471447" datatype="html">
         <source> Request Code </source>
-        <target state="new"> Request Code </target>
+        <target> Solicitar Código </target>
       </trans-unit>
       <trans-unit id="7248429664857556481" datatype="html">
         <source> WhatsApp Business Account identifier </source>
@@ -1268,7 +1280,7 @@
       </trans-unit>
       <trans-unit id="7259765387758462643" datatype="html">
         <source><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4 text-slate-400&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> Basic Information </source>
-        <target state="new"><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4 text-slate-400&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> Basic Information </target>
+        <target><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4 text-slate-400&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> Informações Básicas </target>
       </trans-unit>
       <trans-unit id="7278213602149834905" datatype="html">
         <source>Dark theme</source>
@@ -1318,13 +1330,17 @@
         <source> Send Invitation </source>
         <target> Enviar convite </target>
       </trans-unit>
+      <trans-unit id="100129122612400407" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ successes }}"/> added successfully </source>
+        <target> <x id="INTERPOLATION" equiv-text="{{ successes }}"/> adicionado(s) com sucesso </target>
+      </trans-unit>
       <trans-unit id="1004672047329697606" datatype="html">
         <source> Policies: </source>
         <target> Políticas: </target>
       </trans-unit>
       <trans-unit id="1021436360643445468" datatype="html">
         <source><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4 text-slate-400&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> Status </source>
-        <target state="new"><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4 text-slate-400&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> Status </target>
+        <target><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4 text-slate-400&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot; &gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> Status </target>
       </trans-unit>
       <trans-unit id="1035764495347222552" datatype="html">
         <source>WhatsApp Registration</source>
@@ -1340,15 +1356,15 @@
       </trans-unit>
       <trans-unit id="1074613951806286019" datatype="html">
         <source>Focus messages list</source>
-        <target state="new">Focar na lista de mensagens</target>
+        <target>Focar na lista de mensagens</target>
       </trans-unit>
       <trans-unit id="6257928832200603790" datatype="html">
         <source>Open message options</source>
-        <target state="new">Abrir opções da mensagem</target>
+        <target>Abrir opções da mensagem</target>
       </trans-unit>
       <trans-unit id="3347045600678860291" datatype="html">
         <source>Message type selector</source>
-        <target state="new">Seletor de tipo de mensagem</target>
+        <target>Seletor de tipo de mensagem</target>
       </trans-unit>
       <trans-unit id="338171768951376206" datatype="html">
         <source> No prices configured yet. </source>
@@ -1356,7 +1372,7 @@
       </trans-unit>
       <trans-unit id="7301382007278668178" datatype="html">
         <source>Move message type selection up / down</source>
-        <target state="new">Mover seletor de tipo de mensagem cima / baixo</target>
+        <target>Mover seletor de tipo de mensagem cima / baixo</target>
       </trans-unit>
       <trans-unit id="7330527317988161098" datatype="html">
         <source>Billing (Admin)</source>
@@ -1366,9 +1382,13 @@
         <source> General Information </source>
         <target> Informações gerais </target>
       </trans-unit>
+      <trans-unit id="7044500098947919751" datatype="html">
+        <source><x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container&gt;"/><x id="INTERPOLATION" equiv-text="{{ contacts.length }}"/><x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container&gt;"/> contacts </source>
+        <target><x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container&gt;"/><x id="INTERPOLATION" equiv-text="{{ contacts.length }}"/><x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container&gt;"/> contatos </target>
+      </trans-unit>
       <trans-unit id="7054231182944686314" datatype="html">
         <source>Message options</source>
-        <target state="new">Opções de mensagem</target>
+        <target>Opções de mensagem</target>
       </trans-unit>
       <trans-unit id="1349782650548738418" datatype="html">
         <source> Invite by email </source>
@@ -1376,23 +1396,23 @@
       </trans-unit>
       <trans-unit id="1349920970794534452" datatype="html">
         <source>Reply to message</source>
-        <target state="new">Responder à mensagem</target>
+        <target>Responder à mensagem</target>
       </trans-unit>
       <trans-unit id="3860882842879485037" datatype="html">
         <source>Open message data</source>
-        <target state="new">Mostrar dados da mensagem</target>
+        <target>Mostrar dados da mensagem</target>
       </trans-unit>
       <trans-unit id="4192095172071895326" datatype="html">
         <source>Mark message as read</source>
-        <target state="new">Marcar mensagem como lida</target>
+        <target>Marcar mensagem como lida</target>
       </trans-unit>
       <trans-unit id="5374976605311621535" datatype="html">
         <source>Focus search</source>
-        <target state="new">Focar na barra de pesquisa</target>
+        <target>Focar na barra de pesquisa</target>
       </trans-unit>
       <trans-unit id="5617024237584628219" datatype="html">
         <source>Focus text message area</source>
-        <target state="new">Focar em área de mensagem de texto</target>
+        <target>Focar em área de mensagem de texto</target>
       </trans-unit>
       <trans-unit id="5626676955984660687" datatype="html">
         <source> Joining your workspace... </source>
@@ -1404,23 +1424,23 @@
       </trans-unit>
       <trans-unit id="8604695045343743097" datatype="html">
         <source>Forward</source>
-        <target state="new">Encaminhar</target>
+        <target>Encaminhar</target>
       </trans-unit>
       <trans-unit id="3797570084942068182" datatype="html">
         <source>Select</source>
-        <target state="new">Selecionar</target>
+        <target>Selecionar</target>
       </trans-unit>
       <trans-unit id="3578402141509624800" datatype="html">
         <source>Campaigns are available to supporters. Visit the supporter area to learn more.</source>
-        <target state="new">Campanhas estão disponíveis para apoiadores. Visite a área do apoiador para saber mais.</target>
+        <target>Campanhas estão disponíveis para apoiadores. Visite a área do apoiador para saber mais.</target>
       </trans-unit>
       <trans-unit id="7558837930434347172" datatype="html">
         <source>Automations are available to supporters. Visit the supporter area to learn more.</source>
-        <target state="new">Automações estão disponíveis para apoiadores. Visite a área do apoiador para saber mais.</target>
+        <target>Automações estão disponíveis para apoiadores. Visite a área do apoiador para saber mais.</target>
       </trans-unit>
       <trans-unit id="5378103679051455581" datatype="html">
         <source>Click to view error details</source>
-        <target state="new">Clique para ver detalhes do erro</target>
+        <target>Clique para ver detalhes do erro</target>
       </trans-unit>
       <trans-unit id="4786271583797086407" datatype="html">
         <source>Workspace name</source>
@@ -1428,11 +1448,11 @@
       </trans-unit>
       <trans-unit id="4793952596010266372" datatype="html">
         <source>Code:</source>
-        <target state="new">Código:</target>
+        <target>Código:</target>
       </trans-unit>
       <trans-unit id="7858060057068625943" datatype="html">
         <source>Message:</source>
-        <target state="new">Mensagem:</target>
+        <target>Mensagem:</target>
       </trans-unit>
       <trans-unit id="4345750264644702143" datatype="html">
         <source>Meta App Secret</source>
@@ -1448,11 +1468,15 @@
       </trans-unit>
       <trans-unit id="4361568045684156139" datatype="html">
         <source>Details:</source>
-        <target state="new">Detalhes:</target>
+        <target>Detalhes:</target>
       </trans-unit>
-      <trans-unit id="4432159389957994340" datatype="html">
-        <source> Loading usage... </source>
-        <target> Carregando uso... </target>
+      <trans-unit id="7946935041397533259" datatype="html">
+        <source>Loading usage...</source>
+        <target>Carregando uso...</target>
+      </trans-unit>
+      <trans-unit id="7973140450571597836" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ errors }}"/> invalid </source>
+        <target> <x id="INTERPOLATION" equiv-text="{{ errors }}"/> inválido(s) </target>
       </trans-unit>
       <trans-unit id="4444753420973870540" datatype="html">
         <source>Name is required.</source>
@@ -1461,10 +1485,6 @@
       <trans-unit id="3263703488420683331" datatype="html">
         <source>A valid email is required.</source>
         <target> Um e-mail válido é necessário.</target>
-      </trans-unit>
-      <trans-unit id="187187500641108332" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ messagingProductContact.contact.name || &quot;Unknown&quot; }}"/></source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ messagingProductContact.contact.name || &quot;Desconhecido&quot; }}"/></target>
       </trans-unit>
       <trans-unit id="1888826072615405410" datatype="html">
         <source>Verify Token</source>
@@ -1480,7 +1500,7 @@
       </trans-unit>
       <trans-unit id="7588517493049951533" datatype="html">
         <source><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;&gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M12 4v16m8-8H4&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M12 4v16m8-8H4&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> Add Your First Phone Config </source>
-        <target state="new"><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;&gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M12 4v16m8-8H4&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M12 4v16m8-8H4&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> Add Your First Phone Config </target>
+        <target><x id="START_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;svg class=&quot;h-4 w-4&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;&gt;"/><x id="START_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M12 4v16m8-8H4&quot; /&gt;"/><x id="CLOSE_TAG__SVG_PATH" ctype="x-_svg_path" equiv-text="&lt;path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M12 4v16m8-8H4&quot; /&gt;"/><x id="CLOSE_TAG__SVG_SVG" ctype="x-_svg_svg" equiv-text="&lt;/svg&gt;"/> Adicione Sua Primeira Configuração de Telefone </target>
       </trans-unit>
       <trans-unit id="7590013429208346303" datatype="html">
         <source>Custom</source>
@@ -1488,7 +1508,7 @@
       </trans-unit>
       <trans-unit id="6562715443570244595" datatype="html">
         <source>Message delivery failed</source>
-        <target state="new">Falha no envio da mensagem</target>
+        <target>Falha no envio da mensagem</target>
       </trans-unit>
       <trans-unit id="6652719931015958801" datatype="html">
         <source> Manage your profile and application preferences </source>
@@ -1506,6 +1526,10 @@
         <source>New Password</source>
         <target>Nova Senha</target>
       </trans-unit>
+      <trans-unit id="1228683296994237263" datatype="html">
+        <source> and <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container&gt;"/><x id="INTERPOLATION" equiv-text="{{ contacts.length - 1 }}"/><x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container&gt;"/> more contacts </source>
+        <target> e <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container&gt;"/><x id="INTERPOLATION" equiv-text="{{ contacts.length - 1 }}"/><x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container&gt;"/> mais contatos </target>
+      </trans-unit>
       <trans-unit id="6607728160061723306" datatype="html">
         <source> Language </source>
         <target> Idioma </target>
@@ -1520,7 +1544,7 @@
       </trans-unit>
       <trans-unit id="1271997362648249823" datatype="html">
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot;&gt;"/>edit<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Edit </source>
-        <target state="new"><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-2 !h-5 !w-5 text-sm&quot;&gt;"/>edit<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Editar Perfil</target>
+        <target><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot;&gt;"/>edit<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Editar </target>
       </trans-unit>
       <trans-unit id="1275932406866897399" datatype="html">
         <source> Manual Subscription </source>
@@ -1528,7 +1552,7 @@
       </trans-unit>
       <trans-unit id="8384559525885301918" datatype="html">
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot;&gt;"/>close<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Cancel </source>
-        <target state="new"><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-2 !h-5 !w-5 text-sm&quot;&gt;"/>close<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Cancelar</target>
+        <target><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot;&gt;"/>close<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Cancelar </target>
       </trans-unit>
       <trans-unit id="8417228520586710560" datatype="html">
         <source> Enter your new password </source>
@@ -1548,7 +1572,7 @@
       </trans-unit>
       <trans-unit id="4071377376054753380" datatype="html">
         <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ loading ? &quot;hourglass_empty&quot; : &quot;save&quot; }}"/><x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> <x id="INTERPOLATION_1" equiv-text="{{ loading ? &quot;Saving...&quot; : &quot;Save&quot; }}"/> </source>
-        <target state="new"> <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-2 !h-5 !w-5 text-sm&quot;&gt;"/> <x id="INTERPOLATION" equiv-text="{{ loading ? &apos;hourglass_empty&apos; : &apos;save&apos; }}"/> <x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> <x id="INTERPOLATION_1" equiv-text="{{ loading ? &apos;Salvando...&apos; : &apos;Salvar Alterações&apos; }}"/> </target>
+        <target><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ loading ? &quot;hourglass_empty&quot; : &quot;save&quot; }}"/><x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> <x id="INTERPOLATION_1" equiv-text="{{ loading ? &quot;Saving...&quot; : &quot;Save&quot; }}"/> </target>
       </trans-unit>
       <trans-unit id="4071496549933477149" datatype="html">
         <source>6-digit Code</source>
