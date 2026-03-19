@@ -51,7 +51,7 @@ export class WorkspaceMemberStoreService {
     }
 
     add(members: WorkspaceMember[]) {
-        this.addToMap(members);
+        this.addMembersToMembersById(members);
         this.members = [...this.members, ...members];
     }
 
@@ -69,7 +69,7 @@ export class WorkspaceMemberStoreService {
         }
     }
 
-    private addToMap(members: WorkspaceMember[]) {
+    private addMembersToMembersById(members: WorkspaceMember[]) {
         members.forEach(m => {
             this.membersById.set(m.id, m);
         });
