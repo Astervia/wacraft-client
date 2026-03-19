@@ -165,18 +165,25 @@
         @if (!isEditing) {
             <div class="space-y-2 text-center">
                 <h2 class="text-xl font-medium">
-                    <span i18n>{{ messagingProductContact.contact.name || "Unknown" }}</span>
+                    @if (messagingProductContact.contact.name) {
+                        <span>{{ messagingProductContact.contact.name }}</span>
+                    } @else {
+                        <span i18n>Unknown</span>
+                    }
                 </h2>
-                <p class="text-thin text-sm text-gray-600" i18n>
-                    {{ messagingProductContact.contact.email || "Email not available" }}
+                <p class="text-thin text-sm text-gray-600">
+                    @if (messagingProductContact.contact.email) {
+                        <span>{{ messagingProductContact.contact.email }}</span>
+                    } @else {
+                        <span i18n>Email not available</span>
+                    }
                 </p>
                 <p class="text-thin text-sm text-gray-600">
-                    <span i18n>
-                        {{
-                            messagingProductContact.product_details.phone_number ||
-                                "Phone number not available"
-                        }}
-                    </span>
+                    @if (messagingProductContact.product_details.phone_number) {
+                        <span>{{ messagingProductContact.product_details.phone_number }}</span>
+                    } @else {
+                        <span i18n>Phone number not available</span>
+                    }
                 </p>
             </div>
         }

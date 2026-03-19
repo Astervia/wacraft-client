@@ -28,7 +28,10 @@
                 <mat-icon fontIcon="close"></mat-icon>
             </button>
 
-            <span class="text-lg font-normal" i18n>{{ contacts.length }} contacts</span>
+            <span class="text-lg font-normal" i18n>
+                <ng-container>{{ contacts.length }}</ng-container>
+                contacts
+            </span>
         </div>
 
         <!-- Body -->

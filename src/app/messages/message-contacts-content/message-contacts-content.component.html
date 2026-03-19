@@ -7,7 +7,11 @@
                 contacts.length ? contacts[0].name.formatted_name : ""
             }}</span>
             @if (contacts.length > 1) {
-                <span i18n> and {{ contacts.length - 1 }} more contacts</span>
+                <span i18n>
+                    and
+                    <ng-container>{{ contacts.length - 1 }}</ng-container>
+                    more contacts
+                </span>
             }
         </p>
     </button>
