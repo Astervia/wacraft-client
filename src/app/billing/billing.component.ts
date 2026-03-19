@@ -1,367 +1,43 @@
-import { getCurrency } from "locale-currency";
 import { Component, inject, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { SidebarLayoutComponent } from "../common/sidebar-layout/sidebar-layout.component";
 import { RoutePath } from "../app.routes";
-import { BillingPlanStoreService } from "../../core/billing/store/billing-plan-store.service";
-import { BillingSubscriptionStoreService } from "../../core/billing/store/billing-subscription-store.service";
-import { BillingUsageStoreService } from "../../core/billing/store/billing-usage-store.service";
-import { WorkspaceStoreService } from "../../core/workspace/store/workspace-store.service";
-import { Plan } from "../../core/billing/entity/plan.entity";
-import { PlanPrice } from "../../core/billing/entity/plan-price.entity";
-import { PaymentMode, Subscription } from "../../core/billing/entity/subscription.entity";
-import { UsageInfo } from "../../core/billing/entity/usage.entity";
-import { Policy } from "../../core/workspace/model/policy.model";
+import { BillingPlansComponent } from "./billing-plans/billing-plans.component";
+import { BillingSubscriptionsComponent } from "./billing-subscriptions/billing-subscriptions.component";
 
 @Component({
     selector: "app-billing",
-    imports: [CommonModule, FormsModule, RouterLink, SidebarLayoutComponent],
+    imports: [
+        CommonModule,
+        RouterLink,
+        SidebarLayoutComponent,
+        BillingPlansComponent,
+        BillingSubscriptionsComponent,
+    ],
     templateUrl: "./billing.component.html",
     standalone: true,
 })
 export class BillingComponent implements OnInit {
-    planStore = inject(BillingPlanStoreService);
-    subscriptionStore = inject(BillingSubscriptionStoreService);
-    usageStore = inject(BillingUsageStoreService);
-    workspaceStore = inject(WorkspaceStoreService);
     private route = inject(ActivatedRoute);
     private router = inject(Router);
 
     RoutePath = RoutePath;
 
     activeTab: "plans" | "subscriptions" = "plans";
-    errorMessage = "";
 
-    // Checkout state
-    checkoutScope: "user" | "workspace" = "user";
-    checkoutLoading = false;
-    syncingSubscriptionId: string | null = null;
-
-    // Subscription scope
-    subscriptionScope: "user" | "workspace" = "user";
-
-    // Preferred currency — single global selection, persisted
-    preferredCurrency = "";
-
-    private readonly STORAGE_KEY = "preferred_currency";
-
-    // All distinct currencies offered across active plans
-    get availableCurrencies(): string[] {
-        const seen = new Set<string>();
-        for (const plan of this.planStore.plans) {
-            if (!plan.active) continue;
-            for (const p of plan.prices) seen.add(p.currency.toLowerCase());
-        }
-        return [...seen].sort();
-    }
-
-    get activeSubscriptions(): Subscription[] {
-        return this.subscriptionScope === "workspace"
-            ? this.subscriptionStore.workspaceSubscriptions
-            : this.subscriptionStore.userSubscriptions;
-    }
-
-    get canViewWorkspaceSubscriptions(): boolean {
-        return (
-            this.workspaceStore.hasPolicy(Policy.billing_read) ||
-            this.workspaceStore.hasPolicy(Policy.workspace_admin)
-        );
-    }
-
-    async ngOnInit() {
+    ngOnInit() {
         this.route.fragment.subscribe(fragment => {
             if (fragment === "subscriptions") this.activeTab = "subscriptions";
             else {
                 this.activeTab = "plans";
                 if (fragment !== "plans")
-                    this.router.navigate([], { fragment: "plans", replaceUrl: true });
+                    this.router.navigate([], {
+                        fragment: "plans",
+                        replaceUrl: true,
+                        queryParamsHandling: "preserve",
+                    });
             }
         });
-
-        await Promise.all([
-            this.planStore.load(),
-            this.subscriptionStore.loadUserSubscriptions(),
-            this.usageStore.load(),
-        ]);
-
-        this.initPreferredCurrency();
-    }
-
-    async selectSubscriptionScope(scope: "user" | "workspace"): Promise<void> {
-        this.subscriptionScope = scope;
-        if (scope === "user" && this.subscriptionStore.userSubscriptions.length === 0) {
-            this.subscriptionStore.loading = true;
-            await this.subscriptionStore.loadUserSubscriptions();
-            this.subscriptionStore.loading = false;
-        }
-        if (scope === "workspace" && this.subscriptionStore.workspaceSubscriptions.length === 0) {
-            this.subscriptionStore.loading = true;
-            await this.subscriptionStore.loadWorkspaceSubscriptions();
-            this.subscriptionStore.loading = false;
-        }
-    }
-
-    private initPreferredCurrency(): void {
-        const available = this.availableCurrencies;
-        if (available.length === 0) return;
-
-        // 1. Restore from localStorage
-        const saved = localStorage.getItem(this.STORAGE_KEY);
-        if (saved && available.includes(saved)) {
-            this.preferredCurrency = saved;
-            return;
-        }
-
-        // 2. Auto-detect from browser locale
-        const detected = this.detectLocaleCurrency();
-        if (detected && available.includes(detected)) {
-            this.preferredCurrency = detected;
-            return;
-        }
-
-        // 3. Fall back to the most common currency across plans (highest occurrence)
-        const counts = new Map<string, number>();
-        for (const plan of this.planStore.plans) {
-            if (!plan.active) continue;
-            for (const p of plan.prices) {
-                const c = p.currency.toLowerCase();
-                counts.set(c, (counts.get(c) ?? 0) + 1);
-            }
-        }
-        const top = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
-        if (top) this.preferredCurrency = top[0];
-    }
-
-    private detectLocaleCurrency(): string | null {
-        try {
-            const code = getCurrency(navigator.language);
-            return code ? code.toLowerCase() : null;
-        } catch {
-            return null;
-        }
-    }
-
-    setPreferredCurrency(currency: string): void {
-        this.preferredCurrency = currency;
-        localStorage.setItem(this.STORAGE_KEY, currency);
-    }
-
-    // Usage helpers
-    usagePercent(usage: {
-        current_usage: number;
-        throughput_limit: number;
-        unlimited: boolean;
-    }): number {
-        if (usage.unlimited || usage.throughput_limit <= 0) return 0;
-        return Math.min(100, Math.round((usage.current_usage / usage.throughput_limit) * 100));
-    }
-
-    usageColor(percent: number): string {
-        if (percent > 90) return "bg-red-500";
-        if (percent > 70) return "bg-yellow-500";
-        return "bg-green-500";
-    }
-
-    usageTextColor(percent: number): string {
-        if (percent > 90) return "text-red-600 dark:text-red-400";
-        if (percent > 70) return "text-yellow-600 dark:text-yellow-400";
-        return "text-green-600 dark:text-green-400";
-    }
-
-    usageLabel(usage: UsageInfo): string {
-        if (usage.fallback) return "Fallback";
-        return usage.scope === "workspace" ? "Workspace" : "User";
-    }
-
-    usageDescription(usage: UsageInfo): string {
-        if (usage.fallback)
-            return "Separate fallback budget for essential routes (billing, workspaces, profile) when the main limit is exceeded";
-        if (usage.scope === "workspace") return "Usage shared between workspace members";
-        return "Usage by your user account";
-    }
-
-    usageBadgeClass(usage: UsageInfo): string {
-        if (usage.fallback)
-            return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-        if (usage.scope === "workspace")
-            return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400";
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
-    }
-
-    // Plan helpers
-    formatPrice(cents: number, currency: string): string {
-        return (cents / 100).toLocaleString(undefined, {
-            style: "currency",
-            currency: currency.toUpperCase(),
-        });
-    }
-
-    private defaultPrice(plan: Plan): PlanPrice | undefined {
-        return plan.prices.find(p => p.is_default) ?? plan.prices[0];
-    }
-
-    selectedPrice(plan: Plan): PlanPrice | undefined {
-        if (this.preferredCurrency) {
-            const match = plan.prices.find(
-                p => p.currency.toLowerCase() === this.preferredCurrency,
-            );
-            if (match) return match;
-        }
-        return this.defaultPrice(plan);
-    }
-
-    // True when the shown price is the plan default, not the user's preferred currency
-    isUsingFallback(plan: Plan): boolean {
-        if (!this.preferredCurrency || plan.prices.length === 0) return false;
-        return !plan.prices.some(p => p.currency.toLowerCase() === this.preferredCurrency);
-    }
-
-    formatSelectedPrice(plan: Plan): string {
-        const price = this.selectedPrice(plan);
-        if (!price) return "—";
-        return this.formatPrice(price.price_cents, price.currency);
-    }
-
-    formatThroughput(limit: number): string {
-        if (limit <= 0) return "Unlimited";
-        return `${limit} req`;
-    }
-
-    // Checkout
-    async checkout(plan: Plan, paymentMode: PaymentMode = "payment"): Promise<void> {
-        this.checkoutLoading = true;
-        this.errorMessage = "";
-        try {
-            const workspaceId =
-                this.checkoutScope === "workspace"
-                    ? this.workspaceStore.currentWorkspace?.id
-                    : undefined;
-            const price = this.selectedPrice(plan);
-            const url = await this.subscriptionStore.checkout(
-                plan.id,
-                this.checkoutScope,
-                workspaceId,
-                paymentMode,
-                price?.currency,
-            );
-            if (url) {
-                window.location.href = url;
-            } else {
-                this.errorMessage = "Failed to initiate checkout.";
-            }
-        } catch {
-            this.errorMessage = "Checkout failed. Please try again.";
-        } finally {
-            this.checkoutLoading = false;
-        }
-    }
-
-    // Subscription status
-    subscriptionStatus(
-        sub: Pick<Subscription, "status" | "cancelled_at" | "cancel_at_period_end" | "expires_at">,
-    ): "pending" | "active" | "cancelling" | "cancelled" | "expired" {
-        if (sub.status === "pending") return "pending";
-        if (sub.status === "cancelled" || sub.cancelled_at) return "cancelled";
-        if (sub.cancel_at_period_end) return "cancelling";
-        if (new Date(sub.expires_at) < new Date()) return "expired";
-        return "active";
-    }
-
-    subscriptionStatusLabel(sub: Subscription): string {
-        const status = this.subscriptionStatus(sub);
-        if (status === "pending") return "Awaiting payment confirmation";
-        if (status === "cancelled") return "Cancelled";
-        if (status === "cancelling") {
-            return (
-                "Cancellation pending — Active until " +
-                new Date(sub.expires_at).toLocaleDateString()
-            );
-        }
-        if (status === "expired") return "Expired";
-        if (sub.payment_mode === "subscription") {
-            return "Active — Renews on " + new Date(sub.expires_at).toLocaleDateString();
-        }
-        return "Active — Expires on " + new Date(sub.expires_at).toLocaleDateString();
-    }
-
-    canCancel(sub: Subscription): boolean {
-        return (
-            sub.status === "active" &&
-            sub.payment_mode === "subscription" &&
-            !sub.cancelled_at &&
-            !sub.cancel_at_period_end &&
-            new Date(sub.expires_at) > new Date()
-        );
-    }
-
-    statusBadgeClass(status: string): string {
-        switch (status) {
-            case "pending":
-                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-            case "active":
-                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-            case "cancelling":
-                return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-            case "cancelled":
-                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400";
-            case "expired":
-                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-            default:
-                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400";
-        }
-    }
-
-    canReactivate(sub: Subscription): boolean {
-        return (
-            sub.status === "active" &&
-            sub.payment_mode === "subscription" &&
-            sub.cancel_at_period_end &&
-            !sub.cancelled_at &&
-            new Date(sub.expires_at) > new Date()
-        );
-    }
-
-    async cancelSubscription(sub: Subscription): Promise<void> {
-        const expiresAt = new Date(sub.expires_at).toLocaleDateString();
-        if (
-            !confirm(
-                `Are you sure you want to cancel this subscription? It will remain active until ${expiresAt} and you will not be charged again.`,
-            )
-        )
-            return;
-        await this.subscriptionStore.cancel(sub.id, this.subscriptionScope === "workspace");
-    }
-
-    async reactivateSubscription(sub: Subscription): Promise<void> {
-        if (!confirm("Reactivate this subscription? Auto-renewal will resume.")) return;
-        await this.subscriptionStore.reactivate(sub.id, this.subscriptionScope === "workspace");
-    }
-
-    canSync(sub: Subscription): boolean {
-        if (sub.status === "pending") return true;
-        return (
-            sub.status === "active" &&
-            sub.payment_mode === "subscription" &&
-            !!sub.stripe_subscription_id
-        );
-    }
-
-    syncButtonLabel(sub: Subscription): string {
-        if (sub.status === "pending") return "Check payment status";
-        return "Sync";
-    }
-
-    async syncSubscription(sub: Subscription): Promise<void> {
-        this.syncingSubscriptionId = sub.id;
-        this.errorMessage = "";
-        try {
-            await this.subscriptionStore.sync(sub.id, this.subscriptionScope === "workspace");
-        } catch {
-            this.errorMessage = "Failed to sync subscription. Please try again.";
-        } finally {
-            this.syncingSubscriptionId = null;
-        }
     }
 }

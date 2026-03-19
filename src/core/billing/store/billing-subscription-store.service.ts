@@ -13,57 +13,91 @@ export class BillingSubscriptionStoreService {
     private workspaceStore = inject(WorkspaceStoreService);
     private logger = inject(NGXLogger);
 
-    subscriptions: Subscription[] = [];
+    private paginationLimit = 15;
+
     userSubscriptions: Subscription[] = [];
     workspaceSubscriptions: Subscription[] = [];
+
+    public reachedMaxUserLimit = false;
+    public reachedMaxWorkspaceLimit = false;
     loading = false;
 
     constructor() {
         this.workspaceStore.workspaceChanged.subscribe(() => {
-            this.subscriptions = [];
             this.userSubscriptions = [];
             this.workspaceSubscriptions = [];
+            this.reachedMaxUserLimit = false;
+            this.reachedMaxWorkspaceLimit = false;
         });
     }
 
-    async load(): Promise<void> {
+    async getUserSubscriptions(): Promise<void> {
+        const subscriptions = await this.subscriptionController.get(
+            {
+                limit: this.paginationLimit,
+                offset: this.userSubscriptions.length,
+            },
+            { created_at: DateOrderEnum.desc },
+            false,
+        );
+
+        if (!subscriptions.length) {
+            this.reachedMaxUserLimit = true;
+            return;
+        }
+
+        this.addUser(subscriptions);
+    }
+
+    addUser(subscriptions: Subscription[]) {
+        this.userSubscriptions = [...this.userSubscriptions, ...subscriptions];
+    }
+
+    async loadUserSubscriptions(): Promise<void> {
         this.loading = true;
-        this.subscriptions = [];
         this.userSubscriptions = [];
-        this.workspaceSubscriptions = [];
+        this.reachedMaxUserLimit = false;
         try {
-            this.subscriptions = await this.subscriptionController.get(
-                { limit: 50, offset: 0 },
-                { created_at: DateOrderEnum.desc },
-            );
+            await this.getUserSubscriptions();
         } catch (error) {
-            this.logger.error("Error loading subscriptions", error);
+            this.logger.error("Error loading user subscriptions", error);
         } finally {
             this.loading = false;
         }
     }
 
-    async loadUserSubscriptions(): Promise<void> {
-        try {
-            this.userSubscriptions = await this.subscriptionController.get(
-                { limit: 50, offset: 0 },
-                { created_at: DateOrderEnum.desc },
-                false,
-            );
-        } catch (error) {
-            this.logger.error("Error loading user subscriptions", error);
+    async getWorkspaceSubscriptions(): Promise<void> {
+        const subscriptions = await this.subscriptionController.get(
+            {
+                limit: this.paginationLimit,
+                offset: this.workspaceSubscriptions.length,
+            },
+            { created_at: DateOrderEnum.desc },
+            true,
+        );
+
+        if (!subscriptions.length) {
+            this.reachedMaxWorkspaceLimit = true;
+            return;
         }
+
+        this.addWorkspace(subscriptions);
+    }
+
+    addWorkspace(subscriptions: Subscription[]) {
+        this.workspaceSubscriptions = [...this.workspaceSubscriptions, ...subscriptions];
     }
 
     async loadWorkspaceSubscriptions(): Promise<void> {
+        this.loading = true;
+        this.workspaceSubscriptions = [];
+        this.reachedMaxWorkspaceLimit = false;
         try {
-            this.workspaceSubscriptions = await this.subscriptionController.get(
-                { limit: 50, offset: 0 },
-                { created_at: DateOrderEnum.desc },
-                true,
-            );
+            await this.getWorkspaceSubscriptions();
         } catch (error) {
             this.logger.error("Error loading workspace subscriptions", error);
+        } finally {
+            this.loading = false;
         }
     }
 

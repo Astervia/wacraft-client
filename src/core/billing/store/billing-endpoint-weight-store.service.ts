@@ -12,17 +12,40 @@ export class BillingEndpointWeightStoreService {
     private weightController = inject(BillingEndpointWeightControllerService);
     private logger = inject(NGXLogger);
 
-    weights: EndpointWeight[] = [];
+    private paginationLimit = 15;
+
+    public reachedMaxLimit = false;
     loading = false;
+
+    weights: EndpointWeight[] = [];
+
+    async get(): Promise<void> {
+        const weights = await this.weightController.get(
+            {
+                limit: this.paginationLimit,
+                offset: this.weights.length,
+            },
+            { created_at: DateOrderEnum.desc },
+        );
+
+        if (!weights.length) {
+            this.reachedMaxLimit = true;
+            return;
+        }
+
+        this.add(weights);
+    }
+
+    add(weights: EndpointWeight[]) {
+        this.weights = [...this.weights, ...weights];
+    }
 
     async load(): Promise<void> {
         this.loading = true;
         this.weights = [];
+        this.reachedMaxLimit = false;
         try {
-            this.weights = await this.weightController.get(
-                { limit: 50, offset: 0 },
-                { created_at: DateOrderEnum.desc },
-            );
+            await this.get();
         } catch (error) {
             this.logger.error("Error loading endpoint weights", error);
         } finally {
