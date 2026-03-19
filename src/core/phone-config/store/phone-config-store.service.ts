@@ -51,7 +51,7 @@ export class PhoneConfigStoreService {
     }
 
     add(configs: PhoneConfig[]) {
-        this.addToMap(configs);
+        this.addPhoneConfigsToPhoneConfigsById(configs);
         this.phoneConfigs = [...this.phoneConfigs, ...configs];
     }
 
@@ -69,7 +69,7 @@ export class PhoneConfigStoreService {
         }
     }
 
-    private addToMap(configs: PhoneConfig[]) {
+    private addPhoneConfigsToPhoneConfigsById(configs: PhoneConfig[]) {
         configs.forEach(c => {
             this.phoneConfigsById.set(c.id, c);
         });

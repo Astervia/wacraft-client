@@ -45,10 +45,14 @@ export class WorkspaceStoreService {
                 this.reachedMaxLimit = true;
                 return;
             }
-            this.workspaces = [...this.workspaces, ...workspaces];
+            this.add(workspaces);
         } catch (error) {
             this.logger.error("Error loading workspaces", error);
         }
+    }
+
+    add(workspaces: Workspace[]) {
+        this.workspaces = [...this.workspaces, ...workspaces];
     }
 
     async loadCurrentMembership(): Promise<void> {
