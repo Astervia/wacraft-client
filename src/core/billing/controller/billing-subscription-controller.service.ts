@@ -20,24 +20,31 @@ export class BillingSubscriptionControllerService extends MainServerControllerSe
     async get(
         pagination: Paginate = { limit: 50, offset: 0 },
         order: DateOrder = {},
+        withWorkspace = true,
     ): Promise<Subscription[]> {
+        const params = { ...pagination, ...order };
+        if (withWorkspace) {
+            return (
+                await this.http.get<Subscription[]>(`${ServerEndpoints.billing_subscription}`, {
+                    params,
+                })
+            ).data;
+        }
         return (
-            await this.http.get<Subscription[]>(`${ServerEndpoints.billing_subscription}`, {
-                params: {
-                    ...pagination,
-                    ...order,
-                },
-            })
+            await this.requestWithoutWorkspace<Subscription[]>(
+                "get",
+                `${ServerEndpoints.billing_subscription}`,
+                { params },
+            )
         ).data;
     }
 
-    async checkout(data: CheckoutRequest): Promise<CheckoutResponse> {
-        return (
-            await this.http.post<CheckoutResponse>(
-                `${ServerEndpoints.billing_subscription}/${ServerEndpoints.billing_checkout}`,
-                data,
-            )
-        ).data;
+    async checkout(data: CheckoutRequest, withWorkspace = true): Promise<CheckoutResponse> {
+        const url = `${ServerEndpoints.billing_subscription}/${ServerEndpoints.billing_checkout}`;
+        if (withWorkspace) {
+            return (await this.http.post<CheckoutResponse>(url, data)).data;
+        }
+        return (await this.requestWithoutWorkspace<CheckoutResponse>("post", url, { data })).data;
     }
 
     async createManual(data: CreateManualSubscription): Promise<Subscription> {
@@ -49,32 +56,38 @@ export class BillingSubscriptionControllerService extends MainServerControllerSe
         ).data;
     }
 
-    async cancel(id: string): Promise<void> {
+    async cancel(id: string, withWorkspace = true): Promise<void> {
         console.info("cancelling");
+        const params = { id };
+        if (withWorkspace) {
+            return (
+                await this.http.delete<void>(`${ServerEndpoints.billing_subscription}`, { params })
+            ).data;
+        }
         return (
-            await this.http.delete<void>(`${ServerEndpoints.billing_subscription}`, {
-                params: { id },
-            })
-        ).data;
-    }
-
-    async reactivate(id: string): Promise<void> {
-        return (
-            await this.http.post<void>(
-                `${ServerEndpoints.billing_subscription}/${ServerEndpoints.billing_reactivate}`,
-                null,
-                { params: { id } },
+            await this.requestWithoutWorkspace<void>(
+                "delete",
+                `${ServerEndpoints.billing_subscription}`,
+                { params },
             )
         ).data;
     }
 
-    async sync(id: string): Promise<Subscription> {
-        return (
-            await this.http.post<Subscription>(
-                `${ServerEndpoints.billing_subscription}/${ServerEndpoints.billing_sync}`,
-                null,
-                { params: { id } },
-            )
-        ).data;
+    async reactivate(id: string, withWorkspace = true): Promise<void> {
+        const url = `${ServerEndpoints.billing_subscription}/${ServerEndpoints.billing_reactivate}`;
+        const params = { id };
+        if (withWorkspace) {
+            return (await this.http.post<void>(url, null, { params })).data;
+        }
+        return (await this.requestWithoutWorkspace<void>("post", url, { params })).data;
+    }
+
+    async sync(id: string, withWorkspace = true): Promise<Subscription> {
+        const url = `${ServerEndpoints.billing_subscription}/${ServerEndpoints.billing_sync}`;
+        const params = { id };
+        if (withWorkspace) {
+            return (await this.http.post<Subscription>(url, null, { params })).data;
+        }
+        return (await this.requestWithoutWorkspace<Subscription>("post", url, { params })).data;
     }
 }

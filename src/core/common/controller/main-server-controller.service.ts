@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs";
 import { AuthService } from "../../auth/service/auth.service";
@@ -91,6 +91,24 @@ export class MainServerControllerService {
     private watchVerifyEmailRedirect(): void {
         this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
             this.verifyEmailRedirectInProgress = false;
+        });
+    }
+
+    protected requestWithoutWorkspace<T>(
+        method: "get" | "post" | "put" | "delete",
+        url: string,
+        config: AxiosRequestConfig = {},
+    ) {
+        const token = localStorage.getItem("accessToken");
+        const baseURL = [this.prefix, ...this.path].join("/");
+        return axios.request<T>({
+            method,
+            url: `${baseURL}/${url}`,
+            ...config,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                ...config.headers,
+            },
         });
     }
 

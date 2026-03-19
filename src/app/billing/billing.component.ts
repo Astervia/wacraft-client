@@ -13,6 +13,7 @@ import { Plan } from "../../core/billing/entity/plan.entity";
 import { PlanPrice } from "../../core/billing/entity/plan-price.entity";
 import { PaymentMode, Subscription } from "../../core/billing/entity/subscription.entity";
 import { UsageInfo } from "../../core/billing/entity/usage.entity";
+import { Policy } from "../../core/workspace/model/policy.model";
 
 @Component({
     selector: "app-billing",
@@ -38,6 +39,9 @@ export class BillingComponent implements OnInit {
     checkoutLoading = false;
     syncingSubscriptionId: string | null = null;
 
+    // Subscription scope
+    subscriptionScope: "user" | "workspace" = "user";
+
     // Preferred currency — single global selection, persisted
     preferredCurrency = "";
 
@@ -53,6 +57,19 @@ export class BillingComponent implements OnInit {
         return [...seen].sort();
     }
 
+    get activeSubscriptions(): Subscription[] {
+        return this.subscriptionScope === "workspace"
+            ? this.subscriptionStore.workspaceSubscriptions
+            : this.subscriptionStore.userSubscriptions;
+    }
+
+    get canViewWorkspaceSubscriptions(): boolean {
+        return (
+            this.workspaceStore.hasPolicy(Policy.billing_read) ||
+            this.workspaceStore.hasPolicy(Policy.workspace_admin)
+        );
+    }
+
     async ngOnInit() {
         this.route.fragment.subscribe(fragment => {
             if (fragment === "subscriptions") this.activeTab = "subscriptions";
@@ -65,11 +82,25 @@ export class BillingComponent implements OnInit {
 
         await Promise.all([
             this.planStore.load(),
-            this.subscriptionStore.load(),
+            this.subscriptionStore.loadUserSubscriptions(),
             this.usageStore.load(),
         ]);
 
         this.initPreferredCurrency();
+    }
+
+    async selectSubscriptionScope(scope: "user" | "workspace"): Promise<void> {
+        this.subscriptionScope = scope;
+        if (scope === "user" && this.subscriptionStore.userSubscriptions.length === 0) {
+            this.subscriptionStore.loading = true;
+            await this.subscriptionStore.loadUserSubscriptions();
+            this.subscriptionStore.loading = false;
+        }
+        if (scope === "workspace" && this.subscriptionStore.workspaceSubscriptions.length === 0) {
+            this.subscriptionStore.loading = true;
+            await this.subscriptionStore.loadWorkspaceSubscriptions();
+            this.subscriptionStore.loading = false;
+        }
     }
 
     private initPreferredCurrency(): void {
@@ -300,12 +331,12 @@ export class BillingComponent implements OnInit {
             )
         )
             return;
-        await this.subscriptionStore.cancel(sub.id);
+        await this.subscriptionStore.cancel(sub.id, this.subscriptionScope === "workspace");
     }
 
     async reactivateSubscription(sub: Subscription): Promise<void> {
         if (!confirm("Reactivate this subscription? Auto-renewal will resume.")) return;
-        await this.subscriptionStore.reactivate(sub.id);
+        await this.subscriptionStore.reactivate(sub.id, this.subscriptionScope === "workspace");
     }
 
     canSync(sub: Subscription): boolean {
@@ -326,7 +357,7 @@ export class BillingComponent implements OnInit {
         this.syncingSubscriptionId = sub.id;
         this.errorMessage = "";
         try {
-            await this.subscriptionStore.sync(sub.id);
+            await this.subscriptionStore.sync(sub.id, this.subscriptionScope === "workspace");
         } catch {
             this.errorMessage = "Failed to sync subscription. Please try again.";
         } finally {
