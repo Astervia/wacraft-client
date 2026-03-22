@@ -82,6 +82,9 @@ export class BillingPlansComponent implements OnInit, OnDestroy {
 
     async refreshUsage(): Promise<void> {
         await this.usageStore.load();
+        if (this.autoRefreshActive) {
+            this.refreshCountdown = this.smallestWindow;
+        }
     }
 
     async startAutoRefresh(): Promise<void> {
