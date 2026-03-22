@@ -1,5 +1,5 @@
 import { getCurrency } from "locale-currency";
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { BillingPlanStoreService } from "../../../core/billing/store/billing-plan-store.service";
@@ -17,7 +17,7 @@ import { UsageInfo } from "../../../core/billing/entity/usage.entity";
     templateUrl: "./billing-plans.component.html",
     standalone: true,
 })
-export class BillingPlansComponent implements OnInit {
+export class BillingPlansComponent implements OnInit, OnDestroy {
     planStore = inject(BillingPlanStoreService);
     subscriptionStore = inject(BillingSubscriptionStoreService);
     usageStore = inject(BillingUsageStoreService);
@@ -25,6 +25,11 @@ export class BillingPlansComponent implements OnInit {
 
     errorMessage = "";
     private scrolling = false;
+
+    // Usage auto-refresh
+    autoRefreshActive = false;
+    refreshCountdown = 0;
+    private refreshTimer: ReturnType<typeof setInterval> | null = null;
 
     // Checkout state
     checkoutScope: "user" | "workspace" = "user";
@@ -69,8 +74,44 @@ export class BillingPlansComponent implements OnInit {
         }
     }
 
+    get smallestWindow(): number {
+        const items = this.usageStore.usageItems.filter(u => !u.unlimited && u.window_seconds > 0);
+        if (items.length === 0) return 60;
+        return Math.min(...items.map(u => u.window_seconds));
+    }
+
+    async refreshUsage(): Promise<void> {
+        await this.usageStore.load();
+    }
+
+    async startAutoRefresh(): Promise<void> {
+        await this.usageStore.load();
+        this.autoRefreshActive = true;
+        this.refreshCountdown = this.smallestWindow;
+        this.refreshTimer = setInterval(async () => {
+            this.refreshCountdown--;
+            if (this.refreshCountdown <= 0) {
+                this.refreshCountdown = this.smallestWindow;
+                await this.usageStore.load();
+            }
+        }, 1000);
+    }
+
+    stopAutoRefresh(): void {
+        if (this.refreshTimer) {
+            clearInterval(this.refreshTimer);
+            this.refreshTimer = null;
+        }
+        this.autoRefreshActive = false;
+        this.refreshCountdown = 0;
+    }
+
+    ngOnDestroy(): void {
+        this.stopAutoRefresh();
+    }
+
     async ngOnInit() {
-        await Promise.all([this.planStore.load(), this.usageStore.load()]);
+        await Promise.all([this.planStore.load(), this.startAutoRefresh()]);
 
         this.initPreferredCurrency();
     }
