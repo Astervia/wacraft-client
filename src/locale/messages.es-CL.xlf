@@ -74,6 +74,10 @@
         <source> Workspace Details </source>
         <target> Detalles del espacio de trabajo </target>
       </trans-unit>
+      <trans-unit id="2309890176383467283" datatype="html">
+        <source> Incoming WhatsApp/Meta events and outgoing webhook deliveries draw from the same workspace quota. High bidirectional traffic will exhaust the budget faster — consider upgrading your plan if you see delivery failures or 429 errors. </source>
+        <target> Los eventos entrantes de WhatsApp/Meta y las entregas de webhook salientes comparten la misma cuota del espacio de trabajo. El tráfico bidireccional intenso agotará el presupuesto más rápido — considere actualizar su plan si ve fallas de entrega o errores 429. </target>
+      </trans-unit>
       <trans-unit id="2330577642930707695" datatype="html">
         <source> Cancel </source>
         <target> Cancelar </target>
@@ -898,6 +902,10 @@
         <source>You</source>
         <target>Tú</target>
       </trans-unit>
+      <trans-unit id="722085273828704188" datatype="html">
+        <source> Each verified POST from WhatsApp/Meta to this phone config&apos;s webhook URL counts against your workspace throughput quota. If the quota is exceeded, Meta receives a 429 and will retry according to its own retry policy. </source>
+        <target> Cada POST verificado de WhatsApp/Meta a la URL de webhook de esta configuración de teléfono se descuenta de la cuota de throughput del espacio de trabajo. Si se supera la cuota, Meta recibe un 429 y reintentará según su propia política de reintentos. </target>
+      </trans-unit>
       <trans-unit id="5248717555542428023" datatype="html">
         <source>Username</source>
         <target>Nombre de usuario</target>
@@ -1082,6 +1090,10 @@
         <source> + Add price </source>
         <target> + Agregar precio </target>
       </trans-unit>
+      <trans-unit id="6926973959429118798" datatype="html">
+        <source> Each outgoing delivery attempt counts against your workspace quota. Deliveries blocked by a quota limit are retried with exponential backoff and may reach dead-letter — inspect the logs below for quota errors. </source>
+        <target> Cada intento de entrega saliente se descuenta de la cuota del espacio de trabajo. Las entregas bloqueadas por un límite de cuota se reintentarán con retroceso exponencial y pueden llegar a dead-letter — revise los registros a continuación para ver errores de cuota. </target>
+      </trans-unit>
       <trans-unit id="8608255812134805029" datatype="html">
         <source>Add Email</source>
         <target>Agregar correo</target>
@@ -1125,6 +1137,10 @@
       <trans-unit id="4467990164108770021" datatype="html">
         <source>Add Contact</source>
         <target>Agregar contacto</target>
+      </trans-unit>
+      <trans-unit id="2991816093867082108" datatype="html">
+        <source>Throughput is shared across all webhook activity.</source>
+        <target>El throughput es compartido entre toda la actividad de webhook.</target>
       </trans-unit>
       <trans-unit id="2996246445609738488" datatype="html">
         <source> Billing </source>
@@ -1241,6 +1257,10 @@
       <trans-unit id="3137599440665086165" datatype="html">
         <source>Focus templates list</source>
         <target>Enfocar lista de plantillas</target>
+      </trans-unit>
+      <trans-unit id="3180266112960399564" datatype="html">
+        <source>Incoming events are billed.</source>
+        <target>Los eventos entrantes son facturados.</target>
       </trans-unit>
       <trans-unit id="3193976279273491157" datatype="html">
         <source>Actions</source>
@@ -1673,6 +1693,10 @@
       <trans-unit id="942337603050584343" datatype="html">
         <source> Back to Billing </source>
         <target> Volver a Facturación </target>
+      </trans-unit>
+      <trans-unit id="7102659270377217004" datatype="html">
+        <source>Throughput billing applies to this webhook.</source>
+        <target>La facturación de throughput se aplica a este webhook.</target>
       </trans-unit>
       <trans-unit id="7111379045449294810" datatype="html">
         <source>Users (Admin)</source>
