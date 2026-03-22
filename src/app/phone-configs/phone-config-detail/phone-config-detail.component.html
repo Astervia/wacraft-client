@@ -272,6 +272,37 @@
                         <h4 class="mb-3 text-sm font-semibold text-slate-900 dark:text-white" i18n>
                             Webhook Information
                         </h4>
+
+                        @if (userStore.billingEnabled) {
+                            <div
+                                class="mb-4 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 dark:border-amber-800/50 dark:bg-amber-900/20"
+                            >
+                                <svg
+                                    class="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-600 dark:text-amber-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                                <p class="text-xs text-amber-800 dark:text-amber-300">
+                                    <span class="font-semibold" i18n
+                                        >Incoming events are billed.</span
+                                    >
+                                    <span i18n>
+                                        Each verified POST from WhatsApp/Meta to this phone config's
+                                        webhook URL counts against your workspace throughput quota.
+                                        If the quota is exceeded, Meta receives a 429 and will retry
+                                        according to its own retry policy.
+                                    </span>
+                                </p>
+                            </div>
+                        }
                         <div class="space-y-2">
                             <div class="flex items-center gap-2">
                                 <span

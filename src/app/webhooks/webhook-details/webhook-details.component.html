@@ -112,6 +112,37 @@
     </div>
 
     @if (webhook) {
+        <!-- Billing throughput warning -->
+        @if (userStore.billingEnabled) {
+            <div
+                class="mb-4 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800/50 dark:bg-amber-900/20"
+            >
+                <svg
+                    class="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-600 dark:text-amber-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                </svg>
+                <p class="text-xs text-amber-800 dark:text-amber-300">
+                    <span class="font-semibold" i18n
+                        >Throughput billing applies to this webhook.</span
+                    >
+                    <span i18n>
+                        Each outgoing delivery attempt counts against your workspace quota.
+                        Deliveries blocked by a quota limit are retried with exponential backoff and
+                        may reach dead-letter — inspect the logs below for quota errors.
+                    </span>
+                </p>
+            </div>
+        }
+
         <!-- Main card -->
         <div
             class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900"

@@ -17,6 +17,7 @@ import { environment } from "../../../environments/environment";
 import { WhatsAppError } from "../../../core/common/model/whatsapp-error.model";
 import { isHttpError } from "../../../core/common/model/http-error-shape.model";
 import { CopyButtonComponent } from "../../common/copy-button/copy-button.component";
+import { UserStoreService } from "../../../core/user/store/user-store.service";
 
 @Component({
     selector: "app-phone-config-detail",
@@ -36,6 +37,7 @@ export class PhoneConfigDetailComponent implements OnInit {
     private phoneConfigStore = inject(PhoneConfigStoreService);
     private phoneConfigController = inject(PhoneConfigControllerService);
     workspaceStore = inject(WorkspaceStoreService);
+    userStore = inject(UserStoreService);
 
     RoutePath = RoutePath;
 

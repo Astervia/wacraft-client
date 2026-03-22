@@ -17,6 +17,7 @@ import { isHttpError } from "../../../core/common/model/http-error-shape.model";
 import { TestWebhookResponse } from "../../../core/webhook/model/test.model";
 import { JsonViewerComponent } from "../../common/json-viewer/json-viewer.component";
 import { CopyButtonComponent } from "../../common/copy-button/copy-button.component";
+import { UserStoreService } from "../../../core/user/store/user-store.service";
 
 @Component({
     selector: "app-webhook-details",
@@ -41,6 +42,7 @@ export class WebhookDetailsComponent implements OnInit {
     private router = inject(Router);
     private webhookStore = inject(WebhookStoreService);
     private logger = inject(NGXLogger);
+    userStore = inject(UserStoreService);
 
     HttpMethod = HttpMethod;
     Event = Event;
