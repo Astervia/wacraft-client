@@ -9,6 +9,7 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 import { NgxLoggerLevel, LoggerModule } from "ngx-logger";
 import { environment } from "../environments/environment";
 import { provideHttpClient } from "@angular/common/http";
+import { provideServiceWorker } from "@angular/service-worker";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -33,5 +34,9 @@ export const appConfig: ApplicationConfig = {
                 disableConsoleLogging: false,
             }),
         ),
+        provideServiceWorker("ngsw-worker.js", {
+            enabled: environment.env === "production",
+            registrationStrategy: "registerWhenStable:30000",
+        }),
     ],
 };
