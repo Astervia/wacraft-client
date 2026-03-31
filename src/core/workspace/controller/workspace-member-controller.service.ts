@@ -74,9 +74,19 @@ export class WorkspaceMemberControllerService extends MainServerControllerServic
             .data;
     }
 
-    async getInvitations(workspaceId: string): Promise<unknown[]> {
-        return (await this.http.get<unknown[]>(`${workspaceId}/${ServerEndpoints.invitation}`))
-            .data;
+    async getInvitations(
+        workspaceId: string,
+        pagination: Paginate = { limit: 10, offset: 0 },
+        order: DateOrder = {},
+    ): Promise<unknown[]> {
+        return (
+            await this.http.get<unknown[]>(`${workspaceId}/${ServerEndpoints.invitation}`, {
+                params: {
+                    ...pagination,
+                    ...order,
+                },
+            })
+        ).data;
     }
 
     async revokeInvitation(workspaceId: string, invitationId: string): Promise<void> {

@@ -1,11 +1,15 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import { SidebarLayoutComponent } from "../common/sidebar-layout/sidebar-layout.component";
 import { CopyButtonComponent } from "../common/copy-button/copy-button.component";
 import { RoutePath } from "../app.routes";
 import { WorkspaceStoreService } from "../../core/workspace/store/workspace-store.service";
-import { WorkspaceMemberStoreService } from "../../core/workspace/store/workspace-member-store.service";
+import {
+    WorkspaceMemberStoreService,
+    WorkspaceInvitation,
+} from "../../core/workspace/store/workspace-member-store.service";
 import { WorkspaceMemberControllerService } from "../../core/workspace/controller/workspace-member-controller.service";
 import { WorkspaceMember } from "../../core/workspace/entity/workspace-member.entity";
 import {
@@ -15,14 +19,6 @@ import {
     ViewerPolicies,
 } from "../../core/workspace/model/policy.model";
 
-interface WorkspaceInvitation {
-    id: string;
-    email: string;
-    token: string;
-    policies: string[];
-    expires_at: string;
-}
-
 @Component({
     selector: "app-workspace-members",
     imports: [CommonModule, FormsModule, SidebarLayoutComponent, CopyButtonComponent],
@@ -30,6 +26,8 @@ interface WorkspaceInvitation {
     standalone: true,
 })
 export class WorkspaceMembersComponent implements OnInit {
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
     workspaceStore = inject(WorkspaceStoreService);
     memberStore = inject(WorkspaceMemberStoreService);
     private memberController = inject(WorkspaceMemberControllerService);
@@ -41,8 +39,10 @@ export class WorkspaceMembersComponent implements OnInit {
     ViewerPolicies = ViewerPolicies;
     allPolicies = Object.values(Policy);
 
-    invitations: WorkspaceInvitation[] = [];
     errorMessage = "";
+
+    // Scope toggle
+    memberScope: "members" | "invitations" = "members";
 
     // Invite form
     showInviteForm = false;
@@ -56,21 +56,46 @@ export class WorkspaceMembersComponent implements OnInit {
 
     private scrolling = false;
 
-    async ngOnInit(): Promise<void> {
-        await this.loadMembers();
+    get isLoading(): boolean {
+        return this.memberScope === "members"
+            ? this.memberStore.loading
+            : this.memberStore.invitationLoading;
     }
 
-    async loadMembers(): Promise<void> {
-        const ws = this.workspaceStore.currentWorkspace;
-        if (!ws) return;
-        try {
-            await this.memberStore.load();
-            this.invitations = (await this.memberController.getInvitations(
-                ws.id,
-            )) as WorkspaceInvitation[];
-        } catch {
-            this.errorMessage = "Failed to load members.";
-        }
+    get reachedMax(): boolean {
+        return this.memberScope === "members"
+            ? this.memberStore.reachedMaxLimit
+            : this.memberStore.reachedMaxInvitationLimit;
+    }
+
+    ngOnInit(): void {
+        this.route.fragment.subscribe(fragment => {
+            if (fragment === "invitations") {
+                this.memberScope = "invitations";
+                if (this.memberStore.invitations.length === 0) {
+                    this.memberStore.loadInvitations();
+                }
+            } else {
+                this.memberScope = "members";
+                if (fragment !== "members") {
+                    this.router.navigate([], {
+                        fragment: "members",
+                        replaceUrl: true,
+                        queryParamsHandling: "preserve",
+                    });
+                }
+                if (this.memberStore.members.length === 0) {
+                    this.memberStore.load();
+                }
+            }
+        });
+    }
+
+    selectScope(scope: "members" | "invitations"): void {
+        this.router.navigate([], {
+            fragment: scope,
+            queryParamsHandling: "preserve",
+        });
     }
 
     onScroll(event: Event) {
@@ -83,15 +108,19 @@ export class WorkspaceMembersComponent implements OnInit {
         )
             return;
 
-        if (!this.memberStore.reachedMaxLimit && !this.memberStore.loading) this.getMore();
+        if (!this.reachedMax && !this.isLoading) this.getMore();
     }
 
     async getMore(): Promise<void> {
         this.scrolling = true;
         try {
-            await this.memberStore.get();
+            if (this.memberScope === "members") {
+                await this.memberStore.get();
+            } else {
+                await this.memberStore.getInvitations();
+            }
         } catch {
-            this.errorMessage = "Failed to load more members.";
+            this.errorMessage = "Failed to load more.";
         } finally {
             this.scrolling = false;
         }
@@ -113,7 +142,7 @@ export class WorkspaceMembersComponent implements OnInit {
         try {
             await this.memberController.updateMemberPolicies(ws.id, member.id, this.editPolicies);
             this.editingMemberId = null;
-            await this.loadMembers();
+            await this.memberStore.load();
         } catch {
             this.errorMessage = "Failed to update member.";
         }
@@ -125,7 +154,7 @@ export class WorkspaceMembersComponent implements OnInit {
         if (!confirm("Remove this member from the workspace?")) return;
         try {
             await this.memberController.removeMember(ws.id, member.id);
-            await this.loadMembers();
+            await this.memberStore.load();
         } catch {
             this.errorMessage = "Failed to remove member.";
         }
@@ -172,7 +201,7 @@ export class WorkspaceMembersComponent implements OnInit {
             });
             this.inviteEmail = "";
             this.showInviteForm = false;
-            await this.loadMembers();
+            await this.memberStore.loadInvitations();
         } catch {
             this.errorMessage = "Failed to send invitation.";
         } finally {
@@ -184,12 +213,12 @@ export class WorkspaceMembersComponent implements OnInit {
         return `${window.location.origin}/invitation?token=${token}`;
     }
 
-    async revokeInvitation(invitation: { id: string }): Promise<void> {
+    async revokeInvitation(invitation: WorkspaceInvitation): Promise<void> {
         const ws = this.workspaceStore.currentWorkspace;
         if (!ws) return;
         try {
             await this.memberController.revokeInvitation(ws.id, invitation.id);
-            await this.loadMembers();
+            await this.memberStore.loadInvitations();
         } catch {
             this.errorMessage = "Failed to revoke invitation.";
         }

@@ -5,6 +5,14 @@ import { WorkspaceMemberControllerService } from "../controller/workspace-member
 import { WorkspaceStoreService } from "./workspace-store.service";
 import { DateOrderEnum } from "../../common/model/date-order.model";
 
+export interface WorkspaceInvitation {
+    id: string;
+    email: string;
+    token: string;
+    policies: string[];
+    expires_at: string;
+}
+
 @Injectable({
     providedIn: "root",
 })
@@ -21,11 +29,17 @@ export class WorkspaceMemberStoreService {
     members: WorkspaceMember[] = [];
     membersById = new Map<string, WorkspaceMember>();
 
+    public reachedMaxInvitationLimit = false;
+    invitationLoading = false;
+    invitations: WorkspaceInvitation[] = [];
+
     constructor() {
         this.workspaceStore.workspaceChanged.subscribe(() => {
             this.members = [];
             this.membersById.clear();
             this.reachedMaxLimit = false;
+            this.invitations = [];
+            this.reachedMaxInvitationLimit = false;
         });
     }
 
@@ -67,6 +81,41 @@ export class WorkspaceMemberStoreService {
             this.logger.error("Error loading workspace members", error);
         } finally {
             this.loading = false;
+        }
+    }
+
+    async getInvitations(): Promise<void> {
+        const ws = this.workspaceStore.currentWorkspace;
+        if (!ws) return;
+
+        const invitations = (await this.memberController.getInvitations(
+            ws.id,
+            {
+                limit: this.paginationLimit,
+                offset: this.invitations.length,
+            },
+            { created_at: DateOrderEnum.desc },
+        )) as WorkspaceInvitation[];
+
+        if (invitations.length < this.paginationLimit) {
+            this.reachedMaxInvitationLimit = true;
+        }
+
+        if (invitations.length) {
+            this.invitations = [...this.invitations, ...invitations];
+        }
+    }
+
+    async loadInvitations(): Promise<void> {
+        this.invitationLoading = true;
+        this.invitations = [];
+        this.reachedMaxInvitationLimit = false;
+        try {
+            await this.getInvitations();
+        } catch (error) {
+            this.logger.error("Error loading workspace invitations", error);
+        } finally {
+            this.invitationLoading = false;
         }
     }
 
