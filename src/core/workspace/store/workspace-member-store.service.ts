@@ -42,12 +42,13 @@ export class WorkspaceMemberStoreService {
             { created_at: DateOrderEnum.desc },
         );
 
-        if (!members.length) {
+        if (members.length < this.paginationLimit) {
             this.reachedMaxLimit = true;
-            return;
         }
 
-        this.add(members);
+        if (members.length) {
+            this.add(members);
+        }
     }
 
     add(members: WorkspaceMember[]) {
