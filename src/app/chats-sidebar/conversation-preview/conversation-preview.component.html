@@ -42,33 +42,15 @@
         <div class="flex w-full items-center justify-between gap-2">
             <!-- Ícone de status + texto da mensagem -->
             <div class="flex min-w-0 items-center">
-                @if (lastMessage.statuses && lastMessage.statuses.length) {
+                @if (statusIcon; as icon) {
                     <div
                         class="mr-1 flex flex-shrink-0 items-center justify-center brightness-50 dark:brightness-100"
                     >
-                        @if (lastMessage.statuses[0].product_data.status === "sent") {
-                            <img
-                                width="10px"
-                                src="assets/icons/flaticon/check-mark.png"
-                                alt="Message sent"
-                            />
+                        @if (icon.type === "image") {
+                            <img [style.width]="icon.width" [src]="icon.src" [alt]="icon.alt" />
                         }
-                        @if (lastMessage.statuses[0].product_data.status === "delivered") {
-                            <img
-                                width="15px"
-                                src="assets/icons/flaticon/double-check-mark.png"
-                                alt="Message delivered"
-                            />
-                        }
-                        @if (lastMessage.statuses[0].product_data.status === "read") {
-                            <img
-                                width="15px"
-                                src="assets/icons/flaticon/double-green-check-mark.png"
-                                alt="Message read"
-                            />
-                        }
-                        @if (lastMessage.statuses[0].product_data.status === "failed") {
-                            <i class="fa fa-exclamation-circle text-xm text-red-600"></i>
+                        @if (icon.type === "font") {
+                            <i [class]="icon.iconClass" [attr.aria-label]="icon.alt"></i>
                         }
                     </div>
                 }

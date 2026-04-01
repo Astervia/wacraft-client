@@ -7,6 +7,8 @@ import {
     HostListener,
     Input,
     OnInit,
+    OnChanges,
+    SimpleChanges,
     Output,
     ViewChild,
     inject,
@@ -19,6 +21,10 @@ import {
 import { MessageDataPipe } from "../../../core/message/pipe/message-data.pipe";
 import { MessageContentPreviewComponent } from "../../messages/message-content-preview/message-content-preview.component";
 import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
+import {
+    STATUS_ICON_REPOSITORY,
+    IMessageStatusIcon,
+} from "../../common/repository/status-icon.repository";
 
 @Component({
     selector: "app-conversation-preview",
@@ -27,7 +33,7 @@ import { QueryParamsService } from "../../../core/navigation/service/query-param
     templateUrl: "./conversation-preview.component.html",
     styleUrl: "./conversation-preview.component.scss",
 })
-export class ConversationPreviewComponent implements OnInit {
+export class ConversationPreviewComponent implements OnInit, OnChanges {
     private route = inject(ActivatedRoute);
     private queryParamsService = inject(QueryParamsService);
 
@@ -41,6 +47,19 @@ export class ConversationPreviewComponent implements OnInit {
     @Output() select = new EventEmitter<ConversationMessagingProductContact>();
 
     isSelected = false;
+    statusIcon: IMessageStatusIcon | null = null;
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes["lastMessage"]) {
+            this.statusIcon = this.resolveStatusIcon(this.lastMessage);
+        }
+    }
+
+    private resolveStatusIcon(lastMessage: Conversation): IMessageStatusIcon | null {
+        const status = lastMessage?.statuses?.[0]?.product_data?.status;
+        if (!status) return null;
+        return STATUS_ICON_REPOSITORY[status] ?? null;
+    }
 
     ngOnInit(): void {
         this.watchQueryParams();
