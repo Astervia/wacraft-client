@@ -9,19 +9,19 @@ export interface IMessageStatusIcon {
 export const STATUS_ICON_REPOSITORY: Record<string, IMessageStatusIcon> = {
     sent: {
         type: "image",
-        src: "assets/icons/flaticon/check-mark.png",
+        src: "assets/icons/flaticon/check-mark.svg",
         alt: "Message sent",
         width: "10px",
     },
     delivered: {
         type: "image",
-        src: "assets/icons/flaticon/double-check-mark.png",
+        src: "assets/icons/flaticon/double-check-mark.svg",
         alt: "Message delivered",
         width: "15px",
     },
     read: {
         type: "image",
-        src: "assets/icons/flaticon/double-green-check-mark.png",
+        src: "assets/icons/flaticon/double-green-check-mark.svg",
         alt: "Message read",
         width: "15px",
     },
