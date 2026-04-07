@@ -44,9 +44,15 @@
                     <div
                         class="border-b border-gray-100 bg-blue-50 px-6 py-3 dark:border-gray-700 dark:bg-blue-900/20"
                     >
-                        <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-300" i18n>
-                            {{ editingPlan ? "Edit Plan" : "New Plan" }}
-                        </h3>
+                        @if (editingPlan) {
+                            <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-300" i18n>
+                                Edit Plan
+                            </h3>
+                        } @else {
+                            <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-300" i18n>
+                                New Plan
+                            </h3>
+                        }
                     </div>
                     <div class="p-6">
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -317,20 +323,34 @@
                         }
 
                         <div class="mt-5 flex items-center gap-2">
-                            <button
-                                (click)="savePlan()"
-                                [disabled]="loading"
-                                class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
-                                i18n
-                            >
-                                {{
-                                    loading
-                                        ? "Saving..."
-                                        : editingPlan
-                                          ? "Save changes"
-                                          : "Create plan"
-                                }}
-                            </button>
+                            @if (loading) {
+                                <button
+                                    (click)="savePlan()"
+                                    [disabled]="loading"
+                                    class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                                    i18n
+                                >
+                                    Saving...
+                                </button>
+                            } @else if (editingPlan) {
+                                <button
+                                    (click)="savePlan()"
+                                    [disabled]="loading"
+                                    class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                                    i18n
+                                >
+                                    Save changes
+                                </button>
+                            } @else {
+                                <button
+                                    (click)="savePlan()"
+                                    [disabled]="loading"
+                                    class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                                    i18n
+                                >
+                                    Create plan
+                                </button>
+                            }
                             <button
                                 (click)="showPlanForm = false"
                                 class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
@@ -471,26 +491,23 @@
                                                 >
                                                     Edit
                                                 </button>
-                                                <button
-                                                    (click)="
-                                                        managingPricesPlan?.id === plan.id
-                                                            ? closeManagePrices()
-                                                            : openManagePrices(plan)
-                                                    "
-                                                    class="text-xs font-medium transition-colors"
-                                                    [ngClass]="
-                                                        managingPricesPlan?.id === plan.id
-                                                            ? 'text-indigo-700 dark:text-indigo-300'
-                                                            : 'text-indigo-500 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300'
-                                                    "
-                                                    i18n
-                                                >
-                                                    {{
-                                                        managingPricesPlan?.id === plan.id
-                                                            ? "▲ Prices"
-                                                            : "▼ Prices"
-                                                    }}
-                                                </button>
+                                                @if (managingPricesPlan?.id === plan.id) {
+                                                    <button
+                                                        (click)="closeManagePrices()"
+                                                        class="text-xs font-medium text-indigo-700 transition-colors dark:text-indigo-300"
+                                                        i18n
+                                                    >
+                                                        ▲ Prices
+                                                    </button>
+                                                } @else {
+                                                    <button
+                                                        (click)="openManagePrices(plan)"
+                                                        class="text-xs font-medium text-indigo-500 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                                        i18n
+                                                    >
+                                                        ▼ Prices
+                                                    </button>
+                                                }
                                                 <button
                                                     (click)="deletePlan(plan.id)"
                                                     class="text-xs font-medium text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
@@ -739,14 +756,25 @@
                                                             >Default</label
                                                         >
                                                     </div>
-                                                    <button
-                                                        (click)="addPrice()"
-                                                        [disabled]="loading || !priceForm.currency"
-                                                        class="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
-                                                        i18n
-                                                    >
-                                                        {{ loading ? "Adding…" : "+ Add Price" }}
-                                                    </button>
+                                                    @if (loading) {
+                                                        <button
+                                                            (click)="addPrice()"
+                                                            [disabled]="loading || !priceForm.currency"
+                                                            class="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                                                            i18n
+                                                        >
+                                                            Adding…
+                                                        </button>
+                                                    } @else {
+                                                        <button
+                                                            (click)="addPrice()"
+                                                            [disabled]="loading || !priceForm.currency"
+                                                            class="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                                                            i18n
+                                                        >
+                                                            + Add Price
+                                                        </button>
+                                                    }
                                                 </div>
                                             </td>
                                         </tr>
@@ -838,14 +866,25 @@
                             />
                         </div>
                     </div>
-                    <button
-                        (click)="createManualSubscription()"
-                        [disabled]="loading || !manualSubForm.plan_id || !manualSubForm.user_id"
-                        class="mt-4 inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
-                        i18n
-                    >
-                        {{ loading ? "Creating…" : "Create Subscription" }}
-                    </button>
+                    @if (loading) {
+                        <button
+                            (click)="createManualSubscription()"
+                            [disabled]="loading || !manualSubForm.plan_id || !manualSubForm.user_id"
+                            class="mt-4 inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                            i18n
+                        >
+                            Creating…
+                        </button>
+                    } @else {
+                        <button
+                            (click)="createManualSubscription()"
+                            [disabled]="loading || !manualSubForm.plan_id || !manualSubForm.user_id"
+                            class="mt-4 inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                            i18n
+                        >
+                            Create Subscription
+                        </button>
+                    }
                 </div>
             </div>
         </div>
@@ -930,14 +969,25 @@
                                 i18n-placeholder
                             />
                         </div>
-                        <button
-                            (click)="createWeight()"
-                            [disabled]="loading || !weightForm.path_pattern"
-                            class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
-                            i18n
-                        >
-                            {{ loading ? "Adding…" : "+ Add" }}
-                        </button>
+                        @if (loading) {
+                            <button
+                                (click)="createWeight()"
+                                [disabled]="loading || !weightForm.path_pattern"
+                                class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                                i18n
+                            >
+                                Adding…
+                            </button>
+                        } @else {
+                            <button
+                                (click)="createWeight()"
+                                [disabled]="loading || !weightForm.path_pattern"
+                                class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
+                                i18n
+                            >
+                                + Add
+                            </button>
+                        }
                     </div>
 
                     <!-- Weights Table -->
