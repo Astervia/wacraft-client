@@ -12,11 +12,11 @@ Inputs:
 Workflow:
 
 1. Create the standard domain folders:
-   - `controller/`
-   - `entity/`
-   - `model/`
-   - `store/`
-   - optional `gateway/`
+    - `controller/`
+    - `entity/`
+    - `model/`
+    - `store/`
+    - optional `gateway/`
 2. Add the entity interface and any request or query models.
 3. Register server endpoints.
 4. Create the controller on top of `MainServerControllerService`.
