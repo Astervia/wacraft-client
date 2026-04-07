@@ -15,8 +15,8 @@ Inputs:
 Workflow:
 
 1. Confirm whether the task is:
-   - full workspace infrastructure work
-   - adding workspace awareness to an existing feature
+    - full workspace infrastructure work
+    - adding workspace awareness to an existing feature
 2. Keep `WorkspaceContextService` as the source of the active workspace id.
 3. Route HTTP requests through `MainServerControllerService` so
    `X-Workspace-ID` stays centralized.

@@ -12,10 +12,10 @@ Workflow:
 1. Create the store under `src/core/<domain>/store/`.
 2. Inject the domain controller.
 3. Add the minimum state needed:
-   - collection arrays
-   - id maps
-   - loading flags
-   - pagination flags
+    - collection arrays
+    - id maps
+    - loading flags
+    - pagination flags
 4. Keep remote fetching, optimistic updates, and normalization in the store.
 5. Reset workspace-scoped state on workspace changes where applicable.
 

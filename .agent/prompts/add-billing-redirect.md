@@ -18,9 +18,9 @@ Workflow:
 1. Confirm the request path already flows through `MainServerControllerService`.
 2. Add or reuse a redirect-in-progress flag to prevent loops.
 3. Redirect only when:
-   - the response status is `429`
-   - the response context is `billing`
-   - the user is not already under `/billing` or `/auth`
+    - the response status is `429`
+    - the response context is `billing`
+    - the user is not already under `/billing` or `/auth`
 4. Reset the redirect guard on `NavigationEnd`.
 5. Verify `RoutePath.billing` and the billing page route exist.
 
