@@ -164,26 +164,67 @@
 
     @if (campaignId) {
         <div class="space-y-6">
+            <!-- Send / Schedule tabbed panel -->
             <div>
-                <h3 class="mb-4 text-base font-semibold text-gray-800 dark:text-gray-100" i18n>
-                    Schedule campaign
-                </h3>
-                <app-schedule-campaign
-                    [campaign]="campaign"
-                    (campaignChanged)="onCampaignChanged($event)"
-                ></app-schedule-campaign>
-            </div>
+                @if (campaign.status !== "running") {
+                    <!-- Segmented tab control — matches account theme switcher pattern -->
+                    <div class="mb-4">
+                        <div
+                            class="inline-flex rounded-lg border border-gray-200 p-1 dark:border-gray-600"
+                        >
+                            <button
+                                (click)="activeTab = 'send'"
+                                [class.bg-blue-600]="activeTab === 'send'"
+                                [class.text-white]="activeTab === 'send'"
+                                [class.hover:!bg-blue-700]="activeTab === 'send'"
+                                class="rounded-md px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                                type="button"
+                                i18n
+                            >
+                                Send
+                            </button>
+                            <button
+                                (click)="activeTab = 'schedule'"
+                                [class.bg-blue-600]="activeTab === 'schedule'"
+                                [class.text-white]="activeTab === 'schedule'"
+                                [class.hover:!bg-blue-700]="activeTab === 'schedule'"
+                                class="rounded-md px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                                type="button"
+                                i18n
+                            >
+                                Schedule
+                            </button>
+                        </div>
+                    </div>
+                } @else {
+                    <!-- Running banner -->
+                    <div class="mb-4 flex items-center gap-2">
+                        <span
+                            class="animate-pulse rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-300"
+                            i18n
+                            >Running</span
+                        >
+                        <span class="text-sm text-gray-500 dark:text-gray-400" i18n
+                            >Campaign is being sent automatically</span
+                        >
+                    </div>
+                }
 
-            <div>
-                <h3 class="mb-4 text-base font-semibold text-gray-800 dark:text-gray-100" i18n>
-                    Send campaign
-                </h3>
-                <app-send-campaign
-                    [total]="unsentMessages"
-                    [campaignStatus]="campaign.status"
-                    (done)="loadCampaignDataAndStatuses()"
-                    class="rounded-lg"
-                ></app-send-campaign>
+                <!-- Both components stay mounted to preserve the WebSocket connection.
+                     Visibility is toggled with [hidden] instead of @if. -->
+                <div [hidden]="activeTab !== 'send' && campaign.status !== 'running'">
+                    <app-send-campaign
+                        [total]="unsentMessages"
+                        [campaignStatus]="campaign.status"
+                        (done)="loadCampaignDataAndStatuses()"
+                    ></app-send-campaign>
+                </div>
+                <div [hidden]="activeTab !== 'schedule' || campaign.status === 'running'">
+                    <app-schedule-campaign
+                        [campaign]="campaign"
+                        (campaignChanged)="onCampaignChanged($event)"
+                    ></app-schedule-campaign>
+                </div>
             </div>
 
             <div>

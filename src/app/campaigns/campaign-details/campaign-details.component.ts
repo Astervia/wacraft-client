@@ -54,6 +54,7 @@ export class CampaignDetailsComponent implements OnInit {
     messagesSent = 0;
 
     isEditing = false;
+    activeTab: "send" | "schedule" = "send";
 
     ngOnInit(): void {
         this.watchQueryParams();
@@ -123,6 +124,7 @@ export class CampaignDetailsComponent implements OnInit {
         this.isEditing = false;
         try {
             this.campaign = await this.campaignStore.getById(this.campaignId);
+            this.activeTab = this.campaign.status === "scheduled" ? "schedule" : "send";
         } catch (error) {
             this.logger.error("Error loading campaign", error);
         }
@@ -180,6 +182,7 @@ export class CampaignDetailsComponent implements OnInit {
     onCampaignChanged(updated: CampaignFields): void {
         this.campaign = updated;
         this.campaignStore.updateCampaignById(updated);
+        this.activeTab = updated.status === "scheduled" ? "schedule" : "send";
     }
 
     async loadMessageCount() {
