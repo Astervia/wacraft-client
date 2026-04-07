@@ -80,4 +80,15 @@ export class CampaignControllerService extends MainServerControllerService {
     async delete(id: string): Promise<void> {
         return (await this.http.delete<void>("", { data: { id } })).data;
     }
+
+    async schedule(id: string, scheduled_at: string): Promise<CampaignFields> {
+        return (
+            await this.http.post<CampaignFields>(ServerEndpoints.schedule, { id, scheduled_at })
+        ).data;
+    }
+
+    async unschedule(id: string): Promise<CampaignFields> {
+        return (await this.http.delete<CampaignFields>(ServerEndpoints.schedule, { data: { id } }))
+            .data;
+    }
 }

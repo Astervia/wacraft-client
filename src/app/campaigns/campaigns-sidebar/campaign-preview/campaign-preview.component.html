@@ -12,10 +12,35 @@
 >
     <div class="ml-3 flex-1 truncate">
         <div class="mb-2 flex items-center justify-between">
-            <span
-                class="truncate font-medium text-gray-800 dark:text-gray-200"
-                [textContent]="campaign.name"
-            ></span>
+            <div class="flex min-w-0 items-center gap-1.5">
+                @switch (campaign.status) {
+                    @case ("scheduled") {
+                        <span
+                            class="inline-block h-2 w-2 shrink-0 rounded-full bg-indigo-500"
+                        ></span>
+                    }
+                    @case ("running") {
+                        <span
+                            class="inline-block h-2 w-2 shrink-0 animate-pulse rounded-full bg-amber-500"
+                        ></span>
+                    }
+                    @case ("completed") {
+                        <span
+                            class="inline-block h-2 w-2 shrink-0 rounded-full bg-green-500"
+                        ></span>
+                    }
+                    @case ("failed") {
+                        <span class="inline-block h-2 w-2 shrink-0 rounded-full bg-red-500"></span>
+                    }
+                    @default {
+                        <span class="inline-block h-2 w-2 shrink-0 rounded-full bg-gray-400"></span>
+                    }
+                }
+                <span
+                    class="truncate font-medium text-gray-800 dark:text-gray-200"
+                    [textContent]="campaign.name"
+                ></span>
+            </div>
             <span
                 class="text-sm text-gray-500 dark:text-gray-400"
                 [textContent]="campaign.created_at | date: 'short'"

@@ -56,4 +56,6 @@ export enum ServerEndpoints {
     billing_reactivate = "reactivate",
     billing_sync = "sync",
     billing_retry = "retry",
+
+    schedule = "schedule",
 }

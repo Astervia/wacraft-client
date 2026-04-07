@@ -1,0 +1,109 @@
+<div
+    class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+>
+    <!-- Status badge row -->
+    <div class="mb-4 flex items-center gap-3">
+        @switch (campaign.status) { @case ("scheduled") {
+        <span
+            class="rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300"
+            i18n
+            >Scheduled</span
+        >
+        } @case ("running") {
+        <span
+            class="animate-pulse rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-300"
+            i18n
+            >Running</span
+        >
+        } @case ("completed") {
+        <span
+            class="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900 dark:text-green-300"
+            i18n
+            >Completed</span
+        >
+        } @case ("failed") {
+        <span
+            class="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900 dark:text-red-300"
+            i18n
+            >Failed</span
+        >
+        } @case ("cancelled") {
+        <span
+            class="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+            i18n
+            >Cancelled</span
+        >
+        } @default {
+        <span
+            class="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+            i18n
+            >Draft</span
+        >
+        } } @if (campaign.scheduled_at && campaign.status === "scheduled") {
+        <span class="text-sm text-gray-500 dark:text-gray-400">
+            {{ campaign.scheduled_at | date: "medium" }}
+        </span>
+        }
+    </div>
+
+    <!-- Action area -->
+    @switch (campaign.status) { @case ("running") {
+    <p class="text-sm font-medium text-amber-600 dark:text-amber-400" i18n>
+        Campaign is currently running. Connect to the send panel for live progress.
+    </p>
+    } @case ("scheduled") {
+    <div class="flex flex-col gap-3">
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+            <span i18n>Scheduled for</span>
+            {{ campaign.scheduled_at | date: "medium" }}.
+            <span i18n>Unschedule to send manually or pick a new time.</span>
+        </p>
+        <button
+            (click)="onUnschedule()"
+            [disabled]="loading"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+            i18n
+        >
+            <mat-icon class="material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none"
+                >event_busy</mat-icon
+            >
+            Unschedule
+        </button>
+    </div>
+    } @default {
+    <!-- draft | failed | completed | cancelled → show schedule form -->
+    <div class="flex flex-col gap-3">
+        <div>
+            <span
+                class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                i18n
+            >
+                Schedule for
+            </span>
+            <input
+                type="datetime-local"
+                [(ngModel)]="scheduledAtInput"
+                [min]="minDateTime"
+                class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+            />
+        </div>
+        <button
+            (click)="onSchedule()"
+            [disabled]="loading || !scheduledAtInput"
+            class="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+            i18n
+        >
+            <mat-icon class="material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none"
+                >schedule_send</mat-icon
+            >
+            Schedule
+        </button>
+    </div>
+    } }
+
+    <app-timeout-error-modal
+        #errorModal
+        [message]="errorMessage"
+        [data]="errorData"
+    ></app-timeout-error-modal>
+</div>
