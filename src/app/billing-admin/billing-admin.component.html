@@ -759,7 +759,9 @@
                                                     @if (loading) {
                                                         <button
                                                             (click)="addPrice()"
-                                                            [disabled]="loading || !priceForm.currency"
+                                                            [disabled]="
+                                                                loading || !priceForm.currency
+                                                            "
                                                             class="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
                                                             i18n
                                                         >
@@ -768,7 +770,9 @@
                                                     } @else {
                                                         <button
                                                             (click)="addPrice()"
-                                                            [disabled]="loading || !priceForm.currency"
+                                                            [disabled]="
+                                                                loading || !priceForm.currency
+                                                            "
                                                             class="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
                                                             i18n
                                                         >
