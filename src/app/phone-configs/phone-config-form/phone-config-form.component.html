@@ -24,16 +24,21 @@
                 </svg>
             </div>
             <div>
-                <h3 class="text-base font-semibold text-slate-900 dark:text-white" i18n>
-                    {{ editingConfig ? "Edit Phone Configuration" : "New Phone Configuration" }}
-                </h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400" i18n>
-                    {{
-                        editingConfig
-                            ? "Update your WhatsApp Business phone settings"
-                            : "Connect a new WhatsApp Business phone number"
-                    }}
-                </p>
+                @if (editingConfig) {
+                    <h3 class="text-base font-semibold text-slate-900 dark:text-white" i18n>
+                        Edit Phone Configuration
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400" i18n>
+                        Update your WhatsApp Business phone settings
+                    </p>
+                } @else {
+                    <h3 class="text-base font-semibold text-slate-900 dark:text-white" i18n>
+                        New Phone Configuration
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400" i18n>
+                        Connect a new WhatsApp Business phone number
+                    </p>
+                }
             </div>
         </div>
     </div>
@@ -424,27 +429,51 @@
             >
                 Cancel
             </button>
-            <button
-                class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                (click)="onSubmit()"
-                [disabled]="
-                    !formData.name ||
-                    !formData.waba_id ||
-                    !formData.display_phone ||
-                    !formData.waba_account_id
-                "
-                i18n
-            >
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M5 13l4 4L19 7"
-                    />
-                </svg>
-                {{ editingConfig ? "Update Configuration" : "Create Configuration" }}
-            </button>
+            @if (editingConfig) {
+                <button
+                    class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    (click)="onSubmit()"
+                    [disabled]="
+                        !formData.name ||
+                        !formData.waba_id ||
+                        !formData.display_phone ||
+                        !formData.waba_account_id
+                    "
+                    i18n
+                >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M5 13l4 4L19 7"
+                        />
+                    </svg>
+                    Update Configuration
+                </button>
+            } @else {
+                <button
+                    class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    (click)="onSubmit()"
+                    [disabled]="
+                        !formData.name ||
+                        !formData.waba_id ||
+                        !formData.display_phone ||
+                        !formData.waba_account_id
+                    "
+                    i18n
+                >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M5 13l4 4L19 7"
+                        />
+                    </svg>
+                    Create Configuration
+                </button>
+            }
         </div>
     </div>
 </div>
