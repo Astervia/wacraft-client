@@ -175,6 +175,12 @@ export class CampaignStoreService {
         });
     }
 
+    updateCampaignById(campaign: CampaignFields): void {
+        if (this.campaignsById.has(campaign.id)) {
+            this.campaignsById.set(campaign.id, campaign);
+        }
+    }
+
     async getById(id: string): Promise<CampaignFields> {
         const campaign = this.campaignsById.get(id);
         if (campaign) return campaign;

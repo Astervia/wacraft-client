@@ -166,10 +166,21 @@
         <div class="space-y-6">
             <div>
                 <h3 class="mb-4 text-base font-semibold text-gray-800 dark:text-gray-100" i18n>
+                    Schedule campaign
+                </h3>
+                <app-schedule-campaign
+                    [campaign]="campaign"
+                    (campaignChanged)="onCampaignChanged($event)"
+                ></app-schedule-campaign>
+            </div>
+
+            <div>
+                <h3 class="mb-4 text-base font-semibold text-gray-800 dark:text-gray-100" i18n>
                     Send campaign
                 </h3>
                 <app-send-campaign
                     [total]="unsentMessages"
+                    [campaignStatus]="campaign.status"
                     (done)="loadCampaignDataAndStatuses()"
                     class="rounded-lg"
                 ></app-send-campaign>

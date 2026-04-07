@@ -2,7 +2,10 @@ import { Component, EventEmitter, Input, Output, OnInit, inject } from "@angular
 import { ActivatedRoute } from "@angular/router";
 import { CampaignGatewayService } from "../../../core/campaign/gateway/campaign-gateway.service";
 import { CampaignResults } from "../../../core/campaign/model/campaign-results.model";
+import { CampaignStatus } from "../../../core/campaign/entity/campaign.entity";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { CommonModule } from "@angular/common";
 import {
     ApexAxisChartSeries,
@@ -20,7 +23,13 @@ import { ThemeMode } from "../../../core/common/model/theme-modes.model";
 
 @Component({
     selector: "app-send-campaign",
-    imports: [MatProgressSpinnerModule, CommonModule, NgApexchartsModule],
+    imports: [
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatTooltipModule,
+        CommonModule,
+        NgApexchartsModule,
+    ],
     templateUrl: "./send-campaign.component.html",
     styleUrl: "./send-campaign.component.scss",
     standalone: true,
@@ -34,6 +43,7 @@ export class SendCampaignComponent implements OnInit {
 
     campaignId?: string;
     @Input() total = 0;
+    @Input() campaignStatus?: CampaignStatus;
     batchSize: number = this.total;
     sent = 0;
     errors = 0;

@@ -6,6 +6,7 @@ import { CampaignMessagesComponent } from "../campaign-messages/campaign-message
 import { CampaignMessageBuilderComponent } from "../campaign-message-builder/campaign-message-builder.component";
 import { MatIconModule } from "@angular/material/icon";
 import { SendCampaignComponent } from "../send-campaign/send-campaign.component";
+import { ScheduleCampaign } from "../schedule-campaign/schedule-campaign";
 import { CampaignFields } from "../../../core/campaign/entity/campaign.entity";
 import { CampaignControllerService } from "../../../core/campaign/controller/campaign-controller.service";
 import { CampaignStoreService } from "../../../core/campaign/store/campaign-store.service";
@@ -24,6 +25,7 @@ import { CopyButtonComponent } from "../../common/copy-button/copy-button.compon
         CampaignMessagesComponent,
         CampaignMessageBuilderComponent,
         SendCampaignComponent,
+        ScheduleCampaign,
         MatIconModule,
         MatTooltipModule,
         CopyButtonComponent,
@@ -111,6 +113,7 @@ export class CampaignDetailsComponent implements OnInit {
                 id: "",
                 name: "",
                 messaging_product_id: "",
+                status: "draft",
                 created_at: new Date(),
                 updated_at: new Date(),
             };
@@ -135,6 +138,7 @@ export class CampaignDetailsComponent implements OnInit {
                 id: "",
                 name: "",
                 messaging_product_id: "",
+                status: "draft",
                 created_at: new Date(),
                 updated_at: new Date(),
             };
@@ -171,6 +175,11 @@ export class CampaignDetailsComponent implements OnInit {
             preserveFragment: true,
             queryParamsHandling: "replace",
         });
+    }
+
+    onCampaignChanged(updated: CampaignFields): void {
+        this.campaign = updated;
+        this.campaignStore.updateCampaignById(updated);
     }
 
     async loadMessageCount() {
