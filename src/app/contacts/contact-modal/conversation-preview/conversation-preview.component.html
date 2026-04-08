@@ -39,20 +39,9 @@
         <div class="flex w-full flex-row justify-between">
             <div class="flex flex-row">
                 <div class="flex flex-row items-center justify-center">
-                    @if (getStatusIcon(lastMessage); as icon) {
+                    @if (lastMessage.statuses?.[0]?.product_data?.status; as status) {
                         <div class="mr-1 flex flex-shrink-0 items-center justify-center">
-                            @if (icon.type === "inline-svg") {
-                                <div
-                                    [ngClass]="icon.colorClass"
-                                    [style.width]="icon.width"
-                                    [innerHTML]="icon.safeSvg"
-                                    [attr.aria-label]="icon.alt"
-                                    class="flex items-center justify-center"
-                                ></div>
-                            }
-                            @if (icon.type === "font") {
-                                <i [class]="icon.iconClass" [attr.aria-label]="icon.alt"></i>
-                            }
+                            <app-message-status-icon [status]="status" />
                         </div>
                     }
                 </div>
