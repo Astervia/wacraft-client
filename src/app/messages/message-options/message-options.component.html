@@ -30,13 +30,7 @@
                     (keyup.enter)="markAsRead()"
                     (keyup.space)="markAsRead()"
                 >
-                    <div
-                        [ngClass]="readIconColorClass"
-                        [style.width]="readIconWidth"
-                        [innerHTML]="readIconSvg"
-                        aria-label="Double blue tick"
-                        class="flex items-center justify-center"
-                    ></div>
+                    <app-message-status-icon [status]="SendingStatus.read" size="24px" />
                     <span i18n>Mark as read</span>
                 </li>
             }

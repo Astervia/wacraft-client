@@ -11,7 +11,6 @@ import {
     ViewChild,
     inject,
 } from "@angular/core";
-import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import {
     Conversation,
@@ -20,22 +19,24 @@ import {
 import { MessageDataPipe } from "../../../core/message/pipe/message-data.pipe";
 import { MessageContentPreviewComponent } from "../../messages/message-content-preview/message-content-preview.component";
 import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
-import {
-    STATUS_ICON_REPOSITORY,
-    IMessageStatusIcon,
-} from "../../common/repository/status-icon.repository";
+import { MessageStatusIconComponent } from "../../common/message-status-icon/message-status-icon.component";
 
 @Component({
     selector: "app-conversation-preview",
     standalone: true,
-    imports: [CommonModule, MessageContentPreviewComponent, MessageDataPipe, RouterModule],
+    imports: [
+        CommonModule,
+        MessageContentPreviewComponent,
+        MessageDataPipe,
+        RouterModule,
+        MessageStatusIconComponent,
+    ],
     templateUrl: "./conversation-preview.component.html",
     styleUrl: "./conversation-preview.component.scss",
 })
 export class ConversationPreviewComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private queryParamsService = inject(QueryParamsService);
-    private sanitizer = inject(DomSanitizer);
 
     /* ---------------- inputs & outputs ---------------- */
     @Input() messagingProductContact!: ConversationMessagingProductContact;
@@ -47,28 +48,6 @@ export class ConversationPreviewComponent implements OnInit {
     @Output() select = new EventEmitter<ConversationMessagingProductContact>();
 
     isSelected = false;
-    private sanitizedIconCache: Record<string, SafeHtml> = {};
-
-    protected getStatusIcon(
-        lastMessage: Conversation,
-    ): (IMessageStatusIcon & { safeSvg?: SafeHtml }) | null {
-        const status = lastMessage?.statuses?.[0]?.product_data?.status;
-        if (!status) return null;
-
-        const rawIcon = STATUS_ICON_REPOSITORY[status];
-        if (!rawIcon) return null;
-
-        if (rawIcon.type === "inline-svg" && rawIcon.svgContent) {
-            if (!this.sanitizedIconCache[status]) {
-                this.sanitizedIconCache[status] = this.sanitizer.bypassSecurityTrustHtml(
-                    rawIcon.svgContent,
-                );
-            }
-            return { ...rawIcon, safeSvg: this.sanitizedIconCache[status] };
-        }
-
-        return rawIcon;
-    }
 
     ngOnInit(): void {
         this.watchQueryParams();

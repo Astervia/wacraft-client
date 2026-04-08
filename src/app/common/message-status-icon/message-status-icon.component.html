@@ -1,0 +1,39 @@
+@switch (status) {
+    @case ("sent") {
+        <div
+            class="flex items-center justify-center text-gray-500 dark:text-gray-400"
+            [style.width]="size || '10px'"
+            [style.height]="size || '10px'"
+            [innerHTML]="sentSvg"
+            aria-label="Message sent"
+            i18n-aria-label
+        ></div>
+    }
+    @case ("delivered") {
+        <div
+            class="flex items-center justify-center text-gray-500 dark:text-gray-400"
+            [style.width]="size || '15px'"
+            [style.height]="size || '15px'"
+            [innerHTML]="doubleCheckSvg"
+            aria-label="Message delivered"
+            i18n-aria-label
+        ></div>
+    }
+    @case ("read") {
+        <div
+            class="flex items-center justify-center text-emerald-500 dark:text-emerald-400"
+            [style.width]="size || '15px'"
+            [style.height]="size || '15px'"
+            [innerHTML]="doubleCheckSvg"
+            aria-label="Message read"
+            i18n-aria-label
+        ></div>
+    }
+    @case ("failed") {
+        <i
+            class="fa fa-exclamation-circle text-xm text-red-600"
+            aria-label="Message failed"
+            i18n-aria-label
+        ></i>
+    }
+}

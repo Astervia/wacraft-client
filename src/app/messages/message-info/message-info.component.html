@@ -8,28 +8,20 @@
     <p>{{ message.created_at | date: "short" }}</p>
 
     <div class="ml-2 flex flex-row items-center justify-center">
-        @if (sent && getStatusIcon(message); as icon) {
+        @if (sent && message.statuses?.[0]?.product_data?.status; as status) {
             <div class="flex items-center justify-center">
-                @if (icon.type === "inline-svg") {
-                    <div
-                        [ngClass]="icon.colorClass"
-                        [style.width]="icon.width"
-                        [innerHTML]="icon.safeSvg"
-                        [attr.aria-label]="icon.alt"
-                        class="flex items-center justify-center"
-                    ></div>
-                }
-                @if (icon.type === "font") {
+                @if (status === "failed") {
                     <button
                         type="button"
                         class="flex items-center justify-center bg-transparent p-0"
                         matTooltip="Click to view error details"
                         i18n-matTooltip
                         (click)="toggleErrorModal()"
-                        [attr.aria-label]="icon.alt"
                     >
-                        <i [class]="icon.iconClass + ' cursor-pointer'"></i>
+                        <app-message-status-icon [status]="status" />
                     </button>
+                } @else {
+                    <app-message-status-icon [status]="status" />
                 }
             </div>
         }
