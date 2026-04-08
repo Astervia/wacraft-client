@@ -49,7 +49,9 @@ export class ConversationPreviewComponent implements OnInit {
     isSelected = false;
     private sanitizedIconCache: Record<string, SafeHtml> = {};
 
-    protected getStatusIcon(lastMessage: Conversation): (IMessageStatusIcon & { safeSvg?: SafeHtml }) | null {
+    protected getStatusIcon(
+        lastMessage: Conversation,
+    ): (IMessageStatusIcon & { safeSvg?: SafeHtml }) | null {
         const status = lastMessage?.statuses?.[0]?.product_data?.status;
         if (!status) return null;
 
