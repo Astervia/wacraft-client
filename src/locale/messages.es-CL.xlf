@@ -422,6 +422,10 @@
         <source>Weight</source>
         <target>Peso</target>
       </trans-unit>
+      <trans-unit id="5853597265344459552" datatype="html">
+        <source>Message sent</source>
+        <target>Mensaje enviado</target>
+      </trans-unit>
       <trans-unit id="5856307147839827252" datatype="html">
         <source> Back to login </source>
         <target> Volver al inicio de sesión </target>
@@ -429,6 +433,10 @@
       <trans-unit id="5875130684997376720" datatype="html">
         <source>Billing</source>
         <target>Facturación</target>
+      </trans-unit>
+      <trans-unit id="5693899446840503439" datatype="html">
+        <source>Message failed</source>
+        <target>Error al enviar el mensaje</target>
       </trans-unit>
       <trans-unit id="5696578547712505713" datatype="html">
         <source>Name (optional)</source>
@@ -1130,6 +1138,10 @@
         <source>Formatted Name</source>
         <target>Nombre formateado</target>
       </trans-unit>
+      <trans-unit id="5755386188979035638" datatype="html">
+        <source>Message read</source>
+        <target>Mensaje leído</target>
+      </trans-unit>
       <trans-unit id="5762151072276461448" datatype="html">
         <source>Phones</source>
         <target>Teléfonos</target>
@@ -1230,6 +1242,10 @@
         <source>Add Contact</source>
         <target>Agregar contacto</target>
       </trans-unit>
+      <trans-unit id="2986639088817992529" datatype="html">
+        <source>Message delivered</source>
+        <target>Mensaje entregado</target>
+      </trans-unit>
       <trans-unit id="2991816093867082108" datatype="html">
         <source>Throughput is shared across all webhook activity.</source>
         <target>El throughput es compartido entre toda la actividad de webhook.</target>
@@ -1269,10 +1285,6 @@
       <trans-unit id="5945986349492910662" datatype="html">
         <source>Contacts</source>
         <target>Contactos</target>
-      </trans-unit>
-      <trans-unit id="5968917079030235743" datatype="html">
-        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot; &gt;"/>hourglass_empty<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Saving... </source>
-        <target><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot; &gt;"/>hourglass_empty<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Guardando... </target>
       </trans-unit>
       <trans-unit id="8344427131876198378" datatype="html">
         <source> Keyboard shortcuts </source>
@@ -1345,6 +1357,10 @@
       <trans-unit id="1289200136647215485" datatype="html">
         <source>Move selection up / down</source>
         <target>Mover selección arriba / abajo</target>
+      </trans-unit>
+      <trans-unit id="3407061818321766940" datatype="html">
+        <source>Saving...</source>
+        <target>Guardando...</target>
       </trans-unit>
       <trans-unit id="3424859174110346498" datatype="html">
         <source>Open selected chat</source>
@@ -1849,10 +1865,6 @@
       <trans-unit id="7123490720096247063" datatype="html">
         <source>Advanced Filters</source>
         <target>Filtros Avanzados</target>
-      </trans-unit>
-      <trans-unit id="7134732939442782683" datatype="html">
-        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot;&gt;"/>save<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Save </source>
-        <target><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot;&gt;"/>save<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Guardar </target>
       </trans-unit>
       <trans-unit id="5455256688652084300" datatype="html">
         <source> No usage data available. </source>
