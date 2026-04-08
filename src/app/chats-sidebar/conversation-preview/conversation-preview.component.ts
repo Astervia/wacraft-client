@@ -13,6 +13,7 @@ import {
     ViewChild,
     inject,
 } from "@angular/core";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import {
     Conversation,
@@ -36,6 +37,7 @@ import {
 export class ConversationPreviewComponent implements OnInit, OnChanges {
     private route = inject(ActivatedRoute);
     private queryParamsService = inject(QueryParamsService);
+    private sanitizer = inject(DomSanitizer);
 
     /* ---------------- inputs & outputs ---------------- */
     @Input() messagingProductContact!: ConversationMessagingProductContact;
@@ -47,11 +49,21 @@ export class ConversationPreviewComponent implements OnInit, OnChanges {
     @Output() select = new EventEmitter<ConversationMessagingProductContact>();
 
     isSelected = false;
-    statusIcon: IMessageStatusIcon | null = null;
+    statusIcon: (IMessageStatusIcon & { safeSvg?: SafeHtml }) | null = null;
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes["lastMessage"]) {
-            this.statusIcon = this.resolveStatusIcon(this.lastMessage);
+            const rawIcon = this.resolveStatusIcon(this.lastMessage);
+            if (rawIcon) {
+                this.statusIcon = {
+                    ...rawIcon,
+                    safeSvg: rawIcon.svgContent
+                        ? this.sanitizer.bypassSecurityTrustHtml(rawIcon.svgContent)
+                        : undefined,
+                };
+            } else {
+                this.statusIcon = null;
+            }
         }
     }
 

@@ -43,11 +43,15 @@
             <!-- Ícone de status + texto da mensagem -->
             <div class="flex min-w-0 items-center">
                 @if (statusIcon; as icon) {
-                    <div
-                        class="mr-1 flex flex-shrink-0 items-center justify-center brightness-50 dark:brightness-100"
-                    >
-                        @if (icon.type === "image") {
-                            <img [style.width]="icon.width" [src]="icon.src" [alt]="icon.alt" />
+                    <div class="mr-1 flex flex-shrink-0 items-center justify-center">
+                        @if (icon.type === "inline-svg") {
+                            <div
+                                [ngClass]="icon.colorClass"
+                                [style.width]="icon.width"
+                                [innerHTML]="icon.safeSvg"
+                                [attr.aria-label]="icon.alt"
+                                class="flex items-center justify-center"
+                            ></div>
                         }
                         @if (icon.type === "font") {
                             <i [class]="icon.iconClass" [attr.aria-label]="icon.alt"></i>
