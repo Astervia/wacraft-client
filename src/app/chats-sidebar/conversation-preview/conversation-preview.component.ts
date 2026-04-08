@@ -7,8 +7,6 @@ import {
     HostListener,
     Input,
     OnInit,
-    OnChanges,
-    SimpleChanges,
     Output,
     ViewChild,
     inject,
@@ -34,7 +32,7 @@ import {
     templateUrl: "./conversation-preview.component.html",
     styleUrl: "./conversation-preview.component.scss",
 })
-export class ConversationPreviewComponent implements OnInit, OnChanges {
+export class ConversationPreviewComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private queryParamsService = inject(QueryParamsService);
     private sanitizer = inject(DomSanitizer);
@@ -49,28 +47,25 @@ export class ConversationPreviewComponent implements OnInit, OnChanges {
     @Output() select = new EventEmitter<ConversationMessagingProductContact>();
 
     isSelected = false;
-    statusIcon: (IMessageStatusIcon & { safeSvg?: SafeHtml }) | null = null;
+    private sanitizedIconCache: Record<string, SafeHtml> = {};
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes["lastMessage"]) {
-            const rawIcon = this.resolveStatusIcon(this.lastMessage);
-            if (rawIcon) {
-                this.statusIcon = {
-                    ...rawIcon,
-                    safeSvg: rawIcon.svgContent
-                        ? this.sanitizer.bypassSecurityTrustHtml(rawIcon.svgContent)
-                        : undefined,
-                };
-            } else {
-                this.statusIcon = null;
-            }
-        }
-    }
-
-    private resolveStatusIcon(lastMessage: Conversation): IMessageStatusIcon | null {
+    protected getStatusIcon(lastMessage: Conversation): (IMessageStatusIcon & { safeSvg?: SafeHtml }) | null {
         const status = lastMessage?.statuses?.[0]?.product_data?.status;
         if (!status) return null;
-        return STATUS_ICON_REPOSITORY[status] ?? null;
+
+        const rawIcon = STATUS_ICON_REPOSITORY[status];
+        if (!rawIcon) return null;
+
+        if (rawIcon.type === "inline-svg" && rawIcon.svgContent) {
+            if (!this.sanitizedIconCache[status]) {
+                this.sanitizedIconCache[status] = this.sanitizer.bypassSecurityTrustHtml(
+                    rawIcon.svgContent,
+                );
+            }
+            return { ...rawIcon, safeSvg: this.sanitizedIconCache[status] };
+        }
+
+        return rawIcon;
     }
 
     ngOnInit(): void {

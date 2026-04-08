@@ -42,7 +42,7 @@
         <div class="flex w-full items-center justify-between gap-2">
             <!-- Ícone de status + texto da mensagem -->
             <div class="flex min-w-0 items-center">
-                @if (statusIcon; as icon) {
+                @if (getStatusIcon(lastMessage); as icon) {
                     <div class="mr-1 flex flex-shrink-0 items-center justify-center">
                         @if (icon.type === "inline-svg") {
                             <div
