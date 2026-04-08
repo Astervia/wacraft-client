@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import {
     Component,
     ElementRef,
@@ -15,8 +16,10 @@ import { DateOrderEnum } from "../../../core/common/model/date-order.model";
 import { NIL as NilUUID } from "uuid";
 import { MatIconModule } from "@angular/material/icon";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { NGXLogger } from "ngx-logger";
 import { SenderData } from "../../../core/message/model/sender-data.model";
+import { STATUS_ICON_REPOSITORY } from "../../common/repository/status-icon.repository";
 import { MessageType } from "../../../core/message/model/message-type.model";
 import { MessageIdPipe } from "../../../core/message/pipe/message-id.pipe";
 import { MessageFields } from "../../../core/message/entity/message.entity";
@@ -33,6 +36,7 @@ interface EmojiSelectEvent {
 @Component({
     selector: "app-message-options",
     imports: [
+        CommonModule,
         MessageInfoDataComponent,
         MatIconModule,
         PickerModule,
@@ -48,8 +52,16 @@ export class MessageOptionsComponent {
     private messageController = inject(MessageControllerService);
     private messageIdPipe = inject(MessageIdPipe);
     private logger = inject(NGXLogger);
+    private sanitizer = inject(DomSanitizer);
 
     MessageType = MessageType;
+
+    protected readIconSvg: SafeHtml | null = (() => {
+        const icon = STATUS_ICON_REPOSITORY["read"];
+        return icon?.svgContent ? this.sanitizer.bypassSecurityTrustHtml(icon.svgContent) : null;
+    })();
+    protected readIconWidth = STATUS_ICON_REPOSITORY["read"]?.width ?? "15px";
+    protected readIconColorClass = STATUS_ICON_REPOSITORY["read"]?.colorClass ?? "";
 
     @Input() message!: Conversation;
 

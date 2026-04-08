@@ -30,11 +30,13 @@
                     (keyup.enter)="markAsRead()"
                     (keyup.space)="markAsRead()"
                 >
-                    <img
-                        width="24"
-                        src="assets/icons/flaticon/double-green-check-mark-24.png"
-                        alt="Double blue tick"
-                    />
+                    <div
+                        [ngClass]="readIconColorClass"
+                        [style.width]="readIconWidth"
+                        [innerHTML]="readIconSvg"
+                        aria-label="Double blue tick"
+                        class="flex items-center justify-center"
+                    ></div>
                     <span i18n>Mark as read</span>
                 </li>
             }

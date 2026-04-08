@@ -8,40 +8,28 @@
     <p>{{ message.created_at | date: "short" }}</p>
 
     <div class="ml-2 flex flex-row items-center justify-center">
-        @if (sent && message.statuses && message.statuses.length) {
-            <div class="flex items-center justify-center brightness-50 dark:brightness-100">
-                @if (message.statuses[0].product_data.status === "sent") {
-                    <img
-                        width="10px"
-                        src="assets/icons/flaticon/check-mark.png"
-                        alt="Message sent"
-                    />
+        @if (sent && getStatusIcon(message); as icon) {
+            <div class="flex items-center justify-center">
+                @if (icon.type === "inline-svg") {
+                    <div
+                        [ngClass]="icon.colorClass"
+                        [style.width]="icon.width"
+                        [innerHTML]="icon.safeSvg"
+                        [attr.aria-label]="icon.alt"
+                        class="flex items-center justify-center"
+                    ></div>
                 }
-                @if (message.statuses[0].product_data.status === "delivered") {
-                    <img
-                        width="15px"
-                        src="assets/icons/flaticon/double-check-mark.png"
-                        alt="Message delivered"
-                    />
-                }
-                @if (message.statuses[0].product_data.status === "read") {
-                    <img
-                        width="15px"
-                        src="assets/icons/flaticon/double-green-check-mark.png"
-                        alt="Message read"
-                    />
-                }
-                <!-- Error icon with modal trigger -->
-                @if (message.statuses[0].product_data.status === "failed") {
-                    <i
-                        class="fa fa-exclamation-circle cursor-pointer text-red-600"
-                        height="15px"
-                        width="15px"
-                        aria-hidden="true"
+                @if (icon.type === "font") {
+                    <button
+                        type="button"
+                        class="flex items-center justify-center bg-transparent p-0"
                         matTooltip="Click to view error details"
                         i18n-matTooltip
                         (click)="toggleErrorModal()"
-                    ></i>
+                        [attr.aria-label]="icon.alt"
+                    >
+                        <i [class]="icon.iconClass + ' cursor-pointer'"></i>
+                    </button>
                 }
             </div>
         }
