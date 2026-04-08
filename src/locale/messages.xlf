@@ -494,11 +494,17 @@
       <trans-unit id="5848348023107769657" datatype="html">
         <source>Weight</source>
       </trans-unit>
+      <trans-unit id="5853597265344459552" datatype="html">
+        <source>Message sent</source>
+      </trans-unit>
       <trans-unit id="5856307147839827252" datatype="html">
         <source> Back to login </source>
       </trans-unit>
       <trans-unit id="5875130684997376720" datatype="html">
         <source>Billing</source>
+      </trans-unit>
+      <trans-unit id="5693899446840503439" datatype="html">
+        <source>Message failed</source>
       </trans-unit>
       <trans-unit id="5696578547712505713" datatype="html">
         <source>Name (optional)</source>
@@ -839,6 +845,9 @@
       <trans-unit id="2883859734114302285" datatype="html">
         <source>URLs</source>
       </trans-unit>
+      <trans-unit id="2986639088817992529" datatype="html">
+        <source>Message delivered</source>
+      </trans-unit>
       <trans-unit id="2991816093867082108" datatype="html">
         <source>Throughput is shared across all webhook activity.</source>
       </trans-unit>
@@ -893,14 +902,14 @@
       <trans-unit id="5701618810648052610" datatype="html">
         <source>Title</source>
       </trans-unit>
+      <trans-unit id="5755386188979035638" datatype="html">
+        <source>Message read</source>
+      </trans-unit>
       <trans-unit id="5762151072276461448" datatype="html">
         <source>Phones</source>
       </trans-unit>
       <trans-unit id="5945986349492910662" datatype="html">
         <source>Contacts</source>
-      </trans-unit>
-      <trans-unit id="5968917079030235743" datatype="html">
-        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot; &gt;"/>hourglass_empty<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon &gt;"/> Saving... </source>
       </trans-unit>
       <trans-unit id="6028371114637047813" datatype="html">
         <source>First Name</source>
@@ -985,6 +994,9 @@
       </trans-unit>
       <trans-unit id="3193976279273491157" datatype="html">
         <source>Actions</source>
+      </trans-unit>
+      <trans-unit id="3407061818321766940" datatype="html">
+        <source>Saving...</source>
       </trans-unit>
       <trans-unit id="3424859174110346498" datatype="html">
         <source>Open selected chat</source>
@@ -1357,9 +1369,6 @@
       </trans-unit>
       <trans-unit id="7123490720096247063" datatype="html">
         <source>Advanced Filters</source>
-      </trans-unit>
-      <trans-unit id="7134732939442782683" datatype="html">
-        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;mr-1.5 !h-4 !w-4 text-xs&quot;&gt;"/>save<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Save </source>
       </trans-unit>
       <trans-unit id="7584487295874556568" datatype="html">
         <source>Toggle send typing indicator</source>
