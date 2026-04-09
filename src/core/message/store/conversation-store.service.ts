@@ -44,6 +44,7 @@ export class ConversationStoreService {
 
     messagingProductContactIdFilter?: string;
     conversations: ConversationWithUnread[] = [];
+    conversationMap = new Map<string, ConversationWithUnread>();
     searchConversations: Conversation[] = [];
     searchMode: "contact" | "message" = "message";
 
@@ -60,6 +61,7 @@ export class ConversationStoreService {
 
     resetState(): void {
         this.conversations = [];
+        this.conversationMap.clear();
         this.searchConversations = [];
         this.reachedMaxConversationLimit = false;
         this.reachedMaxSearchConversationLimit = false;
@@ -118,17 +120,16 @@ export class ConversationStoreService {
     }
 
     async unshiftConversation(message: Conversation) {
-        const conversation = new ConversationWithUnread(message);
+        const contact = this.messagingProductPipe.transform(message);
+        const conversation = new ConversationWithUnread(message, contact);
         // Check for conversation id in the array and remove if found
-        const existingIndex = this.conversations.findIndex(
-            conv =>
-                this.messagingProductPipe.transform(conversation.message).id ===
-                this.messagingProductPipe.transform(conv.message).id,
-        );
-        if (existingIndex !== -1) {
-            const currentConversation = this.conversations[existingIndex];
-            this.conversations.splice(existingIndex, 1);
-            conversation.replaceUnread(currentConversation.unread);
+        const existingConversation = this.conversationMap.get(contact.id);
+        if (existingConversation) {
+            const existingIndex = this.conversations.indexOf(existingConversation);
+            if (existingIndex !== -1) {
+                this.conversations.splice(existingIndex, 1);
+            }
+            conversation.replaceUnread(existingConversation.unread);
             if (
                 this.localSettings.unreadMode === UnreadMode.LOCAL ||
                 this.localSettings.unreadMode === UnreadMode.SERVER
@@ -136,17 +137,15 @@ export class ConversationStoreService {
                 conversation.increaseUnread();
         } else if (
             this.localSettings.unreadMode === UnreadMode.SERVER &&
-            conversation.message.created_at >
-                this.messagingProductPipe.transform(conversation.message).last_read_at
+            conversation.message.created_at > contact.last_read_at
         ) {
             const count = await this.messageController.count(
                 {
-                    from_id: this.messagingProductPipe.transform(conversation.message).id,
+                    from_id: contact.id,
                 },
                 undefined,
                 {
-                    created_at_geq: this.messagingProductPipe.transform(conversation.message)
-                        .last_read_at,
+                    created_at_geq: contact.last_read_at,
                 },
             );
             conversation.unread = count;
@@ -154,6 +153,7 @@ export class ConversationStoreService {
 
         // Then add the conversation to the beginning of the array
         this.conversations.unshift(conversation);
+        this.conversationMap.set(contact.id, conversation);
     }
 
     async get(): Promise<void> {
@@ -178,46 +178,38 @@ export class ConversationStoreService {
     }
 
     read(messagingProductContactId: string) {
-        const conversation = this.conversations.find(
-            conversation =>
-                this.messagingProductPipe.transform(conversation.message).id ===
-                messagingProductContactId,
-        );
+        const conversation = this.conversationMap.get(messagingProductContactId);
         if (!conversation) return;
         if (this.localSettings.unreadMode === UnreadMode.SERVER)
-            this.messagingProductContactController.updateLastReadAt(
-                this.messagingProductPipe.transform(conversation.message).id,
-            );
+            this.messagingProductContactController.updateLastReadAt(conversation.contact.id);
         conversation.resetUnread();
     }
 
     async add(conversations: Conversation[]) {
-        this.conversations = [
-            ...this.conversations,
-            ...(await Promise.all(
-                conversations.map(async conversation => {
-                    const withUnread = new ConversationWithUnread(conversation);
-                    if (
-                        this.localSettings.unreadMode === UnreadMode.SERVER &&
-                        conversation.created_at >
-                            this.messagingProductPipe.transform(conversation).last_read_at
-                    ) {
-                        const count = await this.messageController.count(
-                            {
-                                from_id: this.messagingProductPipe.transform(conversation).id,
-                            },
-                            undefined,
-                            {
-                                created_at_geq:
-                                    this.messagingProductPipe.transform(conversation).last_read_at,
-                            },
-                        );
-                        withUnread.unread = count;
-                    }
-                    return withUnread;
-                }),
-            )),
-        ];
+        const newConversationsWithUnread = await Promise.all(
+            conversations.map(async conversation => {
+                const contact = this.messagingProductPipe.transform(conversation);
+                const withUnread = new ConversationWithUnread(conversation, contact);
+                if (
+                    this.localSettings.unreadMode === UnreadMode.SERVER &&
+                    conversation.created_at > contact.last_read_at
+                ) {
+                    const count = await this.messageController.count(
+                        {
+                            from_id: contact.id,
+                        },
+                        undefined,
+                        {
+                            created_at_geq: contact.last_read_at,
+                        },
+                    );
+                    withUnread.unread = count;
+                }
+                this.conversationMap.set(contact.id, withUnread);
+                return withUnread;
+            }),
+        );
+        this.conversations = [...this.conversations, ...newConversationsWithUnread];
     }
 
     addSearch(conversations: Conversation[]) {
