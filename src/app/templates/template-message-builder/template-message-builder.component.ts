@@ -209,6 +209,7 @@ export class TemplateMessageBuilderComponent {
                 useComponent.parameters.push({
                     type: ParameterType.text,
                     text: "",
+                    // placeholder: exampleValue || undefined,
                 });
             });
         } else if (
@@ -221,6 +222,7 @@ export class TemplateMessageBuilderComponent {
                 useComponent.parameters.push({
                     type: ParameterType.text,
                     text: "",
+                    // placeholder: `Enter ${variableName}`,
                 });
             });
         }
@@ -234,9 +236,11 @@ export class TemplateMessageBuilderComponent {
         // First, try to use example.body_text if it exists
         if (example.body_text && example.body_text.length > 0) {
             example.body_text.forEach(() => {
+                // const exampleValue = Array.isArray(exampleGroup) ? exampleGroup[0] : exampleGroup;
                 useComponent.parameters.push({
                     type: ParameterType.text,
                     text: "",
+                    // placeholder: exampleValue || undefined,
                 });
             });
             return;
@@ -249,6 +253,7 @@ export class TemplateMessageBuilderComponent {
                 useComponent.parameters.push({
                     type: ParameterType.text,
                     text: "",
+                    // placeholder: `Enter ${variableName}`,
                 });
             });
         }
@@ -278,6 +283,7 @@ export class TemplateMessageBuilderComponent {
             useComponent.parameters.push({
                 type: ParameterType.text,
                 text: "",
+                // placeholder: component.text,
             });
             return;
         }
@@ -286,6 +292,7 @@ export class TemplateMessageBuilderComponent {
             useComponent.parameters.push({
                 type: ParameterType.text,
                 text: "",
+                // placeholder: `Enter ${variableName}`,
             });
         });
     }
@@ -305,11 +312,14 @@ export class TemplateMessageBuilderComponent {
             if (button && button.url) {
                 // Extract variables from the URL template
                 const variables = this.extractVariables(button.url);
+                // const exampleValues = this.extractButtonExampleValues(button.url, button.example);
 
                 variables.forEach(() => {
+                    // const placeholder = exampleValues[index] || `Enter ${variableName}`;
                     useComponent.parameters.push({
                         type: ParameterType.text,
                         text: "",
+                        // placeholder,
                     });
                 });
             }
@@ -321,15 +331,59 @@ export class TemplateMessageBuilderComponent {
             if (button.url) {
                 // Extract variables from the URL template
                 const variables = this.extractVariables(button.url);
+                // const exampleValues = this.extractButtonExampleValues(button.url, button.example);
 
                 variables.forEach(() => {
+                    // const placeholder = exampleValues[index] || `Enter ${variableName}`;
                     useComponent.parameters.push({
                         type: ParameterType.text,
                         text: "",
+                        // placeholder,
                     });
                 });
             }
         });
+    }
+
+    /**
+     * Extracts example values for button URL variables
+     * @param templateUrl The template URL with variables (e.g., "https://example.com?id={{1}}")
+     * @param example The example data from the button (can be string, array, or undefined)
+     * @returns Array of example values for each variable
+     */
+    extractButtonExampleValues(templateUrl: string, example?: string | string[]): string[] {
+        if (!example) return [];
+
+        const exampleArray = Array.isArray(example) ? example : [example];
+        const variables = this.extractVariables(templateUrl);
+        const exampleValues: string[] = [];
+
+        // If example is a full URL, try to extract variable values from it
+        if (exampleArray.length > 0 && exampleArray[0].startsWith("http")) {
+            const exampleUrl = exampleArray[0];
+
+            // Create a regex pattern from the template URL
+            // Replace {{variable}} with a capture group
+            let pattern = templateUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // Escape special chars
+            variables.forEach(() => {
+                pattern = pattern.replace(/\\\{\\\{[^}]+\\\}\\\}/, "(.+?)"); // Replace first variable with capture group
+            });
+
+            const regex = new RegExp(pattern);
+            const match = exampleUrl.match(regex);
+
+            if (match) {
+                // Extract captured groups (skip the first element which is the full match)
+                for (let i = 1; i < match.length; i++) {
+                    exampleValues.push(match[i]);
+                }
+            }
+        } else {
+            // Example contains direct values
+            return exampleArray;
+        }
+
+        return exampleValues;
     }
 
     setMessage() {
