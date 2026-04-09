@@ -11,7 +11,9 @@
         <button
             id="sidebar-toggle"
             class="flex aspect-square w-10 items-center justify-center rounded-lg border border-gray-500 text-white focus-visible:ring-2 focus-visible:ring-gray-400 dark:border-gray-500"
-            [attr.aria-label]="queryParamsService.sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'"
+            [attr.aria-label]="
+                queryParamsService.sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'
+            "
             [attr.aria-expanded]="queryParamsService.sidebarOpen"
             [title]="queryParamsService.sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'"
             (click)="
