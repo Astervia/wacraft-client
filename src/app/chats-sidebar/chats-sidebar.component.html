@@ -85,7 +85,10 @@
 
         @if (!conversationStore.searchValue && !messagingProductContactIdFilter) {
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
-                @for (conversation of conversationStore.conversations; track conversation.message.id) {
+                @for (
+                    conversation of conversationStore.conversations;
+                    track conversation.message.id
+                ) {
                     <li>
                         <app-conversation-preview
                             [lastMessage]="conversation.message"
@@ -103,7 +106,10 @@
 
         @if (conversationStore.searchValue || messagingProductContactIdFilter) {
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
-                @for (conversation of conversationStore.searchConversations; track conversation.message.id) {
+                @for (
+                    conversation of conversationStore.searchConversations;
+                    track conversation.message.id
+                ) {
                     <li>
                         <app-conversation-preview
                             [lastMessage]="conversation"
