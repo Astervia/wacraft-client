@@ -88,7 +88,10 @@
             >
                 @if (!conversationStore.searchValue && !messagingProductContactIdFilter) {
                     <ul>
-                        @for (conversation of conversationStore.conversations; track conversation.message.id) {
+                        @for (
+                            conversation of conversationStore.conversations;
+                            track conversation.message.id
+                        ) {
                             <li>
                                 <app-conversation-preview
                                     selectMode="multiple"
