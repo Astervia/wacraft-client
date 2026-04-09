@@ -7,7 +7,12 @@
                 <p class="text-lg font-medium">{{ headerMessage }}</p>
             </div>
             @if (data) {
-                <button (click)="toggleData()" class="rounded">
+                <button
+                    (click)="toggleData()"
+                    class="rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                    aria-label="Toggle error details"
+                    [attr.aria-expanded]="showData"
+                >
                     @if (!showData) {
                         <i class="fas fa-chevron-down"></i>
                     }
