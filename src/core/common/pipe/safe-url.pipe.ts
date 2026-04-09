@@ -36,7 +36,7 @@ export class SafeUrlPipe implements PipeTransform {
                 environment.automationServerUrl,
             ].filter(Boolean) as string[];
 
-            return trustedHosts.some((trustedHost) => {
+            return trustedHosts.some(trustedHost => {
                 try {
                     const trustedParsed = new URL(
                         trustedHost.startsWith("http") ? trustedHost : `https://${trustedHost}`,
