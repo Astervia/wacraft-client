@@ -11,7 +11,6 @@ import { UseMedia } from "../../../../core/message/model/media-data.model";
 import { MediaStoreService } from "../../../../core/media/store/media-store.service";
 import { MatIconModule } from "@angular/material/icon";
 import { NGXLogger } from "ngx-logger";
-import { isTrustedUrl } from "../../../../core/common/util/url-validator.util";
 
 @Component({
     selector: "app-media-preview",
@@ -32,7 +31,7 @@ export class MediaPreviewComponent implements OnInit {
 
     @Input() message!: Conversation;
 
-    mediaSafeUrl: SafeUrl | string = ""; // Safe URL for media
+    mediaSafeUrl: SafeUrl = ""; // Safe URL for media
     options = false;
 
     async ngOnInit(): Promise<void> {
@@ -44,11 +43,7 @@ export class MediaPreviewComponent implements OnInit {
         if (!mediaData) return;
         const url = mediaData?.link;
         if (url) {
-            if (isTrustedUrl(url)) {
-                this.mediaSafeUrl = this.sanitizer.bypassSecurityTrustUrl(url);
-            } else {
-                this.mediaSafeUrl = url; // Let Angular's template binding sanitize external URLs
-            }
+            this.mediaSafeUrl = this.sanitizer.bypassSecurityTrustUrl(url); // Sanitize the URL
             return;
         }
         if (!mediaData.id) return;
