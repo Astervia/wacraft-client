@@ -26,6 +26,7 @@ Repository-wide implementation rules for `wacraft-client`.
 - Controllers extend `MainServerControllerService` for HTTP concerns.
 - Realtime integrations extend `MainServerGatewayService`.
 - Stores own local arrays, maps, loading flags, and orchestration.
+- Prefer O(1) Map lookups over O(N) array searches for performance, especially in state stores.
 - Workspace changes should clear workspace-scoped state.
 
 ## Multi-Tenancy
