@@ -7,6 +7,7 @@ import { UseMedia } from "../../../core/message/model/media-data.model";
 import { MediaStoreService } from "../../../core/media/store/media-store.service";
 import { MatIconModule } from "@angular/material/icon";
 import { NGXLogger } from "ngx-logger";
+import { isTrustedUrl } from "../../../core/common/util/url-validator.util";
 
 @Component({
     selector: "app-message-media-content",
@@ -28,7 +29,7 @@ export class MessageMediaContentComponent implements OnInit {
     @Input() isSent!: boolean;
     @Output() asyncContentLoaded = new EventEmitter();
 
-    mediaSafeUrl: SafeUrl = "";
+    mediaSafeUrl: SafeUrl | string = "";
 
     async ngOnInit(): Promise<void> {
         await this.handleAutoPreview();
@@ -39,7 +40,12 @@ export class MessageMediaContentComponent implements OnInit {
         if (!this.mediaData) return;
         const url = this.mediaData?.link;
         if (url) {
-            this.mediaSafeUrl = this.sanitizer.bypassSecurityTrustUrl(url); // Sanitize the URL
+            if (isTrustedUrl(url)) {
+                this.mediaSafeUrl = this.sanitizer.bypassSecurityTrustUrl(url); // Sanitize the URL
+            } else {
+                this.logger.warn(`MessageMediaContentComponent: Blocked untrusted URL: ${url}`);
+                this.mediaSafeUrl = "";
+            }
             return;
         }
         if (!this.mediaData.id) return;
