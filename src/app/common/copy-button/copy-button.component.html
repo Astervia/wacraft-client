@@ -1,10 +1,11 @@
 <button
     type="button"
-    class="flex items-center justify-center rounded text-gray-400 transition-all hover:bg-gray-200 hover:text-gray-600 focus:outline-none dark:hover:bg-gray-700 dark:hover:text-gray-300"
+    class="flex items-center justify-center rounded text-gray-400 transition-all hover:bg-gray-200 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
     [ngClass]="[sizeButtonClass, buttonClass, copied ? copiedTextClass : '']"
     [class.opacity-100]="copied"
     (click)="copy($event)"
     [title]="copied ? 'Copied!' : 'Copy to clipboard'"
+    [attr.aria-label]="copied ? 'Copied to clipboard' : 'Copy to clipboard'"
 >
     <svg
         *ngIf="!copied"
