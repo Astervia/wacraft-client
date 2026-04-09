@@ -41,10 +41,9 @@ export class MessageMediaContentComponent implements OnInit {
         const url = this.mediaData?.link;
         if (url) {
             if (isTrustedUrl(url)) {
-                this.mediaSafeUrl = this.sanitizer.bypassSecurityTrustUrl(url); // Sanitize the URL
+                this.mediaSafeUrl = this.sanitizer.bypassSecurityTrustUrl(url);
             } else {
-                this.logger.warn(`MessageMediaContentComponent: Blocked untrusted URL: ${url}`);
-                this.mediaSafeUrl = "";
+                this.mediaSafeUrl = url; // Let Angular's template binding sanitize external URLs
             }
             return;
         }
