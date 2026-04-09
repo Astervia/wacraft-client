@@ -31,8 +31,12 @@ export class MutexSwapper<T> {
         if (!qttAcquired) return this.mu.release();
 
         qttAcquired--;
-        if (qttAcquired) this.usageCount.set(msgId, qttAcquired);
-        else this.usageCount.delete(msgId);
+        if (qttAcquired) {
+            this.usageCount.set(msgId, qttAcquired);
+        } else {
+            this.usageCount.delete(msgId);
+            this.mutexes.delete(msgId);
+        }
 
         this.mu.release();
 
