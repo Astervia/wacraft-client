@@ -38,9 +38,7 @@ describe("SafeUrlPipe", () => {
 
     it("should allow URLs from mainServerUrl", () => {
         const trustedUrl = "https://trusted.com/api/data";
-        sanitizer.bypassSecurityTrustResourceUrl.and.returnValue(
-            trustedUrl as SafeResourceUrl,
-        );
+        sanitizer.bypassSecurityTrustResourceUrl.and.returnValue(trustedUrl as SafeResourceUrl);
 
         const result = pipe.transform(trustedUrl);
 
@@ -50,9 +48,7 @@ describe("SafeUrlPipe", () => {
 
     it("should allow URLs from automationServerUrl", () => {
         const trustedUrl = "https://automation.io/dashboard";
-        sanitizer.bypassSecurityTrustResourceUrl.and.returnValue(
-            trustedUrl as SafeResourceUrl,
-        );
+        sanitizer.bypassSecurityTrustResourceUrl.and.returnValue(trustedUrl as SafeResourceUrl);
 
         const result = pipe.transform(trustedUrl);
 
