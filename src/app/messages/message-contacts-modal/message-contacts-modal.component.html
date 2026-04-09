@@ -36,7 +36,7 @@
 
         <!-- Body -->
         <div class="scrollable h-full w-full overflow-y-auto bg-white dark:bg-gray-900" id="body">
-            @for (contact of contacts; track contact) {
+            @for (contact of contacts; track contact.name.formatted_name) {
                 <div class="px-4 py-2">
                     <!-- Contact header -->
                     <div class="flex items-center justify-between py-4">
@@ -76,7 +76,7 @@
                     <div class="space-y-3">
                         <!-- Phones -->
                         <div class="space-y-2">
-                            @for (phone of contact.phones; track phone) {
+                            @for (phone of contact.phones; track phone.phone) {
                                 <div class="text-sm">
                                     <a
                                         class="text-gray-800 dark:text-white"
@@ -96,7 +96,7 @@
                             <div
                                 class="space-y-2 border-t border-gray-300 pt-3 dark:border-gray-700"
                             >
-                                @for (email of contact.emails; track email) {
+                                @for (email of contact.emails; track email.email) {
                                     <div class="text-sm">
                                         <a
                                             class="text-gray-800 dark:text-white"
@@ -117,7 +117,7 @@
                             <div
                                 class="space-y-2 border-t border-gray-300 pt-3 dark:border-gray-700"
                             >
-                                @for (url of contact.urls; track url) {
+                                @for (url of contact.urls; track url.url) {
                                     <div class="text-sm">
                                         <a
                                             [href]="

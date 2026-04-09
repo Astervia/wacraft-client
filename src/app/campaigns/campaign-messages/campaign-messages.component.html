@@ -71,7 +71,7 @@
 
     <!-- Campaign Messages List -->
     <div class="scrollable max-h-[100vh] overflow-y-auto px-2" (scroll)="onScroll($event)">
-        @for (message of messages; track message; let i = $index) {
+        @for (message of messages; track message.id; let i = $index) {
             <div class="mb-2 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
                 <div
                     class="flex cursor-pointer items-center justify-between"

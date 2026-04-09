@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 
-import { MainServerControllerService } from "./controller.service";
+import { MainServerControllerService } from "./main-server-controller.service";
 
 describe("ControllerService", () => {
     let service: MainServerControllerService;

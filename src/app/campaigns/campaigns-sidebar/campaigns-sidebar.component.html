@@ -68,7 +68,7 @@
 
         @if (!campaignStore.searchValue) {
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
-                @for (campaign of campaignStore.campaigns; track campaign) {
+                @for (campaign of campaignStore.campaigns; track campaign.id) {
                     <li>
                         <app-campaign-preview [campaign]="campaign"></app-campaign-preview>
                     </li>
@@ -78,7 +78,7 @@
 
         @if (campaignStore.searchValue) {
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
-                @for (campaign of campaignStore.searchCampaigns; track campaign) {
+                @for (campaign of campaignStore.searchCampaigns; track campaign.id) {
                     <li>
                         <app-campaign-preview [campaign]="campaign"></app-campaign-preview>
                     </li>
