@@ -29,7 +29,7 @@ describe("MutexSwapper", () => {
         });
 
         // Small delay to ensure p2 has a chance to run but should be blocked
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        await new Promise(resolve => setTimeout(resolve, 50));
         expect(acquired2).toBe(false);
 
         await swapper.release("id1");
