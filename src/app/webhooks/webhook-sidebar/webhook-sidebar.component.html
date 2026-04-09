@@ -70,7 +70,7 @@
 
         @if (!webhookStore.searchValue) {
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
-                @for (webhook of webhookStore.webhooks; track webhook) {
+                @for (webhook of webhookStore.webhooks; track webhook.id) {
                     <li>
                         <app-webhook-preview [webhook]="webhook"></app-webhook-preview>
                     </li>
@@ -80,7 +80,7 @@
 
         @if (webhookStore.searchValue) {
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
-                @for (webhook of webhookStore.searchWebhooks; track webhook) {
+                @for (webhook of webhookStore.searchWebhooks; track webhook.id) {
                     <li>
                         <app-webhook-preview [webhook]="webhook"></app-webhook-preview>
                     </li>

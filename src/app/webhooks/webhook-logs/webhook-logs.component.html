@@ -73,7 +73,7 @@
 
     <!-- Webhook Logs List -->
     <div class="scrollable max-h-[70vh] overflow-y-auto" (scroll)="onScroll($event)">
-        @for (log of logs; track log; let i = $index) {
+        @for (log of logs; track log.id; let i = $index) {
             <div
                 class="mb-3 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
             >

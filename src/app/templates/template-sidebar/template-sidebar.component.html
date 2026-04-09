@@ -377,7 +377,7 @@
 
         @if (!isSearchMode()) {
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
-                @for (template of templateStore.templates; track template) {
+                @for (template of templateStore.templates; track template.id) {
                     <li>
                         <app-template-preview [template]="template"></app-template-preview>
                     </li>
@@ -387,7 +387,7 @@
 
         @if (isSearchMode()) {
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
-                @for (template of templateStore.searchTemplates; track template) {
+                @for (template of templateStore.searchTemplates; track template.id) {
                     <li>
                         <app-template-preview [template]="template"></app-template-preview>
                     </li>

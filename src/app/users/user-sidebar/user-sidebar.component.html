@@ -70,7 +70,7 @@
 
         @if (!userStore.searchValue) {
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
-                @for (user of userStore.users; track user) {
+                @for (user of userStore.users; track user.id) {
                     <li>
                         <app-user-preview [user]="user"></app-user-preview>
                     </li>
@@ -80,7 +80,7 @@
 
         @if (userStore.searchValue) {
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
-                @for (user of userStore.searchUsers; track user) {
+                @for (user of userStore.searchUsers; track user.id) {
                     <li>
                         <app-user-preview [user]="user"></app-user-preview>
                     </li>

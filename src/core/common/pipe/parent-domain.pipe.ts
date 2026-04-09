@@ -23,7 +23,7 @@ export class ParentDomainPipe implements PipeTransform {
                 return url.hostname;
             }
         } catch (error) {
-            this.logger.error("Error parsing URL for parent domain:", error);
+            console.error("Error parsing URL for parent domain:", error);
             // Fallback to using the full automationServerUrl
             return subdomainUrl;
         }
