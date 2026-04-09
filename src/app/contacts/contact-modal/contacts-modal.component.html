@@ -119,7 +119,7 @@
                     <ul>
                         @for (
                             conversation of conversationStore.searchConversations;
-                            track conversation.message.id
+                            track conversation.id
                         ) {
                             <li>
                                 <app-conversation-preview
