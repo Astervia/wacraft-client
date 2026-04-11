@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from "@angular/core";
+import { Component, Input, OnInit, SecurityContext, inject } from "@angular/core";
 import { Conversation } from "../../../../core/message/model/conversation.model";
 import { CommonModule } from "@angular/common";
 import { MessageDataPipe } from "../../../../core/message/pipe/message-data.pipe";
@@ -43,7 +43,12 @@ export class MediaPreviewComponent implements OnInit {
         if (!mediaData) return;
         const url = mediaData?.link;
         if (url) {
-            this.mediaSafeUrl = this.sanitizer.bypassSecurityTrustUrl(url); // Sanitize the URL
+            const sanitizedUrl = this.sanitizer.sanitize(SecurityContext.URL, url); // Sanitize the URL
+            if (sanitizedUrl) {
+                this.mediaSafeUrl = sanitizedUrl;
+            } else {
+                this.logger.error("Failed to sanitize the URL for preview");
+            }
             return;
         }
         if (!mediaData.id) return;
@@ -56,8 +61,14 @@ export class MediaPreviewComponent implements OnInit {
 
         const url = mediaData?.link;
         if (url) {
+            const sanitizedUrl = this.sanitizer.sanitize(SecurityContext.URL, url);
+            if (!sanitizedUrl) {
+                this.logger.error("Failed to sanitize the URL for download");
+                return;
+            }
+
             const a = document.createElement("a");
-            a.href = url;
+            a.href = sanitizedUrl;
             a.download = mediaData?.filename || "downloaded_file"; // Optional: set the file name
             a.click();
 
