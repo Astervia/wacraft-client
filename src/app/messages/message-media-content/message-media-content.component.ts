@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, SecurityContext, inject } from "@angular/core";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { MessageType, ReceivedMessageType } from "../../../core/message/model/message-type.model";
 import { LocalSettingsService } from "../../local-settings.service";
@@ -39,7 +39,12 @@ export class MessageMediaContentComponent implements OnInit {
         if (!this.mediaData) return;
         const url = this.mediaData?.link;
         if (url) {
-            this.mediaSafeUrl = this.sanitizer.bypassSecurityTrustUrl(url); // Sanitize the URL
+            const sanitizedUrl = this.sanitizer.sanitize(SecurityContext.URL, url); // Sanitize the URL
+            if (sanitizedUrl) {
+                this.mediaSafeUrl = sanitizedUrl;
+            } else {
+                this.logger.error("Failed to sanitize the URL for preview");
+            }
             return;
         }
         if (!this.mediaData.id) return;
@@ -51,8 +56,14 @@ export class MessageMediaContentComponent implements OnInit {
 
         const url = this.mediaData?.link;
         if (url) {
+            const sanitizedUrl = this.sanitizer.sanitize(SecurityContext.URL, url);
+            if (!sanitizedUrl) {
+                this.logger.error("Failed to sanitize the URL for download");
+                return;
+            }
+
             const a = document.createElement("a");
-            a.href = url;
+            a.href = sanitizedUrl;
             a.download = this.mediaData?.filename || "downloaded_file"; // Optional: set the file name
             a.click();
 
