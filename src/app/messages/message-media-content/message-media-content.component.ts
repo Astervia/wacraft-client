@@ -1,5 +1,13 @@
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, OnInit, Output, SecurityContext, inject } from "@angular/core";
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    SecurityContext,
+    inject,
+} from "@angular/core";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { MessageType, ReceivedMessageType } from "../../../core/message/model/message-type.model";
 import { LocalSettingsService } from "../../local-settings.service";
