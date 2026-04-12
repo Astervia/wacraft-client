@@ -2,7 +2,7 @@ import { Injectable, inject } from "@angular/core";
 import { MainServerControllerService } from "../../common/controller/main-server-controller.service";
 import { ServerEndpoints } from "../../common/constant/server-endpoints.enum";
 import { MediaInfo } from "../model/media-info.model";
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Injectable({
     providedIn: "root",
@@ -22,7 +22,7 @@ export class MediaControllerService extends MainServerControllerService {
     }
 
     // Download media by media ID and get SafeUrl to display in browser
-    async downloadMediaById(mediaId: string): Promise<SafeUrl> {
+    async downloadMediaById(mediaId: string): Promise<string> {
         const response = await this.http.get(`/download/${mediaId}`, {
             responseType: "blob",
         });
@@ -30,7 +30,7 @@ export class MediaControllerService extends MainServerControllerService {
     }
 
     // Download media using MediaInfo and get SafeUrl to display in browser
-    async downloadMediaByInfo(mediaInfo: MediaInfo): Promise<SafeUrl> {
+    async downloadMediaByInfo(mediaInfo: MediaInfo): Promise<string> {
         const response = await this.http.post(`/media-info/download`, mediaInfo, {
             responseType: "blob",
         });
@@ -70,9 +70,9 @@ export class MediaControllerService extends MainServerControllerService {
     }
 
     // Helper function to create a SafeUrl for display in browser
-    private createSafeUrl(blob: Blob): SafeUrl {
+    private createSafeUrl(blob: Blob): string {
         const url = window.URL.createObjectURL(blob);
-        return this.sanitizer.bypassSecurityTrustUrl(url);
+        return this.sanitizer.sanitize(4, url) || "";
     }
 
     // Helper function to trigger file download

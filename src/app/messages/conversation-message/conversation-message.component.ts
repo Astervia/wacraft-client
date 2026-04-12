@@ -19,7 +19,6 @@ import {
     MessageType,
     ReceivedMessageType,
 } from "../../../core/message/model/message-type.model";
-import { SafeUrl } from "@angular/platform-browser";
 import { MessageMediaContentComponent } from "../message-media-content/message-media-content.component";
 import { MessageInfoComponent } from "../message-info/message-info.component";
 import { MessageInteractiveContentComponent } from "../message-interactive-content/message-interactive-content.component";
@@ -78,7 +77,7 @@ export class ConversationMessageComponent {
     @Input()
     messagingProductContact!: ConversationMessagingProductContact;
 
-    mediaSafeUrl: SafeUrl = ""; // Safe URL for media
+    mediaSafeUrl = ""; // Safe URL for media
     optionsArrow = false;
     optionsOpen = false;
 

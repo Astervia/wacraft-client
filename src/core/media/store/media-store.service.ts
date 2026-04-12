@@ -1,7 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { MediaInfo } from "../model/media-info.model";
 import { MediaControllerService } from "../controller/media-controller.service";
-import { SafeUrl } from "@angular/platform-browser";
 
 @Injectable({
     providedIn: "root",
@@ -10,7 +9,7 @@ export class MediaStoreService {
     private mediaController = inject(MediaControllerService);
 
     mediaInfos = new Map<string, MediaInfo>();
-    mediaSafeURLs = new Map<string, SafeUrl>();
+    mediaSafeURLs = new Map<string, string>();
 
     async getMediaURL(mediaId: string): Promise<MediaInfo> {
         const info = this.mediaInfos.get(mediaId);
@@ -20,7 +19,7 @@ export class MediaStoreService {
         return newInfo;
     }
 
-    async downloadMediaById(mediaId: string): Promise<SafeUrl> {
+    async downloadMediaById(mediaId: string): Promise<string> {
         const safeUrl = this.mediaSafeURLs.get(mediaId);
         if (safeUrl) return safeUrl;
         const newSafeUrl = await this.mediaController.downloadMediaById(mediaId);
