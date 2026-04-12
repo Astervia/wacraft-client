@@ -56,7 +56,7 @@
                 hidden: currentMediaMode !== mode,
             }"
         >
-            @for (mediaContent of media.get(mode); track mediaContent) {
+            @for (mediaContent of media.get(mode); track mediaContent.id) {
                 <app-media-preview
                     [message]="mediaContent"
                     [ngClass]="{

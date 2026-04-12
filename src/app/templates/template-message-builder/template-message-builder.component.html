@@ -1,7 +1,7 @@
 @if (components) {
     <div class="mb-6 grid grid-cols-12 gap-4 rounded-lg bg-gray-100 p-6 dark:bg-gray-700">
         <div class="3xl:col-span-9 relative col-span-12 md:col-span-6 lg:col-span-6 xl:col-span-7">
-            @for (component of components; track component; let i = $index) {
+            @for (component of components; track component.type; let i = $index) {
                 <div class="mb-3">
                     <p class="mb-2 block text-sm font-medium">{{ component.type }}</p>
                     @if (component) {

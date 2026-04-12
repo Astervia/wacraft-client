@@ -64,7 +64,7 @@
             <!-- Filters -->
             @if (conversationStore.searchFilters.length > 0 || messagingProductContactIdFilter) {
                 <div class="mt-2 w-full space-x-2 space-y-2">
-                    @for (filter of conversationStore.searchFilters; track filter) {
+                    @for (filter of conversationStore.searchFilters; track filter.text) {
                         <span
                             class="inline-flex items-center rounded-md border border-blue-700 bg-blue-700/40 px-2 py-1 font-mono text-sm font-thin dark:text-gray-400"
                         >
@@ -89,8 +89,7 @@
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
                 @for (
                     conversation of conversationStore.conversations;
-                    track conversation.message.id
-                ) {
+                    track conversation.message.id) {
                     <li>
                         <app-conversation-preview
                             [lastMessage]="conversation.message"
@@ -110,8 +109,7 @@
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
                 @for (
                     conversation of conversationStore.searchConversations;
-                    track conversation.id
-                ) {
+                    track conversation.id) {
                     <li>
                         <app-conversation-preview
                             [lastMessage]="conversation"

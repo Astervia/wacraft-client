@@ -49,7 +49,7 @@
             <!-- Filters -->
             @if (webhookStore.searchFilters.length > 0) {
                 <div class="mt-2 w-full space-x-2 space-y-2">
-                    @for (filter of webhookStore.searchFilters; track filter) {
+                    @for (filter of webhookStore.searchFilters; track filter.text) {
                         <span
                             class="inline-flex items-center rounded-md border border-blue-700 bg-blue-700/40 px-2 py-1 font-mono text-sm font-thin text-gray-400"
                         >
