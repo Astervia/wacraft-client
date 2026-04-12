@@ -89,7 +89,8 @@
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
                 @for (
                     conversation of conversationStore.conversations;
-                    track conversation.message.id) {
+                    track conversation.message.id
+                ) {
                     <li>
                         <app-conversation-preview
                             [lastMessage]="conversation.message"
@@ -109,7 +110,8 @@
             <ul class="scrollable flex-1 overflow-y-auto" (scroll)="onScroll($event)">
                 @for (
                     conversation of conversationStore.searchConversations;
-                    track conversation.id) {
+                    track conversation.id
+                ) {
                     <li>
                         <app-conversation-preview
                             [lastMessage]="conversation"
