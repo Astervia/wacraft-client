@@ -54,6 +54,10 @@ Repository-wide implementation rules for `wacraft-client`.
 - Preserve placeholders exactly in XLF files.
 - Do not mark purely dynamic values as translatable.
 
+## Security
+
+- Prevent XSS vulnerabilities by using `sanitizer.sanitize(SecurityContext.URL, url)` for user-provided URLs instead of `sanitizer.bypassSecurityTrustUrl()`, which explicitly disables sanitization.
+
 ## Verification
 
 - For scoped code changes, prefer targeted checks first.
