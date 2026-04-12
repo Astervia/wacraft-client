@@ -8,7 +8,7 @@ import {
     SecurityContext,
     inject,
 } from "@angular/core";
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { DomSanitizer } from "@angular/platform-browser";
 import { MessageType, ReceivedMessageType } from "../../../core/message/model/message-type.model";
 import { LocalSettingsService } from "../../local-settings.service";
 import { UseMedia } from "../../../core/message/model/media-data.model";
@@ -36,7 +36,7 @@ export class MessageMediaContentComponent implements OnInit {
     @Input() isSent!: boolean;
     @Output() asyncContentLoaded = new EventEmitter();
 
-    mediaSafeUrl: SafeUrl = "";
+    mediaSafeUrl = "";
 
     async ngOnInit(): Promise<void> {
         await this.handleAutoPreview();
@@ -79,10 +79,7 @@ export class MessageMediaContentComponent implements OnInit {
         }
 
         if (!this.mediaData.id) return;
-        const safeUrl: SafeUrl = await this.mediaStore.downloadMediaById(this.mediaData.id);
-
-        // Convert SafeUrl to a plain string
-        const urlString = this.sanitizer.sanitize(4, safeUrl); // 4 represents the URL context
+        const urlString: string = await this.mediaStore.downloadMediaById(this.mediaData.id);
 
         if (!urlString) {
             this.logger.error("Failed to sanitize the URL");

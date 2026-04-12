@@ -2,7 +2,7 @@ import { Component, Input, OnInit, SecurityContext, inject } from "@angular/core
 import { Conversation } from "../../../../core/message/model/conversation.model";
 import { CommonModule } from "@angular/common";
 import { MessageDataPipe } from "../../../../core/message/pipe/message-data.pipe";
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { DomSanitizer } from "@angular/platform-browser";
 import { MessageType } from "../../../../core/message/model/message-type.model";
 import { RouterModule } from "@angular/router";
 import { MessagingProductContactFromMessagePipe } from "../../../../core/message/pipe/messaging-product-contact-from-message.pipe";
@@ -31,7 +31,7 @@ export class MediaPreviewComponent implements OnInit {
 
     @Input() message!: Conversation;
 
-    mediaSafeUrl: SafeUrl = ""; // Safe URL for media
+    mediaSafeUrl = ""; // Safe URL for media
     options = false;
 
     async ngOnInit(): Promise<void> {
@@ -76,10 +76,7 @@ export class MediaPreviewComponent implements OnInit {
         }
 
         if (!mediaData.id) return;
-        const safeUrl: SafeUrl = await this.mediaStore.downloadMediaById(mediaData.id);
-
-        // Convert SafeUrl to a plain string
-        const urlString = this.sanitizer.sanitize(4, safeUrl); // 4 represents the URL context
+        const urlString: string = await this.mediaStore.downloadMediaById(mediaData.id);
 
         if (!urlString) {
             this.logger.error("Failed to sanitize the URL");
