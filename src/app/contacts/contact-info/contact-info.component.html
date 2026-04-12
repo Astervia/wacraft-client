@@ -206,7 +206,7 @@
             <div
                 class="hide-scrollbar w-full max-w-full space-x-2 overflow-x-scroll whitespace-nowrap pl-2"
             >
-                @for (message of media; track message) {
+                @for (message of media; track message.id) {
                     <app-media-preview
                         class="inline-block w-40"
                         [message]="message"

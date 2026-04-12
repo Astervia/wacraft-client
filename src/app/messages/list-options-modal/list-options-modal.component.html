@@ -39,7 +39,7 @@
             id="body"
         >
             <div class="h-full w-full">
-                @for (section of sections; track section) {
+                @for (section of sections; track section.title) {
                     <div class="section w-full">
                         @if (section.title) {
                             <p
@@ -47,7 +47,7 @@
                                 [textContent]="section.title"
                             ></p>
                         }
-                        @for (row of section.rows; track row) {
+                        @for (row of section.rows; track row.id) {
                             <div
                                 class="min-h-18 juftify-between flex w-full items-center px-6 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 (click)="selectRow(row)"
