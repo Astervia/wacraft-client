@@ -90,7 +90,8 @@
                     <ul>
                         @for (
                             conversation of conversationStore.conversations;
-                            track conversation.message.id) {
+                            track conversation.message.id
+                        ) {
                             <li>
                                 <app-conversation-preview
                                     selectMode="multiple"
@@ -118,7 +119,8 @@
                     <ul>
                         @for (
                             conversation of conversationStore.searchConversations;
-                            track conversation.id) {
+                            track conversation.id
+                        ) {
                             <li>
                                 <app-conversation-preview
                                     [lastMessage]="conversation"
