@@ -57,7 +57,7 @@ jobs:
                     cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ env.IMAGE_NAME }}:latest"
 
             - name: Publish GitHub release
-              uses: softprops/action-gh-release@v2
+              uses: softprops/action-gh-release@v3
               with:
                   tag_name: ${{ steps.vars.outputs.tag }}
                   generate_release_notes: true
