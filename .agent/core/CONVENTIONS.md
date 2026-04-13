@@ -20,6 +20,10 @@ Repository-wide implementation rules for `wacraft-client`.
 - Follow existing mutable-store patterns before introducing new reactive state
   primitives.
 
+## Security
+
+- Prevent XSS by using Angular's `DomSanitizer.sanitize(SecurityContext.URL, url)` on user-supplied URLs instead of `bypassSecurityTrustUrl()`, or use the `SafeUrlPipe` for safe URL sanitization.
+
 ## Data Flow
 
 - Default flow is `Component -> Store -> Controller -> Backend`.
