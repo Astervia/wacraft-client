@@ -14,7 +14,7 @@
 
     @for (
         message of userConversationStore.unsentMessages.get(messagingProductContact.id) || [];
-        track message.id
+        track message
     ) {
         <li
             class="message-container"
@@ -47,7 +47,7 @@
 
     @for (
         message of userConversationStore.messageHistory.get(messagingProductContact.id) || [];
-        track message.id
+        track message
     ) {
         <li
             class="message-container"

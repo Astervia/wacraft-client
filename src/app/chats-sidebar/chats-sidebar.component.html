@@ -64,7 +64,7 @@
             <!-- Filters -->
             @if (conversationStore.searchFilters.length > 0 || messagingProductContactIdFilter) {
                 <div class="mt-2 w-full space-x-2 space-y-2">
-                    @for (filter of conversationStore.searchFilters; track filter.text) {
+                    @for (filter of conversationStore.searchFilters; track filter) {
                         <span
                             class="inline-flex items-center rounded-md border border-blue-700 bg-blue-700/40 px-2 py-1 font-mono text-sm font-thin dark:text-gray-400"
                         >
