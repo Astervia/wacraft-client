@@ -80,7 +80,6 @@ export class SidebarComponent implements OnInit {
     get isCollapsed(): boolean {
         return [
             RoutePath.account,
-            RoutePath.automation,
             RoutePath.phoneConfigs,
             RoutePath.workspaceMembers,
             RoutePath.workspaceSettings,
@@ -110,11 +109,6 @@ export class SidebarComponent implements OnInit {
                 route: ["/", RoutePath.home],
                 fragment: HomeFragment.campaigns,
                 visible: () => this.isEmailVerified,
-            },
-            {
-                route: ["/", RoutePath.automation],
-                visible: () =>
-                    this.isEmailVerified && this.workspaceStore.hasPolicy(Policy.workspace_admin),
             },
             {
                 route: ["/", RoutePath.webhooks],

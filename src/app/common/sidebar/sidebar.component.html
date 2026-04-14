@@ -93,40 +93,6 @@
             </a>
         }
 
-        @if (
-            workspaceStore.hasPolicy(Policy.workspace_admin) &&
-            !environment.isLite &&
-            environment.automationServerUrl
-        ) {
-            <a
-                [routerLink]="['/', RoutePath.automation]"
-                [queryParams]="queryParamsService.globalQueryParams"
-                queryParamsHandling="replace"
-                class="navigator"
-            >
-                <app-small-button
-                    [active]="activePage === RoutePath.automation"
-                    matTooltip="Automations"
-                    matSymbol="automation"
-                    i18n-matTooltip
-                ></app-small-button>
-            </a>
-        }
-
-        @if (environment.isLite) {
-            <a
-                href="https://wacraft.astervia.tech/support/plans/"
-                class="navigator unavailable-pro-feature"
-            >
-                <app-small-button
-                    [active]="activePage === RoutePath.automation"
-                    matTooltip="Automations are available to supporters. Visit the supporter area to learn more."
-                    matSymbol="automation"
-                    i18n-matTooltip
-                ></app-small-button>
-            </a>
-        }
-
         @if (workspaceStore.hasPolicy(Policy.webhook_read)) {
             <a
                 [routerLink]="['/', RoutePath.webhooks]"
