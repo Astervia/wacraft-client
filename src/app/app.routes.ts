@@ -7,7 +7,6 @@ import { PluginsManagerService } from "../plugins/common/service/plugins-manager
 import { AccountComponent } from "./account/account.component";
 import { WebhooksComponent } from "./webhooks/webhooks.component";
 import { UsersComponent } from "./users/users.component";
-import { AutomationComponent } from "./automation/automation.component";
 import { WorkspaceSettingsComponent } from "./workspace-settings/workspace-settings.component";
 import { WorkspaceMembersComponent } from "./workspace-members/workspace-members.component";
 import { PhoneConfigsComponent } from "./phone-configs/phone-configs.component";
@@ -27,7 +26,6 @@ import { BillingSuccessComponent } from "./billing-success/billing-success.compo
 import { BillingCancelComponent } from "./billing-cancel/billing-cancel.component";
 import { DevtoolsComponent } from "./devtools/devtools.component";
 import { TokenReplacerComponent } from "./devtools/tools/token-replacer/token-replacer.component";
-import { environment } from "../environments/environment";
 import { devtoolsGuard } from "../core/auth/guard/devtools.guard";
 
 export enum RoutePath {
@@ -37,7 +35,6 @@ export enum RoutePath {
     login = "login",
     webhooks = "webhooks",
     users = "users",
-    automation = "automation",
     workspaceSettings = "workspace-settings",
     workspaceMembers = "workspace-members",
     phoneConfigs = "phone-configs",
@@ -168,16 +165,6 @@ export const routes: Routes = [
         component: BillingCancelComponent,
         canActivate: [userGuard],
     },
-    environment.isLite
-        ? {
-              path: RoutePath.automation,
-              pathMatch: "full",
-          }
-        : {
-              path: RoutePath.automation,
-              component: AutomationComponent,
-              canActivate: [userGuard],
-          },
     {
         path: RoutePath.devtools,
         component: DevtoolsComponent,

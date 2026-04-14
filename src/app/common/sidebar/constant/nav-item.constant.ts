@@ -19,12 +19,6 @@ export const navItems: NavItem[] = [
         visible: () => true,
     },
     {
-        route: ["/", RoutePath.automation],
-        visible: () =>
-            !!this.userStore.currentUser &&
-            [Role.admin, Role.developer, Role.automation].includes(this.userStore.currentUser.role),
-    },
-    {
         route: ["/", RoutePath.webhooks],
         visible: () =>
             !!this.userStore.currentUser &&
