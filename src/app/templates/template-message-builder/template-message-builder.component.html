@@ -103,22 +103,26 @@
                     [textToCopy]="getSenderDataJson()"
                 ></app-copy-button>
                 <button
-                    type=""
+                    type="button"
                     matTooltip="Send template to users"
                     i18n-matTooltip
+                    aria-label="Send template to users"
+                    i18n-aria-label
                     (click)="openModal()"
-                    class="template-action"
+                    class="template-action focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:focus-visible:ring-gray-500"
                 >
                     <mat-icon class="material-icons-outlined brightness-50 dark:brightness-100"
                         >send</mat-icon
                     >
                 </button>
                 <button
-                    type=""
+                    type="button"
                     matTooltip="Download CSV data to fill and add messages to campaign"
                     i18n-matTooltip
+                    aria-label="Download CSV data to fill and add messages to campaign"
+                    i18n-aria-label
                     (click)="downloadCsvData()"
-                    class="template-action"
+                    class="template-action focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:focus-visible:ring-gray-500"
                 >
                     <mat-icon class="material-symbols-outlined brightness-50 dark:brightness-100"
                         >csv</mat-icon
