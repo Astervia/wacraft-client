@@ -52,16 +52,28 @@ export class AuthService {
         return response.data;
     }
 
-    async refreshAuthToken(): Promise<TokenResponse> {
-        const refresh_token = localStorage.getItem("refreshToken");
-        const response = await this.http.post<TokenResponse>(`${ServerEndpoints.token}`, {
-            refresh_token,
-            grant_type: GrantType.refresh_token,
-        } as TokenRequest);
-        this.setToken(response.data.access_token);
-        localStorage.setItem("refreshToken", response.data.refresh_token);
+    private refreshInProgress?: Promise<TokenResponse>;
 
-        return response.data;
+    async refreshAuthToken(): Promise<TokenResponse> {
+        if (this.refreshInProgress) return this.refreshInProgress;
+
+        const refresh_token = localStorage.getItem("refreshToken");
+        this.refreshInProgress = this.http
+            .post<TokenResponse>(`${ServerEndpoints.token}`, {
+                refresh_token,
+                grant_type: GrantType.refresh_token,
+            } as TokenRequest)
+            .then(response => {
+                this.setToken(response.data.access_token);
+                localStorage.setItem("refreshToken", response.data.refresh_token);
+                this.loginTime = new Date();
+                return response.data;
+            })
+            .finally(() => {
+                this.refreshInProgress = undefined;
+            });
+
+        return this.refreshInProgress;
     }
 
     setToken(token: string): void {
