@@ -1,3 +1,4 @@
 ## 2025-04-14 - Keyboard Navigation on Icon-Only Buttons
+
 **Learning:** Using Tailwind's `focus:outline-none` on icon-only interactive elements completely hides the focus state, making it impossible for keyboard users to navigate the app and understand which element is currently active. Furthermore, missing `aria-label`s on these buttons prevents screen readers from announcing their purpose.
 **Action:** Always provide an accessible fallback for keyboard navigation, such as `focus-visible:ring-2 focus-visible:ring-gray-400`, when hiding native focus rings. Additionally, always ensure icon-only interactive elements have proper `aria-label` attributes to ensure screen reader compatibility.
