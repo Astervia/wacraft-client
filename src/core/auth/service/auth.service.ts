@@ -4,8 +4,6 @@ import { ServerEndpoints } from "../../common/constant/server-endpoints.enum";
 import { Subject } from "rxjs";
 import { environment } from "../../../environments/environment";
 import { Router } from "@angular/router";
-import { CookieService } from "ngx-cookie-service";
-import { NGXLogger } from "ngx-logger";
 import { TokenResponse } from "../model/token-response.model";
 import { TokenRequest } from "../model/token-request.model";
 import { GrantType } from "../enum/grant-type.enum";
@@ -15,8 +13,6 @@ import { GrantType } from "../enum/grant-type.enum";
 })
 export class AuthService {
     private router = inject(Router);
-    private cookieService = inject(CookieService);
-    private logger = inject(NGXLogger);
 
     private prefix = "";
     private http: AxiosInstance;
@@ -135,36 +131,6 @@ export class AuthService {
         username: string, // Email
     ): Promise<void> {
         await this.http.post(`${ServerEndpoints.resetPassword}`, { username });
-    }
-
-    setAuthCookie(): void {
-        this.cookieService.set(
-            "authToken",
-            this.getToken(),
-            7,
-            "/",
-            this.getParentTransform(environment.automationServerUrl || ""),
-            true,
-            "None",
-        );
-    }
-
-    getParentTransform(subdomainUrl: string): string {
-        try {
-            // Prepend protocol if missing to create a valid URL
-            if (!/^https?:\/\//i.test(subdomainUrl)) subdomainUrl = `https://${subdomainUrl}`;
-            const url = new URL(subdomainUrl);
-            const hostnameParts = url.hostname.split(".");
-
-            // Assuming the parent domain is the last three parts (e.g., whatsappmanager.criaup.com.br)
-            if (hostnameParts.length >= 3) return hostnameParts.slice(-3).join(".");
-            else return url.hostname;
-            // Fallback to the full hostname if it's shorter than expected
-        } catch (error) {
-            this.logger.error("Error parsing URL for parent domain:", error);
-            // Fallback to using the full automationServerUrl
-            return subdomainUrl;
-        }
     }
 
     _loginTime?: number;

@@ -14,7 +14,7 @@ export class ParentDomainPipe implements PipeTransform {
             const url = new URL(subdomainUrl);
             const hostnameParts = url.hostname.split(".");
 
-            // Assuming the parent domain is the last three parts (e.g., whatsappmanager.criaup.com.br)
+            // Assuming the parent domain is the last three parts (e.g., wacraftserver.astervia.tech)
             if (hostnameParts.length >= 3) {
                 const parentDomain = hostnameParts.slice(-3).join(".");
                 return `.${parentDomain}`; // Leading dot for subdomain access
