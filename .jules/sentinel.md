@@ -9,3 +9,9 @@
 **Vulnerability:** Found bypassSecurityTrustUrl used on dynamically generated object URLs instead of proper sanitization.
 **Learning:** Generating object URLs from unknown/untrusted Blobs and wrapping them in bypassSecurityTrustUrl can expose applications to XSS attacks since Angular will not sanitize them. Returning them simply as strings sanitized by DomSanitizer.sanitize is cleaner and safer.
 **Prevention:** Avoid bypassSecurityTrustUrl unless there's a verified need and strict custom validation. Use sanitize(SecurityContext.URL, url) and return strings for safe template bindings.
+
+## 2026-04-15 - Missing rel="noopener noreferrer" on External Links
+
+**Vulnerability:** Found multiple instances where `target="_blank"` was used on `<a>` tags for external links without `rel="noopener noreferrer"`.
+**Learning:** Developers often forget to include `rel="noopener noreferrer"` when opening external links in a new tab. This can expose the application to reverse tabnabbing vulnerabilities, where the newly opened page can access the `window.opener` object of the original page and potentially redirect it to a malicious site.
+**Prevention:** Always include `rel="noopener noreferrer"` when using `target="_blank"` on external links, especially when rendering user-supplied URLs or linking to external documentation.
