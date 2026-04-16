@@ -49,6 +49,7 @@ Repository-wide implementation rules for `wacraft-client`.
 - Extract strings with `ng extract-i18n --output-path src/locale`.
 - Preserve placeholders exactly in XLF files.
 - Do not mark purely dynamic values as translatable.
+- When adding `aria-label` attributes to elements in templates, always include `i18n-aria-label` to ensure the accessibility text can be translated.
 
 ## Verification
 
