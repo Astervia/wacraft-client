@@ -9,7 +9,7 @@ import { MessagingProductContactFromMessagePipe } from "../pipe/messaging-produc
 import { LocalSettingsService } from "../../../app/local-settings.service";
 import { SenderData } from "../model/sender-data.model";
 import { Subject } from "rxjs";
-import { NIL as NilUUID } from "uuid";
+import { NIL as NilUUID, v4 as uuidv4 } from "uuid";
 import { StatusGatewayService } from "../../status/gateway/status-gateway.service";
 import { Status } from "../../status/entity/status.entity";
 import { statusOrder } from "../../status/constant/status-order.constant";
@@ -251,7 +251,7 @@ export class UserConversationsStoreService {
 
         const unsentMessages = this.unsentMessages.get(messagingProductContactId) || [];
         const conversation = {
-            id: "",
+            id: uuidv4(),
             sender_data: senderData,
             to_id: messagingProductContactId,
             from_id: NilUUID,
