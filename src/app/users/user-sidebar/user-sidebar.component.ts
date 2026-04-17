@@ -59,6 +59,13 @@ export class UserSidebarComponent extends KeyboardNavigableList implements OnIni
         element.style.height = `${element.scrollHeight}px`; // Set height to scrollHeight
     }
 
+    clearSearch(): void {
+        this.userStore.searchValue = "";
+        const textarea = this.searchTextarea.nativeElement;
+        textarea.style.height = "auto";
+        textarea.focus();
+    }
+
     async ngOnInit() {
         await this.getUsers();
     }

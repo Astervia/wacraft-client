@@ -55,25 +55,38 @@
             class="by-2 flex-grow-1 flex h-full w-full flex-col overflow-y-auto bg-white dark:bg-gray-900"
             id="body"
         >
-            <div class="relative mb-4 mt-4 flex w-full flex-grow-0 flex-row gap-2 px-2">
-                <div class="absolute left-2 top-0 flex h-10 w-10 items-center justify-center">
-                    <i class="fas fa-search text-gray-500 dark:text-gray-400"></i>
+            <div class="mb-4 mt-4 flex w-full flex-grow-0 flex-row gap-2 px-2">
+                <div class="relative h-10 flex-1">
+                    <i
+                        class="fas fa-search absolute left-3 top-3 text-gray-500 dark:text-gray-400"
+                    ></i>
+                    <textarea
+                        class="hide-scrollbar w-full resize-none rounded-md bg-gray-200 p-2 pl-10 pr-10 text-gray-800 outline-none dark:bg-gray-700 dark:text-gray-200"
+                        rows="1"
+                        (input)="adjustHeight($event)"
+                        [(ngModel)]="conversationStore.searchValue"
+                        (keydown.control.enter)="conversationStore.getInitialSearchConcurrent()"
+                        (ngModelChange)="conversationStore.getInitialSearchConcurrent()"
+                        placeholder="Search"
+                        i18n-placeholder
+                        #searchTextarea
+                    >
+                    </textarea>
+                    @if (conversationStore.searchValue) {
+                        <button
+                            type="button"
+                            class="absolute right-3 top-3 leading-none text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            (click)="clearSearch()"
+                            aria-label="Clear search"
+                            i18n-aria-label
+                        >
+                            <i class="fas fa-times"></i>
+                        </button>
+                    }
                 </div>
-                <textarea
-                    class="hide-scrollbar w-full resize-none rounded-md bg-gray-200 p-2 pl-10 text-gray-800 outline-none dark:bg-gray-700 dark:text-gray-200"
-                    rows="1"
-                    (input)="adjustHeight($event)"
-                    [(ngModel)]="conversationStore.searchValue"
-                    (keydown.control.enter)="conversationStore.getInitialSearchConcurrent()"
-                    (ngModelChange)="conversationStore.getInitialSearchConcurrent()"
-                    placeholder="Search"
-                    i18n-placeholder
-                    #searchTextarea
-                >
-                </textarea>
 
                 <select
-                    class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                    class="h-fit rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                     [(ngModel)]="conversationStore.searchMode"
                     (ngModelChange)="conversationStore.getInitialSearchConcurrent()"
                 >

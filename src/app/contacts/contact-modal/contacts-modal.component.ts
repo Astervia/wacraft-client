@@ -65,6 +65,13 @@ export class ContactsModalComponent implements OnInit {
         element.style.height = `${element.scrollHeight}px`; // Set height to scrollHeight
     }
 
+    clearSearch(shouldFocus = true): void {
+        this.conversationStore.searchValue = "";
+        const textarea = this.searchTextarea.nativeElement;
+        textarea.style.height = "auto";
+        if (shouldFocus) textarea.focus();
+    }
+
     async ngOnInit() {
         this.conversationStore.initConditionally(this.route);
         this.watchQueryParams();
@@ -183,12 +190,14 @@ export class ContactsModalComponent implements OnInit {
     }
 
     sendToContacts() {
+        this.clearSearch(false);
         this.send.emit(this.selectedConversations);
         this.selectedConversations = [];
         this.close.emit();
     }
 
     closeModal() {
+        this.clearSearch(false);
         this.selectedConversations = [];
         this.close.emit();
     }

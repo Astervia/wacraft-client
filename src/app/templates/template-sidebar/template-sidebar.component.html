@@ -17,22 +17,39 @@
                 <!-- </app-small-button> -->
             </h2>
 
-            <div class="relative mt-4 flex w-full flex-row gap-2">
-                <i class="fas fa-search absolute left-3 top-3 text-gray-500 dark:text-gray-400"></i>
-                <textarea
-                    class="w-full resize-none overflow-hidden rounded-md bg-gray-200 p-2 pl-10 text-gray-800 outline-none dark:bg-gray-700 dark:text-gray-200"
-                    rows="1"
-                    placeholder="Search"
-                    i18n-placeholder
-                    (input)="adjustHeight($event)"
-                    (keydown.control.enter)="templateStore.getInitialSearchTemplatesConcurrent()"
-                    [(ngModel)]="templateStore.searchValue"
-                    (ngModelChange)="templateStore.getInitialSearchTemplatesConcurrent()"
-                    #searchTextarea
-                ></textarea>
+            <div class="mt-4 flex w-full flex-row gap-2">
+                <div class="relative h-10 flex-1">
+                    <i
+                        class="fas fa-search absolute left-3 top-3 text-gray-500 dark:text-gray-400"
+                    ></i>
+                    <textarea
+                        class="w-full resize-none overflow-hidden rounded-md bg-gray-200 p-2 pl-10 pr-10 text-gray-800 outline-none dark:bg-gray-700 dark:text-gray-200"
+                        rows="1"
+                        placeholder="Search"
+                        i18n-placeholder
+                        (input)="adjustHeight($event)"
+                        (keydown.control.enter)="
+                            templateStore.getInitialSearchTemplatesConcurrent()
+                        "
+                        [(ngModel)]="templateStore.searchValue"
+                        (ngModelChange)="templateStore.getInitialSearchTemplatesConcurrent()"
+                        #searchTextarea
+                    ></textarea>
+                    @if (templateStore.searchValue) {
+                        <button
+                            type="button"
+                            class="absolute right-3 top-3 leading-none text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            (click)="clearSearch()"
+                            aria-label="Clear search"
+                            i18n-aria-label
+                        >
+                            <i class="fas fa-times"></i>
+                        </button>
+                    }
+                </div>
 
                 <select
-                    class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                    class="h-fit rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                     [(ngModel)]="templateStore.searchMode"
                     (ngModelChange)="templateStore.getInitialSearchTemplatesConcurrent()"
                 >

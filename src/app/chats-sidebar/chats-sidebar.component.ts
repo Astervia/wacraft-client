@@ -77,6 +77,13 @@ export class ChatsSidebarComponent extends KeyboardNavigableList implements OnIn
         element.style.height = `${element.scrollHeight}px`; // Set height to scrollHeight
     }
 
+    clearSearch(): void {
+        this.conversationStore.searchValue = "";
+        const textarea = this.searchTextarea.nativeElement;
+        textarea.style.height = "auto";
+        textarea.focus();
+    }
+
     async getConversations(): Promise<void> {
         this.scrolling = true;
 
