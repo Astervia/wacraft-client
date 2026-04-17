@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
@@ -13,18 +13,48 @@ export class FileUploadComponent {
     @Output() change = new EventEmitter<Event>();
     @Input() acceptedFormats?: string = "";
     uploadedFileName: string | null = null;
+    isDragOver = false;
+
+    @ViewChild("fileInput") fileInput?: ElementRef<HTMLInputElement>;
 
     onFileChange(event: Event) {
         const input = event.target as HTMLInputElement;
-        if (input.files && input.files.length > 0) this.uploadedFileName = input.files[0].name;
-        else this.uploadedFileName = null;
-
-        this.change.emit(event);
+        this.selectFiles(input.files ?? undefined);
     }
 
-    clearFile(input: HTMLInputElement) {
-        input.value = "";
+    onDragOver(event: DragEvent) {
+        event.preventDefault();
+        this.isDragOver = true;
+    }
+
+    onDragLeave(event: DragEvent) {
+        event.preventDefault();
+        this.isDragOver = false;
+    }
+
+    onDrop(event: DragEvent) {
+        event.preventDefault();
+        this.isDragOver = false;
+        this.selectFiles(event.dataTransfer?.files);
+    }
+
+    clearFile() {
+        if (this.fileInput) this.fileInput.nativeElement.value = "";
+        this.clearSelection();
+    }
+
+    clearSelection() {
         this.uploadedFileName = null;
-        this.change.emit(new Event("clear"));
+        this.change.emit({ target: { files: [] } } as unknown as Event);
+    }
+
+    private selectFiles(files?: FileList | File[]) {
+        if (files && files.length > 0) {
+            this.uploadedFileName = files[0].name;
+            this.change.emit({ target: { files } } as unknown as Event);
+            return;
+        }
+
+        this.clearSelection();
     }
 }
