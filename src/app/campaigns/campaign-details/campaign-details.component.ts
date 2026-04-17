@@ -73,6 +73,7 @@ export class CampaignDetailsComponent implements OnInit {
                         name: this.campaign.name,
                         messaging_product_id: messagingProduct.id,
                     });
+                    await this.campaignStore.prependCampaign(campaign);
                     await this.router.navigate([], {
                         queryParams: {
                             "campaign.id": campaign.id,
@@ -81,13 +82,18 @@ export class CampaignDetailsComponent implements OnInit {
                         preserveFragment: true,
                         queryParamsHandling: "replace",
                     });
-                    window.location.reload();
+                    this.campaignId = campaign.id;
+                    this.campaign = await this.campaignStore.getById(campaign.id);
+                    this.activeTab = this.campaign.status === "scheduled" ? "schedule" : "send";
+                    this.isEditing = false;
                     return;
                 }
-                await this.campaignController.update({
+                const updatedCampaign = await this.campaignController.update({
                     id: this.campaignId,
                     name: this.campaign.name,
                 });
+                await this.campaignStore.updateCampaignById(updatedCampaign);
+                this.campaign = await this.campaignStore.getById(updatedCampaign.id);
                 this.isEditing = false;
                 return;
             } catch (error) {
@@ -163,8 +169,8 @@ export class CampaignDetailsComponent implements OnInit {
         if (confirmed) {
             try {
                 await this.campaignController.delete(this.campaignId);
+                await this.campaignStore.removeCampaign(this.campaignId);
                 await this.resetCampaignId(); // Call to reset or clean up after deletion
-                window.location.reload();
             } catch (error) {
                 this.logger.error("Error deleting campaign:", error);
             }
@@ -181,7 +187,7 @@ export class CampaignDetailsComponent implements OnInit {
 
     onCampaignChanged(updated: CampaignFields): void {
         this.campaign = updated;
-        this.campaignStore.updateCampaignById(updated);
+        void this.campaignStore.updateCampaignById(updated);
         this.activeTab = updated.status === "scheduled" ? "schedule" : "send";
     }
 

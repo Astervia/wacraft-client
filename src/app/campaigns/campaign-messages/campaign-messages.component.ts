@@ -161,7 +161,10 @@ export class CampaignMessagesComponent implements OnInit {
             if (campaignId !== this.campaignId) {
                 this.campaignId = campaignId;
                 this.messages = [];
+                this.errors = {};
+                this.isLoadingError = {};
                 this.reachedEnd = false;
+                this.expandedMessageIndex = null;
                 await this.loadMessages();
             }
         });

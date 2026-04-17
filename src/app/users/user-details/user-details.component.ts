@@ -61,6 +61,7 @@ export class UserDetailsComponent implements OnInit {
                         password: this.user.password,
                         role: this.user.role || Role.user,
                     });
+                    await this.userStore.prependUser(wh);
                     await this.router.navigate([], {
                         queryParams: {
                             "user.id": wh.id,
@@ -69,15 +70,19 @@ export class UserDetailsComponent implements OnInit {
                         preserveFragment: true,
                         queryParamsHandling: "replace",
                     });
-                    window.location.reload();
+                    this.userId = wh.id;
+                    this.user = await this.userStore.getById(wh.id);
+                    this.isEditing = false;
                     return;
                 }
-                await this.userController.update({
+                const updatedUser = await this.userController.update({
                     id: this.userId,
                     name: this.user.name,
                     email: this.user.email,
                     role: this.user.role,
                 });
+                await this.userStore.syncUser(updatedUser);
+                this.user = await this.userStore.getById(updatedUser.id);
                 this.isEditing = false;
                 return;
             } catch (error) {
@@ -151,9 +156,8 @@ export class UserDetailsComponent implements OnInit {
         if (confirmed) {
             try {
                 await this.userController.delete(this.userId);
+                await this.userStore.removeUser(this.userId);
                 await this.resetUserId();
-                window.location.reload();
-                this.resetUserId(); // Call to reset or clean up after deletion
             } catch (error) {
                 this.handleErr("Error deleting user", error);
                 return;
