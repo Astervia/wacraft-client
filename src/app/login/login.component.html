@@ -29,6 +29,7 @@
             >
             <input
                 type="text"
+                id="username"
                 name="username"
                 class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
                 required
@@ -46,6 +47,7 @@
             >
             <input
                 [type]="showPassword ? 'text' : 'password'"
+                id="password"
                 name="password"
                 class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-slate-900 transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
                 required
@@ -54,7 +56,7 @@
             />
             <button
                 type="button"
-                class="absolute right-3 top-9 text-slate-400 transition-colors hover:text-slate-600 focus:outline-none dark:text-slate-500 dark:hover:text-slate-300"
+                class="absolute right-3 top-9 text-slate-400 transition-colors hover:text-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 rounded dark:text-slate-500 dark:hover:text-slate-300"
                 (click)="togglePasswordVisibility()"
                 aria-label="Toggle password visibility"
                 i18n-aria-label
