@@ -15,7 +15,7 @@ export class UserStoreService {
     private listMutex = new MutexSwapper<string>();
     private readonly listMutexKey = "users";
 
-    private paginationLimit = 10;
+    private paginationLimit = 15;
 
     public reachedMaxLimit = false;
     public reachedMaxSearchLimit = false;

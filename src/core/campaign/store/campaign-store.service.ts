@@ -17,7 +17,7 @@ export class CampaignStoreService {
     private listMutex = new MutexSwapper<string>();
     private readonly listMutexKey = "campaigns";
 
-    private paginationLimit = 10;
+    private paginationLimit = 15;
 
     public reachedMaxLimit = false;
     public reachedMaxSearchLimit = false;
