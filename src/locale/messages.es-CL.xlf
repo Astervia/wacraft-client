@@ -102,6 +102,10 @@
         <source> Pending Invitations </source>
         <target> Invitaciones pendientes </target>
       </trans-unit>
+      <trans-unit id="3643866539136239218" datatype="html">
+        <source>Clear search</source>
+        <target state="translated">Limpiar búsqueda</target>
+      </trans-unit>
       <trans-unit id="3480251249939293287" datatype="html">
         <source> Auto Preview </source>
         <target> Vista previa automática </target>
@@ -257,6 +261,10 @@
       <trans-unit id="8066608938393600549" datatype="html">
         <source>Message</source>
         <target>Mensaje</target>
+      </trans-unit>
+      <trans-unit id="989488558392421224" datatype="html">
+        <source>Remove filter</source>
+        <target state="translated">Quitar filtro</target>
       </trans-unit>
       <trans-unit id="991761096918819245" datatype="html">
         <source>Not verified</source>
@@ -518,10 +526,6 @@
         <source>Campaigns</source>
         <target>Campañas</target>
       </trans-unit>
-      <trans-unit id="6112696339048270378" datatype="html">
-        <source>Automations</source>
-        <target>Automatizaciones</target>
-      </trans-unit>
       <trans-unit id="6129468430051817019" datatype="html">
         <source>Set as Active</source>
         <target> Establecer como activo </target>
@@ -545,6 +549,10 @@
       <trans-unit id="4555457172864212828" datatype="html">
         <source>Users</source>
         <target>Usuarios</target>
+      </trans-unit>
+      <trans-unit id="4560504204439476580" datatype="html">
+        <source>Toggle password visibility</source>
+        <target state="translated">Alternar visibilidad de la contraseña</target>
       </trans-unit>
       <trans-unit id="1344813883591844650" datatype="html">
         <source>Account configuration</source>
@@ -1601,10 +1609,6 @@
       <trans-unit id="3578402141509624800" datatype="html">
         <source>Campaigns are available to supporters. Visit the supporter area to learn more.</source>
         <target>Las campañas están disponibles para colaboradores. Visita el área de colaboradores para saber más.</target>
-      </trans-unit>
-      <trans-unit id="7558837930434347172" datatype="html">
-        <source>Automations are available to supporters. Visit the supporter area to learn more.</source>
-        <target>Las automatizaciones están disponibles para colaboradores. Visita el área de colaboradores para saber más.</target>
       </trans-unit>
       <trans-unit id="5378103679051455581" datatype="html">
         <source>Click to view error details</source>

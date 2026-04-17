@@ -77,6 +77,9 @@
       <trans-unit id="3635309748917095362" datatype="html">
         <source> Pending Invitations </source>
       </trans-unit>
+      <trans-unit id="3643866539136239218" datatype="html">
+        <source>Clear search</source>
+      </trans-unit>
       <trans-unit id="3480251249939293287" datatype="html">
         <source> Auto Preview </source>
       </trans-unit>
@@ -316,6 +319,9 @@
       </trans-unit>
       <trans-unit id="935187492052582731" datatype="html">
         <source>Submit</source>
+      </trans-unit>
+      <trans-unit id="989488558392421224" datatype="html">
+        <source>Remove filter</source>
       </trans-unit>
       <trans-unit id="991761096918819245" datatype="html">
         <source>Not verified</source>
@@ -629,9 +635,6 @@
       <trans-unit id="8864658120410603626" datatype="html">
         <source>Campaigns</source>
       </trans-unit>
-      <trans-unit id="6112696339048270378" datatype="html">
-        <source>Automations</source>
-      </trans-unit>
       <trans-unit id="6129468430051817019" datatype="html">
         <source>Set as Active</source>
       </trans-unit>
@@ -649,6 +652,9 @@
       </trans-unit>
       <trans-unit id="4555457172864212828" datatype="html">
         <source>Users</source>
+      </trans-unit>
+      <trans-unit id="4560504204439476580" datatype="html">
+        <source>Toggle password visibility</source>
       </trans-unit>
       <trans-unit id="1344813883591844650" datatype="html">
         <source>Account configuration</source>
@@ -1201,9 +1207,6 @@
       </trans-unit>
       <trans-unit id="3578402141509624800" datatype="html">
         <source>Campaigns are available to supporters. Visit the supporter area to learn more.</source>
-      </trans-unit>
-      <trans-unit id="7558837930434347172" datatype="html">
-        <source>Automations are available to supporters. Visit the supporter area to learn more.</source>
       </trans-unit>
       <trans-unit id="4345750264644702143" datatype="html">
         <source>Meta App Secret</source>
