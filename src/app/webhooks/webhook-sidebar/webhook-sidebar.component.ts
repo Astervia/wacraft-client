@@ -59,6 +59,13 @@ export class WebhookSidebarComponent extends KeyboardNavigableList implements On
         element.style.height = `${element.scrollHeight}px`; // Set height to scrollHeight
     }
 
+    clearSearch(): void {
+        this.webhookStore.searchValue = "";
+        const textarea = this.searchTextarea.nativeElement;
+        textarea.style.height = "auto";
+        textarea.focus();
+    }
+
     async ngOnInit() {
         await this.getWebhooks();
     }

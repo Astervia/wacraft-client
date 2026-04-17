@@ -79,6 +79,13 @@ export class TemplateSidebarComponent extends KeyboardNavigableList implements O
         element.style.height = `${element.scrollHeight}px`; // Set height to scrollHeight
     }
 
+    clearSearch(): void {
+        this.templateStore.searchValue = "";
+        const textarea = this.searchTextarea.nativeElement;
+        textarea.style.height = "auto";
+        textarea.focus();
+    }
+
     async ngOnInit() {
         await this.getTemplates();
     }
