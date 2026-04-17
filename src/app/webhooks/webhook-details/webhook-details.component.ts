@@ -96,6 +96,7 @@ export class WebhookDetailsComponent implements OnInit {
                                 : undefined,
                         event_filter: this.webhook.event_filter,
                     });
+                    await this.webhookStore.prependWebhook(wh);
                     this.signingSecret = wh.signing_secret;
                     await this.router.navigate([], {
                         queryParams: {
@@ -105,10 +106,12 @@ export class WebhookDetailsComponent implements OnInit {
                         preserveFragment: true,
                         queryParamsHandling: "replace",
                     });
-                    window.location.reload();
+                    this.webhookId = wh.id;
+                    this.webhook = await this.webhookStore.getById(wh.id);
+                    this.isEditing = false;
                     return;
                 }
-                await this.webhookController.update({
+                const updatedWebhook = await this.webhookController.update({
                     id: this.webhookId,
                     url: this.webhook.url,
                     authorization: this.webhook.authorization,
@@ -124,6 +127,8 @@ export class WebhookDetailsComponent implements OnInit {
                             : undefined,
                     event_filter: this.webhook.event_filter,
                 });
+                await this.webhookStore.syncWebhook(updatedWebhook);
+                this.webhook = await this.webhookStore.getById(updatedWebhook.id);
                 this.isEditing = false;
                 return;
             } catch (error) {
@@ -231,8 +236,8 @@ export class WebhookDetailsComponent implements OnInit {
         if (confirmed) {
             try {
                 await this.webhookController.delete(this.webhookId);
+                await this.webhookStore.removeWebhook(this.webhookId);
                 await this.resetWebhookId(); // Call to reset or clean up after deletion
-                window.location.reload();
             } catch (error) {
                 this.handleErr("Error deleting webhook", error);
             }

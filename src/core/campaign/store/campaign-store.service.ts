@@ -5,6 +5,7 @@ import { CampaignControllerService } from "../controller/campaign-controller.ser
 import { DateOrderEnum } from "../../common/model/date-order.model";
 import { NGXLogger } from "ngx-logger";
 import { WorkspaceStoreService } from "../../workspace/store/workspace-store.service";
+import { MutexSwapper } from "../../synch/mutex-swapper/mutex-swapper";
 
 @Injectable({
     providedIn: "root",
@@ -13,8 +14,10 @@ export class CampaignStoreService {
     private campaignController = inject(CampaignControllerService);
     private logger = inject(NGXLogger);
     private workspaceStore = inject(WorkspaceStoreService);
+    private listMutex = new MutexSwapper<string>();
+    private readonly listMutexKey = "campaigns";
 
-    private paginationLimit = 15;
+    private paginationLimit = 10;
 
     public reachedMaxLimit = false;
     public reachedMaxSearchLimit = false;
@@ -46,30 +49,53 @@ export class CampaignStoreService {
     public isExecuting = false;
     public pendingExecution = false;
 
-    async get(): Promise<void> {
-        const campaigns = await this.campaignController.get(
-            undefined,
-            {
-                limit: this.paginationLimit,
-                offset: this.campaigns.length,
-            },
-            { created_at: DateOrderEnum.desc },
-        );
-
-        if (!campaigns.length) {
-            this.reachedMaxLimit = true;
-            return;
+    private async withListLock<T>(fn: () => Promise<T>): Promise<T> {
+        await this.listMutex.acquire(this.listMutexKey);
+        try {
+            return await fn();
+        } finally {
+            await this.listMutex.release(this.listMutexKey);
         }
+    }
 
-        this.add(campaigns);
+    async get(): Promise<void> {
+        await this.withListLock(async () => {
+            const campaigns = await this.campaignController.get(
+                undefined,
+                {
+                    limit: this.paginationLimit,
+                    offset: this.campaigns.length,
+                },
+                { created_at: DateOrderEnum.desc },
+            );
+
+            if (!campaigns.length) {
+                this.reachedMaxLimit = true;
+                return;
+            }
+
+            this.addUnsafe(campaigns);
+        });
     }
 
     add(campaigns: CampaignFields[]) {
+        void this.withListLock(async () => {
+            this.addUnsafe(campaigns);
+        });
+    }
+
+    addSearch(campaigns: CampaignFields[]) {
+        void this.withListLock(async () => {
+            this.addSearchUnsafe(campaigns);
+        });
+    }
+
+    private addUnsafe(campaigns: CampaignFields[]) {
         this.addCampaignsToCampaignsById(campaigns);
         this.campaigns = [...this.campaigns, ...campaigns];
     }
 
-    addSearch(campaigns: CampaignFields[]) {
+    private addSearchUnsafe(campaigns: CampaignFields[]) {
         this.addCampaignsToCampaignsById(campaigns);
         this.searchCampaigns = [...this.searchCampaigns, ...campaigns];
     }
@@ -112,49 +138,54 @@ export class CampaignStoreService {
     }
 
     async getInitialSearch(): Promise<void> {
-        this.searchCampaigns = [];
+        await this.withListLock(async () => {
+            this.searchCampaigns = [];
+            this.reachedMaxSearchLimit = false;
 
-        const campaigns = await this.campaignController.contentLike(
-            `%${this.searchValue}%`,
-            this.searchMode,
-            this.searchFilters.reduce((acc, filter) => {
-                return { ...acc, ...filter.query };
-            }, {}),
-            {
-                limit: this.paginationLimit,
-                offset: this.searchCampaigns.length,
-            },
-            { created_at: DateOrderEnum.desc },
-        );
+            const campaigns = await this.campaignController.contentLike(
+                `%${this.searchValue}%`,
+                this.searchMode,
+                this.searchFilters.reduce((acc, filter) => {
+                    return { ...acc, ...filter.query };
+                }, {}),
+                {
+                    limit: this.paginationLimit,
+                    offset: this.searchCampaigns.length,
+                },
+                { created_at: DateOrderEnum.desc },
+            );
 
-        if (!campaigns.length) {
-            this.reachedMaxSearchLimit = true;
-            return;
-        }
+            if (!campaigns.length) {
+                this.reachedMaxSearchLimit = true;
+                return;
+            }
 
-        this.addSearch(campaigns);
+            this.addSearchUnsafe(campaigns);
+        });
     }
 
     async getSearch(): Promise<void> {
-        const campaigns = await this.campaignController.contentLike(
-            `%${this.searchValue}%`,
-            "url",
-            this.searchFilters.reduce((acc, filter) => {
-                return { ...acc, ...filter.query };
-            }, {}),
-            {
-                limit: this.paginationLimit,
-                offset: this.searchCampaigns.length,
-            },
-            { created_at: DateOrderEnum.desc },
-        );
+        await this.withListLock(async () => {
+            const campaigns = await this.campaignController.contentLike(
+                `%${this.searchValue}%`,
+                "url",
+                this.searchFilters.reduce((acc, filter) => {
+                    return { ...acc, ...filter.query };
+                }, {}),
+                {
+                    limit: this.paginationLimit,
+                    offset: this.searchCampaigns.length,
+                },
+                { created_at: DateOrderEnum.desc },
+            );
 
-        if (!campaigns.length) {
-            this.reachedMaxSearchLimit = true;
-            return;
-        }
+            if (!campaigns.length) {
+                this.reachedMaxSearchLimit = true;
+                return;
+            }
 
-        this.addSearch(campaigns);
+            this.addSearchUnsafe(campaigns);
+        });
     }
 
     async addFilter(filter: { text: string; query?: Query }) {
@@ -175,10 +206,55 @@ export class CampaignStoreService {
         });
     }
 
-    updateCampaignById(campaign: CampaignFields): void {
-        if (this.campaignsById.has(campaign.id)) {
+    private matchesCurrentSearch(campaign: CampaignFields): boolean {
+        if (!this.searchValue || this.searchFilters.length > 0) return false;
+
+        return campaign.name.toLowerCase().includes(this.searchValue.toLowerCase());
+    }
+
+    async prependCampaign(campaign: CampaignFields): Promise<void> {
+        await this.withListLock(async () => {
             this.campaignsById.set(campaign.id, campaign);
-        }
+            this.campaigns = [
+                campaign,
+                ...this.campaigns.filter(current => current.id !== campaign.id),
+            ];
+
+            if (this.matchesCurrentSearch(campaign)) {
+                this.searchCampaigns = [
+                    campaign,
+                    ...this.searchCampaigns.filter(current => current.id !== campaign.id),
+                ];
+            }
+        });
+    }
+
+    async updateCampaignById(campaign: CampaignFields): Promise<void> {
+        await this.withListLock(async () => {
+            this.campaignsById.set(campaign.id, campaign);
+            this.campaigns = this.campaigns.map(current =>
+                current.id === campaign.id ? campaign : current,
+            );
+
+            const searchIndex = this.searchCampaigns.findIndex(
+                current => current.id === campaign.id,
+            );
+            if (searchIndex !== -1) {
+                this.searchCampaigns = this.searchCampaigns.map(current =>
+                    current.id === campaign.id ? campaign : current,
+                );
+            } else if (this.matchesCurrentSearch(campaign)) {
+                this.searchCampaigns = [campaign, ...this.searchCampaigns];
+            }
+        });
+    }
+
+    async removeCampaign(id: string): Promise<void> {
+        await this.withListLock(async () => {
+            this.campaignsById.delete(id);
+            this.campaigns = this.campaigns.filter(campaign => campaign.id !== id);
+            this.searchCampaigns = this.searchCampaigns.filter(campaign => campaign.id !== id);
+        });
     }
 
     async getById(id: string): Promise<CampaignFields> {

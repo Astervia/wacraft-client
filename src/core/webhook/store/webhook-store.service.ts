@@ -5,6 +5,7 @@ import { Query } from "../model/query.model";
 import { DateOrderEnum } from "../../common/model/date-order.model";
 import { NGXLogger } from "ngx-logger";
 import { WorkspaceStoreService } from "../../workspace/store/workspace-store.service";
+import { MutexSwapper } from "../../synch/mutex-swapper/mutex-swapper";
 
 @Injectable({
     providedIn: "root",
@@ -13,6 +14,8 @@ export class WebhookStoreService {
     private webhookController = inject(WebhookControllerService);
     private logger = inject(NGXLogger);
     private workspaceStore = inject(WorkspaceStoreService);
+    private listMutex = new MutexSwapper<string>();
+    private readonly listMutexKey = "webhooks";
 
     private paginationLimit = 15;
 
@@ -46,30 +49,53 @@ export class WebhookStoreService {
     public isExecuting = false;
     public pendingExecution = false;
 
-    async get(): Promise<void> {
-        const webhooks = await this.webhookController.get(
-            undefined,
-            {
-                limit: this.paginationLimit,
-                offset: this.webhooks.length,
-            },
-            { created_at: DateOrderEnum.desc },
-        );
-
-        if (!webhooks.length) {
-            this.reachedMaxLimit = true;
-            return;
+    private async withListLock<T>(fn: () => Promise<T>): Promise<T> {
+        await this.listMutex.acquire(this.listMutexKey);
+        try {
+            return await fn();
+        } finally {
+            await this.listMutex.release(this.listMutexKey);
         }
+    }
 
-        this.add(webhooks);
+    async get(): Promise<void> {
+        await this.withListLock(async () => {
+            const webhooks = await this.webhookController.get(
+                undefined,
+                {
+                    limit: this.paginationLimit,
+                    offset: this.webhooks.length,
+                },
+                { created_at: DateOrderEnum.desc },
+            );
+
+            if (!webhooks.length) {
+                this.reachedMaxLimit = true;
+                return;
+            }
+
+            this.addUnsafe(webhooks);
+        });
     }
 
     add(webhooks: Webhook[]) {
+        void this.withListLock(async () => {
+            this.addUnsafe(webhooks);
+        });
+    }
+
+    addSearch(webhooks: Webhook[]) {
+        void this.withListLock(async () => {
+            this.addSearchUnsafe(webhooks);
+        });
+    }
+
+    private addUnsafe(webhooks: Webhook[]) {
         this.addWebhooksToWebhooksById(webhooks);
         this.webhooks = [...this.webhooks, ...webhooks];
     }
 
-    addSearch(webhooks: Webhook[]) {
+    private addSearchUnsafe(webhooks: Webhook[]) {
         this.addWebhooksToWebhooksById(webhooks);
         this.searchWebhooks = [...this.searchWebhooks, ...webhooks];
     }
@@ -112,49 +138,54 @@ export class WebhookStoreService {
     }
 
     async getInitialSearch(): Promise<void> {
-        this.searchWebhooks = [];
+        await this.withListLock(async () => {
+            this.searchWebhooks = [];
+            this.reachedMaxSearchLimit = false;
 
-        const webhooks = await this.webhookController.contentLike(
-            `%${this.searchValue}%`,
-            this.searchMode,
-            this.searchFilters.reduce((acc, filter) => {
-                return { ...acc, ...filter.query };
-            }, {}),
-            {
-                limit: this.paginationLimit,
-                offset: this.searchWebhooks.length,
-            },
-            { created_at: DateOrderEnum.desc },
-        );
+            const webhooks = await this.webhookController.contentLike(
+                `%${this.searchValue}%`,
+                this.searchMode,
+                this.searchFilters.reduce((acc, filter) => {
+                    return { ...acc, ...filter.query };
+                }, {}),
+                {
+                    limit: this.paginationLimit,
+                    offset: this.searchWebhooks.length,
+                },
+                { created_at: DateOrderEnum.desc },
+            );
 
-        if (!webhooks.length) {
-            this.reachedMaxSearchLimit = true;
-            return;
-        }
+            if (!webhooks.length) {
+                this.reachedMaxSearchLimit = true;
+                return;
+            }
 
-        this.addSearch(webhooks);
+            this.addSearchUnsafe(webhooks);
+        });
     }
 
     async getSearch(): Promise<void> {
-        const webhooks = await this.webhookController.contentLike(
-            `%${this.searchValue}%`,
-            "url",
-            this.searchFilters.reduce((acc, filter) => {
-                return { ...acc, ...filter.query };
-            }, {}),
-            {
-                limit: this.paginationLimit,
-                offset: this.searchWebhooks.length,
-            },
-            { created_at: DateOrderEnum.desc },
-        );
+        await this.withListLock(async () => {
+            const webhooks = await this.webhookController.contentLike(
+                `%${this.searchValue}%`,
+                "url",
+                this.searchFilters.reduce((acc, filter) => {
+                    return { ...acc, ...filter.query };
+                }, {}),
+                {
+                    limit: this.paginationLimit,
+                    offset: this.searchWebhooks.length,
+                },
+                { created_at: DateOrderEnum.desc },
+            );
 
-        if (!webhooks.length) {
-            this.reachedMaxSearchLimit = true;
-            return;
-        }
+            if (!webhooks.length) {
+                this.reachedMaxSearchLimit = true;
+                return;
+            }
 
-        this.addSearch(webhooks);
+            this.addSearchUnsafe(webhooks);
+        });
     }
 
     async addFilter(filter: { text: string; query?: Query }) {
@@ -172,6 +203,63 @@ export class WebhookStoreService {
     async addWebhooksToWebhooksById(webhooks: Webhook[]) {
         webhooks.forEach(u => {
             this.webhooksById.set(u.id, u);
+        });
+    }
+
+    private matchesCurrentSearch(webhook: Webhook): boolean {
+        if (!this.searchValue || this.searchFilters.length > 0) return false;
+
+        const searchValue = this.searchValue.toLowerCase();
+        switch (this.searchMode) {
+            case "url":
+                return webhook.url.toLowerCase().includes(searchValue);
+            case "http_method":
+                return webhook.http_method.toLowerCase().includes(searchValue);
+            case "event":
+                return webhook.event.toLowerCase().includes(searchValue);
+        }
+    }
+
+    async prependWebhook(webhook: Webhook): Promise<void> {
+        await this.withListLock(async () => {
+            this.webhooksById.set(webhook.id, webhook);
+            this.webhooks = [
+                webhook,
+                ...this.webhooks.filter(current => current.id !== webhook.id),
+            ];
+
+            if (this.matchesCurrentSearch(webhook)) {
+                this.searchWebhooks = [
+                    webhook,
+                    ...this.searchWebhooks.filter(current => current.id !== webhook.id),
+                ];
+            }
+        });
+    }
+
+    async syncWebhook(webhook: Webhook): Promise<void> {
+        await this.withListLock(async () => {
+            this.webhooksById.set(webhook.id, webhook);
+            this.webhooks = this.webhooks.map(current =>
+                current.id === webhook.id ? webhook : current,
+            );
+
+            const searchIndex = this.searchWebhooks.findIndex(current => current.id === webhook.id);
+            if (searchIndex !== -1) {
+                this.searchWebhooks = this.searchWebhooks.map(current =>
+                    current.id === webhook.id ? webhook : current,
+                );
+            } else if (this.matchesCurrentSearch(webhook)) {
+                this.searchWebhooks = [webhook, ...this.searchWebhooks];
+            }
+        });
+    }
+
+    async removeWebhook(id: string): Promise<void> {
+        await this.withListLock(async () => {
+            this.webhooksById.delete(id);
+            this.webhooks = this.webhooks.filter(webhook => webhook.id !== id);
+            this.searchWebhooks = this.searchWebhooks.filter(webhook => webhook.id !== id);
         });
     }
 

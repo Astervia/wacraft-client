@@ -39,6 +39,7 @@ export class CampaignMessageBuilderComponent implements OnInit {
     uploadFileType: "json" | "csv" = "csv";
 
     @Output() messagesAdded = new EventEmitter();
+    @ViewChild(FileUploadComponent) fileUpload?: FileUploadComponent;
     @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
     async ngOnInit(): Promise<void> {
@@ -50,23 +51,37 @@ export class CampaignMessageBuilderComponent implements OnInit {
             const campaignId = params["campaign.id"];
             if (campaignId !== this.campaignId) {
                 this.campaignId = campaignId;
+                this.resetUploadState();
             }
         });
     }
 
     async onFileSelected(event: Event) {
         const target = event.target as HTMLInputElement;
-        if (!target.files || target.files.length <= 0) return (this.selectedFile = undefined);
+        if (!target.files || target.files.length <= 0) {
+            this.selectedFile = undefined;
+            this.successes = 0;
+            this.errors = 0;
+            return;
+        }
 
         this.selectedFile = target.files[0];
+        this.error = undefined;
         this.successes = 0;
         this.errors = 0;
     }
 
     cancel() {
+        this.fileUpload?.clearSelection();
+        this.error = undefined;
+    }
+
+    private resetUploadState() {
         this.selectedFile = undefined;
+        this.error = undefined;
         this.successes = 0;
         this.errors = 0;
+        this.fileUpload?.clearSelection();
     }
 
     // Existing readFile function
