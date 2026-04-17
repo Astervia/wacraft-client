@@ -91,7 +91,7 @@
         <div
             class="3xl:col-span-3 relative col-span-12 flex h-full justify-end rounded-lg bg-gray-300 py-1 pr-4 dark:bg-gray-900 md:col-span-6 lg:col-span-6 xl:col-span-5"
         >
-            <div class="flex flex-col">
+            <div class="flex flex-col items-center">
                 <app-copy-button
                     matTooltip="Copy data to send message as raw"
                     i18n-matTooltip
@@ -102,6 +102,7 @@
                     copiedIconClass="h-6 w-6"
                     [textToCopy]="getSenderDataJson()"
                 ></app-copy-button>
+
                 <button
                     type=""
                     matTooltip="Send template to users"
