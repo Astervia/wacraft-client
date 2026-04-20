@@ -52,6 +52,11 @@ Repository-wide implementation rules for `wacraft-client`.
 - Do not mark purely dynamic values as translatable.
 - When adding `aria-label` attributes to elements in templates, always include `i18n-aria-label` to ensure the accessibility text can be translated.
 
+## Accessibility
+
+- When hiding native focus rings on interactive elements (e.g., using Tailwind's `focus:outline-none`), always provide an accessible fallback for keyboard navigation, such as `focus-visible:ring-2`.
+- Always ensure icon-only interactive elements have proper `aria-label` attributes.
+
 ## Verification
 
 - For scoped code changes, prefer targeted checks first.
