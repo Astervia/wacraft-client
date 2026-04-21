@@ -62,9 +62,15 @@ export class UserConversationsStoreService {
             this.statusGateway.opened,
             this.statusGateway.watchNewStatus((data: Status) => {
                 const messageId = data.message_id;
-                const message = [...this.messageHistory.values()] // get all arrays
-                    .flat() // flatten into a single array
-                    .find(item => item.id === messageId); // find by messageId
+
+                // ⚡ Bolt: Replaced [...map.values()].flat().find() with a nested for...of loop
+                // to avoid O(N) memory allocation and allow early exit, improving performance on large histories.
+                let message: Conversation | undefined;
+                for (const conversations of this.messageHistory.values()) {
+                    message = conversations.find(item => item.id === messageId);
+                    if (message) break;
+                }
+
                 if (!message) return;
 
                 if (!message.statuses) message.statuses = [];
