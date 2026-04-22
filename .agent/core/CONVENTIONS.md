@@ -19,6 +19,7 @@ Repository-wide implementation rules for `wacraft-client`.
 - Use `inject()` for dependency wiring when that matches surrounding code.
 - Follow existing mutable-store patterns before introducing new reactive state
   primitives.
+- In Angular 17+ `@for` loops, always track list items by a unique primitive identifier (e.g., `track item.id`) rather than object reference. Use `uuidv4()` for unsaved entities.
 
 ## Data Flow
 
