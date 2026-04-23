@@ -62,9 +62,11 @@ export class UserConversationsStoreService {
             this.statusGateway.opened,
             this.statusGateway.watchNewStatus((data: Status) => {
                 const messageId = data.message_id;
-                const message = [...this.messageHistory.values()] // get all arrays
-                    .flat() // flatten into a single array
-                    .find(item => item.id === messageId); // find by messageId
+                let message: Conversation | undefined;
+                for (const history of this.messageHistory.values()) {
+                    message = history.find(item => item.id === messageId);
+                    if (message) break;
+                }
                 if (!message) return;
 
                 if (!message.statuses) message.statuses = [];
