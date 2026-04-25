@@ -104,9 +104,11 @@
                 ></app-copy-button>
 
                 <button
-                    type=""
+                    type="button"
                     matTooltip="Send template to users"
                     i18n-matTooltip
+                    aria-label="Send template to users"
+                    i18n-aria-label
                     (click)="openModal()"
                     class="template-action"
                 >
@@ -115,9 +117,11 @@
                     >
                 </button>
                 <button
-                    type=""
+                    type="button"
                     matTooltip="Download CSV data to fill and add messages to campaign"
                     i18n-matTooltip
+                    aria-label="Download CSV data"
+                    i18n-aria-label
                     (click)="downloadCsvData()"
                     class="template-action"
                 >

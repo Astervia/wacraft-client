@@ -2,3 +2,8 @@
 
 **Learning:** When using utility classes like `focus:outline-none` on interactive elements, it's critical to ensure that keyboard focus is still accessible by adding a fallback indicator like `focus-visible:ring-2`. Additionally, form inputs must provide a matching `id` corresponding to the `for` attribute in the associated label to ensure compatibility with screen readers and focus functionalities.
 **Action:** Always provide an accessible fallback for keyboard navigation, such as `focus-visible:ring-2` (often paired with a color like `focus-visible:ring-blue-500/50`) when removing standard focus outlines. Additionally, always explicitly include an `id` on inputs referenced by a `for` attribute from a `<label>`.
+
+## 2026-04-25 - Accessible Icon-only Buttons
+
+**Learning:** When using components like `<mat-icon>` within a `<button>`, relying solely on tooltips (e.g., `matTooltip`) is insufficient for accessibility. Icon-only buttons without text content need explicitly defined aria-labels so screen readers can interpret their functionality. Furthermore, using empty `type=""` attributes breaks standard HTML validation and could lead to implicit form submissions.
+**Action:** Always provide explicit `aria-label` attributes on icon-only interactive elements and include `i18n-aria-label` for internationalization. Ensure interactive elements use correct HTML types (e.g., `type="button"`).
