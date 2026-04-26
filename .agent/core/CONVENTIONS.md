@@ -58,3 +58,7 @@ Repository-wide implementation rules for `wacraft-client`.
 - Use `npm run lint` for repo linting when the changed surface justifies it.
 - Use `npm run build` when route, template, i18n, or production wiring changed.
 - Format changed files with Prettier rather than reformatting the whole repo.
+
+## Performance
+
+- Avoid using `.flat()` or array spread operators `[...iterable]` on Maps or large data structures to search for elements, as it causes massive temporary memory allocation overhead. Use `for...of` loops with early exits instead.
