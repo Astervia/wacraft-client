@@ -19,6 +19,7 @@ Repository-wide implementation rules for `wacraft-client`.
 - Use `inject()` for dependency wiring when that matches surrounding code.
 - Follow existing mutable-store patterns before introducing new reactive state
   primitives.
+- In `@for` loops, always track list items by a unique primitive identifier (e.g., `track item.id`) rather than object reference to optimize rendering diffs. When tracking unsaved or temporary entities, assign a unique identifier (e.g., `uuidv4()`) instead of an empty string to prevent rendering collisions.
 
 ## Data Flow
 
