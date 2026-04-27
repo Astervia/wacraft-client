@@ -15,3 +15,9 @@
 **Vulnerability:** Found multiple instances where `target="_blank"` was used on `<a>` tags for external links without `rel="noopener noreferrer"`.
 **Learning:** Developers often forget to include `rel="noopener noreferrer"` when opening external links in a new tab. This can expose the application to reverse tabnabbing vulnerabilities, where the newly opened page can access the `window.opener` object of the original page and potentially redirect it to a malicious site.
 **Prevention:** Always include `rel="noopener noreferrer"` when using `target="_blank"` on external links, especially when rendering user-supplied URLs or linking to external documentation.
+
+## 2026-04-27 - Missing target="\_blank" and rel="noopener noreferrer" on External Links from User Data
+
+**Vulnerability:** Found an instance in `message-template-content.component.html` where an external, user-supplied URL (`button.url` from a template message) was rendered in an `<a>` tag without `target="_blank"` and `rel="noopener noreferrer"`.
+**Learning:** When dealing with dynamic, potentially untrusted URLs in templates (e.g., from WhatsApp template buttons), failing to include `target="_blank"` forces the user to navigate away from the current application tab, which is bad UX and a potential security risk if the URL is malicious. Furthermore, not pairing it with `rel="noopener noreferrer"` exposes the application to reverse tabnabbing.
+**Prevention:** Always ensure that external links, especially those populated from user data, open in a new tab securely by explicitly including both `target="_blank"` and `rel="noopener noreferrer"`.
