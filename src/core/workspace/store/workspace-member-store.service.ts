@@ -4,7 +4,7 @@ import { WorkspaceMember } from "../entity/workspace-member.entity";
 import { WorkspaceMemberControllerService } from "../controller/workspace-member-controller.service";
 import { WorkspaceStoreService } from "./workspace-store.service";
 import { DateOrderEnum } from "../../common/model/date-order.model";
-import { MutexSwapper } from "../../synch/mutex-swapper/mutex-swapper";
+import { Mutex } from "async-mutex";
 
 export interface WorkspaceInvitation {
     id: string;
@@ -22,9 +22,8 @@ export class WorkspaceMemberStoreService {
     private workspaceStore = inject(WorkspaceStoreService);
     private logger = inject(NGXLogger);
 
-    private listMutex = new MutexSwapper<string>();
-    private readonly membersMutexKey = "members";
-    private readonly invitationsMutexKey = "invitations";
+    private membersMutex = new Mutex();
+    private invitationsMutex = new Mutex();
 
     private paginationLimit = 15;
 
@@ -51,20 +50,20 @@ export class WorkspaceMemberStoreService {
     }
 
     private async withMembersLock<T>(fn: () => Promise<T>): Promise<T> {
-        await this.listMutex.acquire(this.membersMutexKey);
+        await this.membersMutex.acquire();
         try {
             return await fn();
         } finally {
-            await this.listMutex.release(this.membersMutexKey);
+            this.membersMutex.release();
         }
     }
 
     private async withInvitationsLock<T>(fn: () => Promise<T>): Promise<T> {
-        await this.listMutex.acquire(this.invitationsMutexKey);
+        await this.invitationsMutex.acquire();
         try {
             return await fn();
         } finally {
-            await this.listMutex.release(this.invitationsMutexKey);
+            this.invitationsMutex.release();
         }
     }
 
