@@ -120,10 +120,7 @@ export class WorkspaceMemberStoreService {
     async prependMember(member: WorkspaceMember): Promise<void> {
         await this.withMembersLock(async () => {
             this.membersById.set(member.id, member);
-            this.members = [
-                member,
-                ...this.members.filter(current => current.id !== member.id),
-            ];
+            this.members = [member, ...this.members.filter(current => current.id !== member.id)];
         });
     }
 

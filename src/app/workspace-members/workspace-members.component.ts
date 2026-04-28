@@ -82,10 +82,7 @@ export class WorkspaceMembersComponent implements OnInit {
             this.memberScope = fragment;
             if (fragment === "members" && this.memberStore.members.length === 0) {
                 this.memberStore.get();
-            } else if (
-                fragment === "invitations" &&
-                this.memberStore.invitations.length === 0
-            ) {
+            } else if (fragment === "invitations" && this.memberStore.invitations.length === 0) {
                 this.memberStore.getInvitations();
             }
         });
