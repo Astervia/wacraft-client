@@ -70,23 +70,23 @@ export class WorkspaceMembersComponent implements OnInit {
 
     ngOnInit(): void {
         this.route.fragment.subscribe(fragment => {
-            if (fragment === "invitations") {
-                this.memberScope = "invitations";
-                if (this.memberStore.invitations.length === 0) {
-                    this.memberStore.loadInvitations();
-                }
-            } else {
-                this.memberScope = "members";
-                if (fragment !== "members") {
-                    this.router.navigate([], {
-                        fragment: "members",
-                        replaceUrl: true,
-                        queryParamsHandling: "preserve",
-                    });
-                }
-                if (this.memberStore.members.length === 0) {
-                    this.memberStore.load();
-                }
+            if (fragment !== "members" && fragment !== "invitations") {
+                this.router.navigate([], {
+                    fragment: "members",
+                    replaceUrl: true,
+                    queryParamsHandling: "preserve",
+                });
+                return;
+            }
+
+            this.memberScope = fragment;
+            if (fragment === "members" && this.memberStore.members.length === 0) {
+                this.memberStore.get();
+            } else if (
+                fragment === "invitations" &&
+                this.memberStore.invitations.length === 0
+            ) {
+                this.memberStore.getInvitations();
             }
         });
     }
@@ -140,9 +140,13 @@ export class WorkspaceMembersComponent implements OnInit {
         const ws = this.workspaceStore.currentWorkspace;
         if (!ws) return;
         try {
-            await this.memberController.updateMemberPolicies(ws.id, member.id, this.editPolicies);
+            const updated = await this.memberController.updateMemberPolicies(
+                ws.id,
+                member.id,
+                this.editPolicies,
+            );
             this.editingMemberId = null;
-            await this.memberStore.load();
+            await this.memberStore.syncMember(updated);
         } catch {
             this.errorMessage = "Failed to update member.";
         }
@@ -154,7 +158,7 @@ export class WorkspaceMembersComponent implements OnInit {
         if (!confirm("Remove this member from the workspace?")) return;
         try {
             await this.memberController.removeMember(ws.id, member.id);
-            await this.memberStore.load();
+            await this.memberStore.removeMember(member.id);
         } catch {
             this.errorMessage = "Failed to remove member.";
         }
@@ -201,7 +205,7 @@ export class WorkspaceMembersComponent implements OnInit {
             });
             this.inviteEmail = "";
             this.showInviteForm = false;
-            await this.memberStore.loadInvitations();
+            await this.memberStore.refetchInvitations();
         } catch {
             this.errorMessage = "Failed to send invitation.";
         } finally {
@@ -218,7 +222,7 @@ export class WorkspaceMembersComponent implements OnInit {
         if (!ws) return;
         try {
             await this.memberController.revokeInvitation(ws.id, invitation.id);
-            await this.memberStore.loadInvitations();
+            await this.memberStore.removeInvitation(invitation.id);
         } catch {
             this.errorMessage = "Failed to revoke invitation.";
         }
