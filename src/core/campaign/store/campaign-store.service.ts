@@ -5,7 +5,7 @@ import { CampaignControllerService } from "../controller/campaign-controller.ser
 import { DateOrderEnum } from "../../common/model/date-order.model";
 import { NGXLogger } from "ngx-logger";
 import { WorkspaceStoreService } from "../../workspace/store/workspace-store.service";
-import { MutexSwapper } from "../../synch/mutex-swapper/mutex-swapper";
+import { Mutex } from "async-mutex";
 
 @Injectable({
     providedIn: "root",
@@ -14,8 +14,7 @@ export class CampaignStoreService {
     private campaignController = inject(CampaignControllerService);
     private logger = inject(NGXLogger);
     private workspaceStore = inject(WorkspaceStoreService);
-    private listMutex = new MutexSwapper<string>();
-    private readonly listMutexKey = "campaigns";
+    private listMutex = new Mutex();
 
     private paginationLimit = 15;
 
@@ -50,11 +49,11 @@ export class CampaignStoreService {
     public pendingExecution = false;
 
     private async withListLock<T>(fn: () => Promise<T>): Promise<T> {
-        await this.listMutex.acquire(this.listMutexKey);
+        await this.listMutex.acquire();
         try {
             return await fn();
         } finally {
-            await this.listMutex.release(this.listMutexKey);
+            this.listMutex.release();
         }
     }
 

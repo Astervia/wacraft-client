@@ -4,7 +4,7 @@ import { UserControllerService } from "../controller/user-controller.service";
 import { Query } from "../model/query.model";
 import { DateOrderEnum } from "../../common/model/date-order.model";
 import { NGXLogger } from "ngx-logger";
-import { MutexSwapper } from "../../synch/mutex-swapper/mutex-swapper";
+import { Mutex } from "async-mutex";
 
 @Injectable({
     providedIn: "root",
@@ -12,8 +12,7 @@ import { MutexSwapper } from "../../synch/mutex-swapper/mutex-swapper";
 export class UserStoreService {
     private userController = inject(UserControllerService);
     private logger = inject(NGXLogger);
-    private listMutex = new MutexSwapper<string>();
-    private readonly listMutexKey = "users";
+    private listMutex = new Mutex();
 
     private paginationLimit = 15;
 
@@ -38,11 +37,11 @@ export class UserStoreService {
     public pendingExecution = false;
 
     private async withListLock<T>(fn: () => Promise<T>): Promise<T> {
-        await this.listMutex.acquire(this.listMutexKey);
+        await this.listMutex.acquire();
         try {
             return await fn();
         } finally {
-            await this.listMutex.release(this.listMutexKey);
+            this.listMutex.release();
         }
     }
 
