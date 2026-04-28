@@ -62,21 +62,20 @@
             </app-small-button>
         </a>
 
-            <a
-                [routerLink]="['/', RoutePath.home]"
-                [fragment]="HomeFragment.campaigns"
-                [queryParams]="queryParamsService.globalQueryParams"
-                queryParamsHandling="replace"
-                class="navigator"
-            >
-                <app-small-button
-                    matIcon="campaign"
-                    [active]="activePage === HomeFragment.campaigns"
-                    matTooltip="Campaigns"
-                    i18n-matTooltip
-                ></app-small-button>
-            </a>
-
+        <a
+            [routerLink]="['/', RoutePath.home]"
+            [fragment]="HomeFragment.campaigns"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class="navigator"
+        >
+            <app-small-button
+                matIcon="campaign"
+                [active]="activePage === HomeFragment.campaigns"
+                matTooltip="Campaigns"
+                i18n-matTooltip
+            ></app-small-button>
+        </a>
 
         @if (workspaceStore.hasPolicy(Policy.webhook_read)) {
             <a
