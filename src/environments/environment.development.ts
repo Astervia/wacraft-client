@@ -1,8 +1,6 @@
 import { EnvironmentConfig } from "./config.model";
 
 export const environment: EnvironmentConfig = {
-    isLite: false,
-
     env: "development",
 
     mainServerUrl: "localhost:6900",

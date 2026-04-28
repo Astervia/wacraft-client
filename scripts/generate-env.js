@@ -12,23 +12,10 @@ const hasEnv = key => Object.prototype.hasOwnProperty.call(process.env, key);
 
 const envLines = [
     `    env: "${process.env.ENV || "production"}",`,
-    `    isLite: ${process.env.IS_LITE != "false"},`,
     ``,
     `    mainServerUrl: "${process.env.MAIN_SERVER_URL}",`,
     `    mainServerSecurity: ${process.env.MAIN_SERVER_SECURITY == "true"},`,
 ];
-
-if (hasEnv("AUTOMATION_SERVER_URL")) {
-    envLines.push(`    automationServerUrl: "${process.env.AUTOMATION_SERVER_URL}",`);
-}
-if (hasEnv("AUTOMATION_SERVER_SECURITY")) {
-    envLines.push(
-        `    automationServerSecurity: ${process.env.AUTOMATION_SERVER_SECURITY == "true"},`,
-    );
-}
-if (hasEnv("GOOGLE_MAPS_API_KEY")) {
-    envLines.push(`    googleMapsApiKey: "${process.env.GOOGLE_MAPS_API_KEY}",`);
-}
 
 envLines.push(
     `    appTitle: "${process.env.APP_TITLE || "wacraft"}",`,

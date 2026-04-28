@@ -43,11 +43,11 @@
         <app-template-details class="w-full dark:bg-gray-800"></app-template-details>
     }
 
-    @if (currentFragment === HomeFragment.campaigns && !environment.isLite) {
+    @if (currentFragment === HomeFragment.campaigns) {
         <app-campaigns-sidebar></app-campaigns-sidebar>
     }
 
-    @if (currentFragment === HomeFragment.campaigns && !environment.isLite) {
+    @if (currentFragment === HomeFragment.campaigns) {
         <app-campaign-details class="w-full dark:bg-gray-800"></app-campaign-details>
     }
 </app-sidebar-layout>
