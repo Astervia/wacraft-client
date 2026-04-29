@@ -178,6 +178,28 @@ export class UserDetailsComponent implements OnInit {
         this.showPassword = !this.showPassword;
     }
 
+    private static readonly EMAIL_RE = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    get nameValid(): boolean {
+        const v = this.user?.name?.trim() ?? "";
+        return v.length >= 2 && v.length <= 100;
+    }
+
+    get emailValid(): boolean {
+        return UserDetailsComponent.EMAIL_RE.test(this.user?.email ?? "");
+    }
+
+    get passwordValid(): boolean {
+        if (this.userId) return true;
+        const v = this.user?.password ?? "";
+        return v.length >= 8 && v.length <= 72;
+    }
+
+    get isFormValid(): boolean {
+        if (!this.user) return false;
+        return this.nameValid && this.emailValid && this.passwordValid;
+    }
+
     errorStr = "";
     errorData: unknown;
     handleErr(message: string, err: unknown) {

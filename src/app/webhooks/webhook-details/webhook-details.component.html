@@ -198,7 +198,12 @@
                                 [(ngModel)]="webhook.url"
                                 [disabled]="!isEditing"
                                 placeholder="https://example.com/webhook"
-                                class="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 py-3 pr-12 font-mono text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-900"
+                                class="w-full rounded-xl border bg-gray-50 px-3 py-3 pr-12 font-mono text-sm text-gray-900 outline-none transition focus:ring-2 disabled:cursor-not-allowed disabled:bg-gray-100 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900"
+                                [ngClass]="
+                                    isEditing && !urlValid
+                                        ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500/60'
+                                        : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500/20 dark:border-gray-700 dark:focus:border-blue-400'
+                                "
                             />
                             <app-copy-button
                                 class="absolute right-2 top-1/2 -translate-y-1/2"
@@ -208,9 +213,15 @@
                             ></app-copy-button>
                         </div>
 
-                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                            This endpoint will receive event payloads from the platform.
-                        </p>
+                        @if (isEditing && !urlValid) {
+                            <p class="mt-2 text-xs text-red-600 dark:text-red-400">
+                                Enter a valid http:// or https:// URL.
+                            </p>
+                        } @else {
+                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                This endpoint will receive event payloads from the platform.
+                            </p>
+                        }
                     </div>
 
                     <!-- Event -->
@@ -469,9 +480,9 @@
                         </div>
                     </div>
 
-                    <!-- Custom Headers accordion (same logic, nicer layout) -->
+                    <!-- Custom Headers accordion -->
                     <div class="col-span-12">
-                        <div class="flex items-center justify-between gap-3">
+                        <div class="flex flex-wrap items-center gap-2">
                             <button
                                 type="button"
                                 (click)="toggleCustomHeaders()"
@@ -495,15 +506,46 @@
                                 </mat-icon>
                             </button>
 
-                            @if (isEditing && showCustomHeaders) {
+                            @if (showCustomHeaders) {
+                                @if (isEditing) {
+                                    <button
+                                        type="button"
+                                        (click)="openHeadersImportModal()"
+                                        matTooltip="Import headers from JSON"
+                                        class="inline-flex h-[46px] shrink-0 items-center justify-center gap-1 rounded-xl border border-gray-300 bg-white px-3 text-xs font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
+                                    >
+                                        <mat-icon class="!h-4 !w-4 !text-base !leading-4"
+                                            >file_upload</mat-icon
+                                        >
+                                        Import
+                                    </button>
+                                }
                                 <button
                                     type="button"
-                                    (click)="addCustomHeader()"
-                                    class="inline-flex shrink-0 items-center gap-1 rounded-xl bg-blue-600 px-3 py-3 text-xs font-medium text-white shadow-sm transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                    (click)="exportHeadersAsJson()"
+                                    [disabled]="
+                                        !webhook.authorization && customHeaders.length === 0
+                                    "
+                                    matTooltip="Download headers as JSON"
+                                    class="inline-flex h-[46px] shrink-0 items-center justify-center gap-1 rounded-xl border border-gray-300 bg-white px-3 text-xs font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
                                 >
-                                    <mat-icon class="text-base">add</mat-icon>
-                                    Add
+                                    <mat-icon class="!h-4 !w-4 !text-base !leading-4"
+                                        >file_download</mat-icon
+                                    >
+                                    Export
                                 </button>
+                                @if (isEditing) {
+                                    <button
+                                        type="button"
+                                        (click)="addCustomHeader()"
+                                        class="inline-flex h-[46px] shrink-0 items-center justify-center gap-1 rounded-xl bg-blue-600 px-3 text-xs font-medium text-white shadow-sm transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                    >
+                                        <mat-icon class="!h-4 !w-4 !text-base !leading-4"
+                                            >add</mat-icon
+                                        >
+                                        Add
+                                    </button>
+                                }
                             }
                         </div>
 
@@ -511,34 +553,62 @@
                             <div
                                 class="mt-3 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900"
                             >
+                                <p class="mb-3 text-xs text-gray-500 dark:text-gray-400" i18n>
+                                    Note: the
+                                    <span class="font-mono font-semibold">Authorization</span>
+                                    header is set in the dedicated field above.
+                                </p>
                                 @if (customHeaders.length > 0) {
                                     <div class="space-y-2">
                                         @for (header of customHeaders; track $index) {
-                                            <div class="grid grid-cols-12 gap-2">
+                                            <div
+                                                class="flex flex-col gap-2 md:flex-row md:items-stretch"
+                                            >
                                                 <input
                                                     type="text"
                                                     [(ngModel)]="header.key"
                                                     [disabled]="!isEditing"
                                                     placeholder="Header name"
-                                                    class="col-span-12 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:col-span-5"
+                                                    class="w-full rounded-xl border bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:ring-2 disabled:cursor-not-allowed disabled:bg-gray-100 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:basis-2/5"
+                                                    [ngClass]="
+                                                        isEditing &&
+                                                        (!header.key.trim() ||
+                                                            header.key.trim().toLowerCase() ===
+                                                                'authorization')
+                                                            ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500/60'
+                                                            : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500/20 dark:border-gray-700 dark:focus:border-blue-400'
+                                                    "
                                                 />
                                                 <input
                                                     type="text"
                                                     [(ngModel)]="header.value"
                                                     [disabled]="!isEditing"
                                                     placeholder="Header value"
-                                                    class="col-span-12 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:col-span-6"
+                                                    class="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:flex-1"
                                                 />
                                                 @if (isEditing) {
                                                     <button
                                                         type="button"
                                                         (click)="removeCustomHeader($index)"
-                                                        class="col-span-12 rounded-xl bg-red-600 px-3 py-2.5 text-xs font-medium text-white transition hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 md:col-span-1"
+                                                        matTooltip="Remove header"
+                                                        class="inline-flex shrink-0 items-center justify-center rounded-xl bg-red-600 px-3 py-2.5 text-white transition hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 md:w-11"
                                                     >
-                                                        <mat-icon class="text-base">close</mat-icon>
+                                                        <mat-icon
+                                                            class="!h-4 !w-4 !text-base !leading-4"
+                                                            >close</mat-icon
+                                                        >
                                                     </button>
                                                 }
                                             </div>
+                                            @if (
+                                                isEditing &&
+                                                header.key.trim().toLowerCase() === "authorization"
+                                            ) {
+                                                <p class="text-xs text-red-600 dark:text-red-400">
+                                                    Use the Authorization Header field above
+                                                    instead.
+                                                </p>
+                                            }
                                         }
                                     </div>
                                 } @else {
@@ -592,79 +662,161 @@
                             <div
                                 class="mt-3 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900"
                             >
-                                @if (
-                                    webhook.event_filter &&
-                                    webhook.event_filter.conditions.length > 0
-                                ) {
-                                    <div class="space-y-3">
-                                        <div class="flex items-center gap-3">
-                                            <label
-                                                for="event-filter-logic"
-                                                class="text-xs font-medium text-gray-700 dark:text-gray-300"
-                                                >Logic</label
+                                @if (webhook.event_filter; as ef) {
+                                    @if (ef.conditions && ef.conditions.length > 0) {
+                                        <div class="space-y-3">
+                                            <!-- Logic toggle -->
+                                            <div
+                                                class="flex flex-wrap items-center gap-2 rounded-xl bg-gray-50 px-3 py-2 ring-1 ring-inset ring-gray-200 dark:bg-gray-800/40 dark:ring-gray-800"
                                             >
-                                            <select
-                                                id="event-filter-logic"
-                                                [(ngModel)]="webhook.event_filter.logic"
-                                                [disabled]="!isEditing"
-                                                class="w-28 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900"
-                                            >
-                                                <option value="AND">AND</option>
-                                                <option value="OR">OR</option>
-                                            </select>
-                                        </div>
-
-                                        @for (
-                                            condition of webhook.event_filter.conditions;
-                                            track $index
-                                        ) {
-                                            <div class="grid grid-cols-12 gap-2">
-                                                <input
-                                                    type="text"
-                                                    [(ngModel)]="condition.path"
-                                                    [disabled]="!isEditing"
-                                                    placeholder="Path (e.g., message.type)"
-                                                    class="col-span-12 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:col-span-4"
-                                                />
-                                                <select
-                                                    [(ngModel)]="condition.operator"
-                                                    [disabled]="!isEditing"
-                                                    class="col-span-12 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:col-span-3"
+                                                <span
+                                                    class="text-xs font-medium uppercase tracking-wide text-gray-600 dark:text-gray-400"
+                                                    i18n
+                                                    >Match</span
                                                 >
-                                                    <option value="equals">equals</option>
-                                                    <option value="contains">contains</option>
-                                                    <option value="regex">regex</option>
-                                                    <option value="exists">exists</option>
-                                                </select>
-
-                                                @if (condition.operator !== "exists") {
-                                                    <input
-                                                        type="text"
-                                                        [(ngModel)]="condition.value"
-                                                        [disabled]="!isEditing"
-                                                        placeholder="Value"
-                                                        class="col-span-12 rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900 md:col-span-4"
-                                                    />
-                                                } @else {
-                                                    <div
-                                                        class="col-span-12 rounded-xl bg-gray-50 px-3 py-2.5 text-xs text-gray-500 ring-1 ring-inset ring-gray-200 dark:bg-gray-800/50 dark:text-gray-400 dark:ring-gray-800 md:col-span-4"
-                                                    >
-                                                        No value needed
-                                                    </div>
-                                                }
-
-                                                @if (isEditing) {
+                                                <div
+                                                    class="inline-flex overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700"
+                                                >
                                                     <button
                                                         type="button"
-                                                        (click)="removeFilterCondition($index)"
-                                                        class="col-span-12 rounded-xl bg-red-600 px-3 py-2.5 text-xs font-medium text-white transition hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 md:col-span-1"
+                                                        (click)="isEditing && (ef.logic = 'AND')"
+                                                        [disabled]="!isEditing"
+                                                        class="px-3 py-1.5 text-xs font-semibold transition disabled:cursor-not-allowed"
+                                                        [ngClass]="
+                                                            ef.logic === 'AND'
+                                                                ? 'bg-indigo-600 text-white dark:bg-indigo-500'
+                                                                : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800'
+                                                        "
                                                     >
-                                                        <mat-icon class="text-base">close</mat-icon>
+                                                        AND
                                                     </button>
-                                                }
+                                                    <button
+                                                        type="button"
+                                                        (click)="isEditing && (ef.logic = 'OR')"
+                                                        [disabled]="!isEditing"
+                                                        class="px-3 py-1.5 text-xs font-semibold transition disabled:cursor-not-allowed"
+                                                        [ngClass]="
+                                                            ef.logic === 'OR'
+                                                                ? 'bg-amber-500 text-white dark:bg-amber-500'
+                                                                : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800'
+                                                        "
+                                                    >
+                                                        OR
+                                                    </button>
+                                                </div>
+                                                <span
+                                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                                    i18n
+                                                >
+                                                    @if (ef.logic === "OR") {
+                                                        Any condition matches
+                                                    } @else {
+                                                        All conditions must match
+                                                    }
+                                                </span>
                                             </div>
-                                        }
-                                    </div>
+
+                                            @for (condition of ef.conditions; track $index) {
+                                                <div
+                                                    class="rounded-xl border border-gray-200 bg-gray-50/50 p-3 dark:border-gray-800 dark:bg-gray-800/30"
+                                                >
+                                                    <div
+                                                        class="mb-2 flex items-center justify-between gap-2"
+                                                    >
+                                                        <span
+                                                            class="inline-flex items-center gap-1.5 rounded-full bg-gray-200/70 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-gray-700 dark:bg-gray-700/70 dark:text-gray-200"
+                                                        >
+                                                            <span
+                                                                class="h-1.5 w-1.5 rounded-full bg-gray-400"
+                                                            ></span>
+                                                            Condition {{ $index + 1 }}
+                                                        </span>
+                                                        @if (isEditing) {
+                                                            <button
+                                                                type="button"
+                                                                (click)="
+                                                                    removeFilterCondition($index)
+                                                                "
+                                                                matTooltip="Remove condition"
+                                                                class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-red-600 transition hover:bg-red-50 dark:text-red-300 dark:hover:bg-red-900/30"
+                                                            >
+                                                                <mat-icon
+                                                                    class="!h-4 !w-4 !text-base !leading-4"
+                                                                    >close</mat-icon
+                                                                >
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                    <div
+                                                        class="flex flex-col gap-2 md:flex-row md:items-stretch"
+                                                    >
+                                                        <input
+                                                            type="text"
+                                                            [(ngModel)]="condition.path"
+                                                            [disabled]="!isEditing"
+                                                            placeholder="Path (e.g., message.type)"
+                                                            class="w-full rounded-xl border bg-white px-3 py-2.5 font-mono text-sm text-gray-900 outline-none transition focus:ring-2 disabled:cursor-not-allowed disabled:bg-gray-100 dark:bg-gray-900 dark:text-white dark:disabled:bg-gray-800/60 md:basis-2/5"
+                                                            [ngClass]="
+                                                                isEditing && !condition.path.trim()
+                                                                    ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500/60'
+                                                                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500/20 dark:border-gray-700 dark:focus:border-blue-400'
+                                                            "
+                                                        />
+                                                        <select
+                                                            [(ngModel)]="condition.operator"
+                                                            [disabled]="!isEditing"
+                                                            class="w-full rounded-xl border bg-white px-3 py-2.5 text-sm font-semibold outline-none transition focus:ring-2 disabled:cursor-not-allowed disabled:opacity-80 dark:bg-gray-900 md:basis-1/4"
+                                                            [ngClass]="{
+                                                                'border-emerald-500 text-emerald-700 focus:border-emerald-500 focus:ring-emerald-500/20 dark:border-emerald-400 dark:text-emerald-300':
+                                                                    condition.operator === 'equals',
+                                                                'border-blue-500 text-blue-700 focus:border-blue-500 focus:ring-blue-500/20 dark:border-blue-400 dark:text-blue-300':
+                                                                    condition.operator ===
+                                                                    'contains',
+                                                                'border-purple-500 text-purple-700 focus:border-purple-500 focus:ring-purple-500/20 dark:border-purple-400 dark:text-purple-300':
+                                                                    condition.operator === 'regex',
+                                                                'border-gray-400 text-gray-700 focus:border-gray-500 focus:ring-gray-500/20 dark:border-gray-500 dark:text-gray-300':
+                                                                    condition.operator === 'exists',
+                                                            }"
+                                                        >
+                                                            <option value="equals">equals</option>
+                                                            <option value="contains">
+                                                                contains
+                                                            </option>
+                                                            <option value="regex">regex</option>
+                                                            <option value="exists">exists</option>
+                                                        </select>
+                                                        @if (condition.operator !== "exists") {
+                                                            <input
+                                                                type="text"
+                                                                [(ngModel)]="condition.value"
+                                                                [disabled]="!isEditing"
+                                                                placeholder="Value"
+                                                                class="w-full rounded-xl border bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:ring-2 disabled:cursor-not-allowed disabled:bg-gray-100 dark:bg-gray-900 dark:text-white dark:disabled:bg-gray-800/60 md:flex-1"
+                                                                [ngClass]="
+                                                                    isEditing &&
+                                                                    (condition.value ===
+                                                                        undefined ||
+                                                                        condition.value === '')
+                                                                        ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500/60'
+                                                                        : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500/20 dark:border-gray-700 dark:focus:border-blue-400'
+                                                                "
+                                                            />
+                                                        } @else {
+                                                            <div
+                                                                class="flex w-full items-center rounded-xl bg-gray-100 px-3 py-2.5 text-xs italic text-gray-500 ring-1 ring-inset ring-gray-200 dark:bg-gray-800/60 dark:text-gray-400 dark:ring-gray-700 md:flex-1"
+                                                            >
+                                                                No value needed
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    } @else {
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                                            No event filters configured
+                                        </p>
+                                    }
                                 } @else {
                                     <p class="text-sm text-gray-500 dark:text-gray-400">
                                         No event filters configured
@@ -737,7 +889,9 @@
                         <button
                             type="button"
                             (click)="saveChanges()"
-                            class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:bg-blue-500 dark:hover:bg-blue-600"
+                            [disabled]="!isFormValid"
+                            [matTooltip]="isFormValid ? '' : 'Fill in required fields to save'"
+                            class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600"
                         >
                             <mat-icon class="mr-2 text-base">save</mat-icon>
                             Save changes
@@ -931,6 +1085,84 @@
                         }
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Headers Import Modal -->
+@if (showHeadersImportModal) {
+    <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        (click)="closeHeadersImportModal()"
+        (keydown.escape)="closeHeadersImportModal()"
+        tabindex="0"
+        role="button"
+        aria-label="Close headers import modal"
+    >
+        <div
+            class="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5 dark:bg-gray-900 dark:ring-white/10"
+            (click)="$event.stopPropagation()"
+            (keydown)="$event.stopPropagation()"
+            tabindex="0"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="headers-import-title"
+        >
+            <div class="mb-4 flex items-start justify-between gap-4">
+                <div>
+                    <h3
+                        id="headers-import-title"
+                        class="text-lg font-semibold text-gray-900 dark:text-gray-100"
+                        i18n
+                    >
+                        Import Headers from JSON
+                    </h3>
+                    <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400" i18n>
+                        Paste a JSON object with string values. The
+                        <span class="font-mono font-semibold">Authorization</span> key (if present)
+                        is moved to the dedicated authorization field.
+                    </p>
+                </div>
+                <button
+                    type="button"
+                    (click)="closeHeadersImportModal()"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                    aria-label="Close"
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+
+            <textarea
+                [(ngModel)]="headersImportText"
+                rows="10"
+                class="w-full rounded-xl border border-gray-300 bg-gray-50 p-3 font-mono text-xs text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400"
+            ></textarea>
+
+            @if (headersImportError) {
+                <p class="mt-2 text-xs text-red-600 dark:text-red-400">
+                    {{ headersImportError }}
+                </p>
+            }
+
+            <div class="mt-4 flex justify-end gap-2">
+                <button
+                    type="button"
+                    (click)="closeHeadersImportModal()"
+                    class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-transparent dark:text-gray-200 dark:hover:bg-gray-800"
+                    i18n
+                >
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    (click)="applyHeadersImport()"
+                    class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    i18n
+                >
+                    Apply
+                </button>
             </div>
         </div>
     </div>

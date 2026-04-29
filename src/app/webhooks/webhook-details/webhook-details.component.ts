@@ -63,6 +63,11 @@ export class WebhookDetailsComponent implements OnInit {
     showCustomHeaders = false;
     showEventFilter = false;
 
+    // Headers import/export modal state
+    showHeadersImportModal = false;
+    headersImportText = "";
+    headersImportError = "";
+
     @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
     ngOnInit(): void {
@@ -121,10 +126,7 @@ export class WebhookDetailsComponent implements OnInit {
                     is_active: this.webhook.is_active,
                     max_retries: this.webhook.max_retries,
                     retry_delay_ms: this.webhook.retry_delay_ms,
-                    custom_headers:
-                        Object.keys(customHeadersRecord).length > 0
-                            ? customHeadersRecord
-                            : undefined,
+                    custom_headers: customHeadersRecord,
                     event_filter: this.webhook.event_filter,
                 });
                 await this.webhookStore.syncWebhook(updatedWebhook);
@@ -182,11 +184,15 @@ export class WebhookDetailsComponent implements OnInit {
                   }))
                 : [];
 
+            // Normalize event_filter so downstream code can rely on conditions being an array
+            if (this.webhook.event_filter && !Array.isArray(this.webhook.event_filter.conditions)) {
+                this.webhook.event_filter.conditions = [];
+            }
+
             // Set toggle states based on existing data
             this.showSecuritySection = this.webhook.signing_enabled;
             this.showCustomHeaders = this.customHeaders.length > 0;
-            this.showEventFilter =
-                !!this.webhook.event_filter && this.webhook.event_filter.conditions.length > 0;
+            this.showEventFilter = (this.webhook.event_filter?.conditions?.length ?? 0) > 0;
         } catch (error) {
             this.handleErr("Error loading webhook", error);
         }
@@ -274,6 +280,77 @@ export class WebhookDetailsComponent implements OnInit {
         this.customHeaders.splice(index, 1);
     }
 
+    // Headers JSON import / export
+    openHeadersImportModal() {
+        const seed: Record<string, string> = {};
+        if (this.webhook.authorization) seed["Authorization"] = this.webhook.authorization;
+        this.customHeaders.forEach(h => {
+            if (h.key) seed[h.key] = h.value;
+        });
+        this.headersImportText = Object.keys(seed).length
+            ? JSON.stringify(seed, null, 2)
+            : '{\n  "X-Custom-Header": "value"\n}';
+        this.headersImportError = "";
+        this.showHeadersImportModal = true;
+    }
+
+    closeHeadersImportModal() {
+        this.showHeadersImportModal = false;
+        this.headersImportError = "";
+    }
+
+    applyHeadersImport() {
+        let parsed: unknown;
+        try {
+            parsed = JSON.parse(this.headersImportText);
+        } catch {
+            this.headersImportError = "Invalid JSON.";
+            return;
+        }
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+            this.headersImportError = "Expected a JSON object with string values.";
+            return;
+        }
+        const entries = Object.entries(parsed as Record<string, unknown>);
+        for (const [k, v] of entries) {
+            if (typeof v !== "string") {
+                this.headersImportError = `Header "${k}" must be a string.`;
+                return;
+            }
+        }
+        const next: { key: string; value: string }[] = [];
+        let authValue: string | undefined;
+        for (const [k, v] of entries as [string, string][]) {
+            if (k.toLowerCase() === "authorization") {
+                authValue = v;
+                continue;
+            }
+            next.push({ key: k, value: v });
+        }
+        this.customHeaders = next;
+        if (authValue !== undefined) this.webhook.authorization = authValue;
+        this.showCustomHeaders = next.length > 0;
+        this.closeHeadersImportModal();
+    }
+
+    exportHeadersAsJson() {
+        const out: Record<string, string> = {};
+        if (this.webhook.authorization) out["Authorization"] = this.webhook.authorization;
+        this.customHeaders.forEach(h => {
+            if (h.key) out[h.key] = h.value;
+        });
+        const text = JSON.stringify(out, null, 2);
+        const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+        const filename = `webhook-headers-${this.webhookId ?? "new"}.json`;
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+    }
+
     // Event Filter Management
     addFilterCondition() {
         if (!this.webhook.event_filter) {
@@ -281,6 +358,8 @@ export class WebhookDetailsComponent implements OnInit {
                 logic: "AND",
                 conditions: [],
             };
+        } else if (!Array.isArray(this.webhook.event_filter.conditions)) {
+            this.webhook.event_filter.conditions = [];
         }
         this.webhook.event_filter.conditions.push({
             path: "",
@@ -290,7 +369,7 @@ export class WebhookDetailsComponent implements OnInit {
     }
 
     removeFilterCondition(index: number) {
-        if (this.webhook.event_filter) {
+        if (this.webhook.event_filter?.conditions) {
             this.webhook.event_filter.conditions.splice(index, 1);
         }
     }
@@ -327,6 +406,74 @@ export class WebhookDetailsComponent implements OnInit {
     getTestResponsePayload(): unknown {
         if (!this.testResult) return undefined;
         return this.testResult.response ?? this.testResult.response_body;
+    }
+
+    // Validation
+    private isValidUrl(value: string | undefined): boolean {
+        if (!value) return false;
+        try {
+            const u = new URL(value);
+            return u.protocol === "http:" || u.protocol === "https:";
+        } catch {
+            return false;
+        }
+    }
+
+    get urlValid(): boolean {
+        return this.isValidUrl(this.webhook?.url);
+    }
+
+    get timeoutValid(): boolean {
+        const v = this.webhook?.timeout;
+        return typeof v === "number" && v >= 1 && v <= 60;
+    }
+
+    get maxRetriesValid(): boolean {
+        const v = this.webhook?.max_retries;
+        return typeof v === "number" && v >= 0 && v <= 10;
+    }
+
+    get retryDelayValid(): boolean {
+        const v = this.webhook?.retry_delay_ms;
+        return typeof v === "number" && v >= 100 && v <= 60000;
+    }
+
+    get customHeadersValid(): boolean {
+        if (!this.showCustomHeaders) return true;
+        const seen = new Set<string>();
+        for (const h of this.customHeaders) {
+            if (!h.key || !h.key.trim()) return false;
+            const k = h.key.trim().toLowerCase();
+            if (k === "authorization") return false;
+            if (seen.has(k)) return false;
+            seen.add(k);
+        }
+        return true;
+    }
+
+    get eventFilterValid(): boolean {
+        if (!this.showEventFilter) return true;
+        const conditions = this.webhook?.event_filter?.conditions;
+        if (!conditions?.length) return true;
+        return conditions.every(c => {
+            if (!c.path || !c.path.trim()) return false;
+            if (c.operator !== "exists" && (c.value === undefined || c.value === "")) return false;
+            return true;
+        });
+    }
+
+    get isFormValid(): boolean {
+        if (!this.webhook) return false;
+        return (
+            this.urlValid &&
+            !!this.webhook.event &&
+            !!this.webhook.http_method &&
+            this.timeoutValid &&
+            this.maxRetriesValid &&
+            this.retryDelayValid &&
+            this.customHeadersValid &&
+            this.eventFilterValid
+        );
     }
 
     getCircuitStateLabel(): string {
