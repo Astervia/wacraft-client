@@ -34,7 +34,13 @@
                 hidden: !!body.selectedMessages.length,
             }"
             [toId]="messagingProductContact.id"
-            (sent)="userConversationStore.addUnsent($event, messagingProductContact.id)"
+            (sent)="
+                userConversationStore.addUnsent(
+                    $event.senderData,
+                    messagingProductContact.id,
+                    $event.httpResponse
+                )
+            "
             (typingStateChange)="onTypingStateChange($event)"
             [contactName]="
                 messagingProductContact.contact.name ||
@@ -50,7 +56,13 @@
             }"
             [messages]="body.selectedMessages"
             (clear)="body.clearSelectedMessages()"
-            (sent)="userConversationStore.addUnsent($event[0], $event[1])"
+            (sent)="
+                userConversationStore.addUnsent(
+                    $event[0].senderData,
+                    $event[1],
+                    $event[0].httpResponse
+                )
+            "
         ></app-message-actions-footer>
     </div>
 

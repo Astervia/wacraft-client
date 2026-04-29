@@ -16,6 +16,7 @@ import { statusOrder } from "../../status/constant/status-order.constant";
 import { MutexSwapper } from "../../synch/mutex-swapper/mutex-swapper";
 import { NGXLogger } from "ngx-logger";
 import { DeepEqualService } from "../../common/comparator";
+import { MessageFields } from "../entity/message.entity";
 
 @Injectable({
     providedIn: "root",
@@ -36,6 +37,9 @@ export class UserConversationsStoreService {
 
     public messageHistory = new Map<string, Conversation[]>();
     public unsentMessages = new Map<string, Conversation[]>();
+    private pendingIds = new Set<string>();
+    private messageMutex = new MutexSwapper<string>();
+    private sentAt = new Map<string, number>(); // message id → performance.now() at addUnsent
     private initPromise: Promise<void> | null = null;
     public async initConditionally(
         route: ActivatedRoute,
@@ -52,7 +56,7 @@ export class UserConversationsStoreService {
             this.messageGateway.opened,
             this.messageGateway.watchNewMessage(async (msg: Conversation) => {
                 const messagingProductContactId = this.mpContactFromMessage.transform(msg).id;
-                if (msg.sender_data) this.removeSent(msg.sender_data, messagingProductContactId);
+                if (msg.sender_data) this.removeSent(msg, messagingProductContactId);
                 this.appendConversationIfAtBottom(msg, messagingProductContactId);
 
                 const mpcId = route.snapshot.queryParamMap.get("messaging_product_contact.id");
@@ -62,17 +66,35 @@ export class UserConversationsStoreService {
             this.statusGateway.opened,
             this.statusGateway.watchNewStatus((data: Status) => {
                 const messageId = data.message_id;
+                const statusReceivedAt = performance.now();
 
                 // ⚡ Bolt Performance Optimization:
                 // Using for...of instead of [...this.messageHistory.values()].flat().find(...)
                 // Avoids massive array allocations on every status update and allows early exit
                 let message: Conversation | undefined;
-                for (const conversations of this.messageHistory.values()) {
+                let foundIn: "history" | "unsent" | undefined;
+                for (const [source, conversations] of [
+                    ["history", [...this.messageHistory.values()].flat()] as const,
+                    ["unsent", [...this.unsentMessages.values()].flat()] as const,
+                ]) {
                     message = conversations.find(item => item.id === messageId);
-                    if (message) break;
+                    if (message) {
+                        foundIn = source;
+                        break;
+                    }
                 }
 
-                if (!message) return;
+                if (!message) {
+                    this.logger.debug(
+                        `[msg-timing] status arrived: msgId=${messageId} status=${data.product_data?.status} — not found in history or unsent`,
+                    );
+                    return;
+                }
+
+                const sendTime = this.sentAt.get(messageId);
+                this.logger.debug(
+                    `[msg-timing] status arrived: msgId=${messageId} status=${data.product_data?.status} foundIn=${foundIn}${sendTime !== undefined ? ` elapsed-since-send=${(statusReceivedAt - sendTime).toFixed(1)}ms` : ""}`,
+                );
 
                 if (!message.statuses) message.statuses = [];
 
@@ -158,22 +180,54 @@ export class UserConversationsStoreService {
         return this.messageHistory.set(messagingProductContactId, conversations);
     }
 
-    private async removeSent(senderData: SenderData, messagingProductContactId: string) {
+    private async removeSent(incoming: Conversation, messagingProductContactId: string) {
+        const wsReceivedAt = performance.now();
         await this.unsentMutex.acquire(messagingProductContactId);
 
         const unsentMessages = this.unsentMessages.get(messagingProductContactId);
-        if (!unsentMessages) return;
-        const index = unsentMessages.findIndex(msg =>
-            msg.sender_data
-                ? this.deepEqual.areEqual(
-                      msg.sender_data[msg.sender_data.type],
-                      senderData[msg.sender_data.type],
-                  )
-                : false,
-        );
+        if (!unsentMessages) {
+            await this.unsentMutex.release(messagingProductContactId);
+            return;
+        }
+
+        // Phase 1: ID-first — scan the whole queue for an exact real-id match.
+        // This must run before fallback so that a pending entry at the front of the queue
+        // (inserted more recently via unshift) can never shadow a real-id entry further back.
+        let strategy: "id" | "fallback" | "none" = "none";
+        let index = incoming.id
+            ? unsentMessages.findIndex(
+                  msg => !this.pendingIds.has(msg.id) && msg.id === incoming.id,
+              )
+            : -1;
+        if (index !== -1) strategy = "id";
+
+        // Phase 2: fallback — only reached when no ID match exists, only scans pending entries.
+        if (index === -1) {
+            index = unsentMessages.findIndex(
+                msg =>
+                    this.pendingIds.has(msg.id) &&
+                    !!incoming.sender_data &&
+                    !!msg.sender_data &&
+                    this.deepEqual.areEqual(
+                        msg.sender_data[msg.sender_data.type],
+                        incoming.sender_data[incoming.sender_data.type],
+                    ),
+            );
+            if (index !== -1) strategy = "fallback";
+        }
+
         if (index !== -1) {
-            unsentMessages.splice(index, 1);
+            const [removed] = unsentMessages.splice(index, 1);
+            this.pendingIds.delete(removed.id);
             this.unsentMessages.set(messagingProductContactId, unsentMessages);
+
+            const sendTime = this.sentAt.get(removed.id);
+            if (sendTime !== undefined) {
+                this.logger.debug(
+                    `[msg-timing] WS confirmed: strategy=${strategy} total=${(wsReceivedAt - sendTime).toFixed(1)}ms lock-wait=${(performance.now() - wsReceivedAt).toFixed(1)}ms`,
+                );
+                this.sentAt.delete(removed.id);
+            }
         }
 
         await this.unsentMutex.release(messagingProductContactId);
@@ -251,14 +305,19 @@ export class UserConversationsStoreService {
     }
 
     private unsentMutex = new MutexSwapper<string>();
-    async addUnsent(senderData: SenderData, messagingProductContactId: string) {
-        this.logger.debug("addUnsent", senderData, messagingProductContactId);
-        await this.unsentMutex.acquire(messagingProductContactId);
-        this.logger.debug("Unsent acquired for", messagingProductContactId);
+    async addUnsent(
+        senderData: SenderData,
+        messagingProductContactId: string,
+        httpResponse?: Promise<MessageFields>,
+    ) {
+        const t0 = performance.now();
+        const fakeId = uuidv4();
+        this.logger.debug(
+            `[msg-timing] addUnsent fakeId=${fakeId} type=${senderData.type} to=${messagingProductContactId}`,
+        );
 
-        const unsentMessages = this.unsentMessages.get(messagingProductContactId) || [];
-        const conversation = {
-            id: uuidv4(),
+        const conversation: Conversation = {
+            id: fakeId,
             sender_data: senderData,
             to_id: messagingProductContactId,
             from_id: NilUUID,
@@ -266,16 +325,72 @@ export class UserConversationsStoreService {
             created_at: new Date(),
             updated_at: new Date(),
         };
-        unsentMessages.unshift(conversation);
 
+        this.pendingIds.add(fakeId);
+        this.sentAt.set(fakeId, t0);
+
+        await this.unsentMutex.acquire(messagingProductContactId);
+        const listWaitMs = (performance.now() - t0).toFixed(1);
+        const unsentMessages = this.unsentMessages.get(messagingProductContactId) || [];
+        unsentMessages.unshift(conversation);
         this.unsentMessages.set(messagingProductContactId, unsentMessages);
+        await this.unsentMutex.release(messagingProductContactId);
+        this.logger.debug(`[msg-timing] fakeId=${fakeId} list-lock-wait=${listWaitMs}ms`);
 
         (await this.createBottomMessageSubjectIfNotExists(messagingProductContactId)).next(
             conversation,
         );
 
-        await this.unsentMutex.release(messagingProductContactId);
-        this.logger.debug("Unsent mutex released for", messagingProductContactId);
+        httpResponse?.then(async fields => {
+            const httpMs = (performance.now() - t0).toFixed(1);
+            await this.messageMutex.acquire(fakeId);
+            const stillPending = this.unsentMessages
+                .get(messagingProductContactId)
+                ?.some(m => m.id === fakeId);
+            if (stillPending) {
+                this.pendingIds.delete(fakeId);
+                Object.assign(conversation, fields);
+                const realId = conversation.id;
+                this.sentAt.set(realId, t0);
+                this.sentAt.delete(fakeId);
+                await this.messageMutex.release(fakeId);
+
+                // WS may have already arrived for this message and added it to messageHistory
+                // while the entry was still pending (WS beat HTTP, or a WS for another message
+                // incorrectly evicted our fake entry via fallback). If so, the entry in
+                // unsentMessages is now a stale duplicate with the real id — remove it.
+                const alreadyInHistory = [...this.messageHistory.values()].some(list =>
+                    list.some(m => m.id === realId),
+                );
+                if (alreadyInHistory) {
+                    await this.unsentMutex.acquire(messagingProductContactId);
+                    const list = this.unsentMessages.get(messagingProductContactId);
+                    if (list) {
+                        const idx = list.findIndex(m => m.id === realId);
+                        if (idx !== -1) {
+                            list.splice(idx, 1);
+                            this.unsentMessages.set(messagingProductContactId, list);
+                        }
+                    }
+                    await this.unsentMutex.release(messagingProductContactId);
+                    this.sentAt.delete(realId);
+                    this.logger.debug(
+                        `[msg-timing] HTTP resolved: fakeId=${fakeId.slice(0, 8)} → realId=${realId.slice(0, 8)} elapsed=${httpMs}ms — cleaned up stale unsent entry (WS already in history)`,
+                    );
+                } else {
+                    this.logger.debug(
+                        `[msg-timing] HTTP resolved: fakeId=${fakeId.slice(0, 8)} → realId=${realId.slice(0, 8)} elapsed=${httpMs}ms`,
+                    );
+                }
+                return;
+            } else {
+                this.sentAt.delete(fakeId);
+                this.logger.debug(
+                    `[msg-timing] HTTP resolved: fakeId=${fakeId.slice(0, 8)} elapsed=${httpMs}ms — WS already removed it via fallback`,
+                );
+            }
+            await this.messageMutex.release(fakeId);
+        });
     }
 
     private offsets = new Map<string, number>();

@@ -493,13 +493,9 @@ export class TemplateMessageBuilderComponent {
                 ...senderData,
                 to: contact.product_details.phone_number,
             };
-            const promise = this.messageController
-                .sendWhatsAppMessage({
-                    to_id,
-                    sender_data,
-                })
-                .catch(err => this.handleErr(`Failed to send message to ${contact.id}`, err));
-            this.userConversationStore.addUnsent(sender_data, to_id);
+            const promise = this.messageController.sendWhatsAppMessage({ to_id, sender_data });
+            promise.catch(err => this.handleErr(`Failed to send message to ${contact.id}`, err));
+            this.userConversationStore.addUnsent(sender_data, to_id, promise);
             return promise;
         });
         await Promise.all(sendPromises);

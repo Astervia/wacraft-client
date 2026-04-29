@@ -19,6 +19,7 @@ import { InteractiveData } from "../../../core/message/model/interactive-data.mo
 import { InteractiveButtonType } from "../../../core/message/model/button-data.model";
 import { MessageType } from "../../../core/message/model/message-type.model";
 import { SenderData } from "../../../core/message/model/sender-data.model";
+import { SentMessageEvent } from "../../../core/message/model/sent-message-event.model";
 import { Context } from "../../../core/message/model/context.model";
 import { MatIconModule } from "@angular/material/icon";
 import { FileUploadComponent } from "../../common/file-upload/file-upload.component";
@@ -54,7 +55,7 @@ export class InteractiveMessageBuilderComponent {
     headerMediaCaptionArea!: HTMLTextAreaElement;
     @Input("toId") toIdInput!: string;
     @Input("toPhoneNumber") toPhoneNumberInput!: string;
-    @Output() sent = new EventEmitter<SenderData>();
+    @Output() sent = new EventEmitter<SentMessageEvent>();
     @Output() typing = new EventEmitter<void>();
 
     // Interactive Message Fields
@@ -171,11 +172,12 @@ export class InteractiveMessageBuilderComponent {
             },
         };
 
-        this.sent.emit(payload.sender_data);
+        const httpResponse = this.messageController.sendWhatsAppMessage(payload);
+        this.sent.emit({ senderData: payload.sender_data, httpResponse });
         this.resetForm();
 
         try {
-            const data = await this.messageController.sendWhatsAppMessage(payload);
+            const data = await httpResponse;
 
             this.resetForm();
             return data;

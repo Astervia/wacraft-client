@@ -11,6 +11,7 @@ import {
     inject,
 } from "@angular/core";
 import { SenderData } from "../../../core/message/model/sender-data.model";
+import { SentMessageEvent } from "../../../core/message/model/sent-message-event.model";
 import { MessageType } from "../../../core/message/model/message-type.model";
 import { MessageControllerService } from "../../../core/message/controller/message-controller.service";
 import { CommonModule } from "@angular/common";
@@ -33,7 +34,7 @@ export class LocationMessageBuilderComponent implements OnInit, AfterViewInit {
 
     @Input("toId") toIdInput!: string;
     @Input("toPhoneNumber") toPhoneNumberInput!: string;
-    @Output() sent = new EventEmitter<SenderData>();
+    @Output() sent = new EventEmitter<SentMessageEvent>();
 
     @ViewChild("nameArea") nameArea!: ElementRef<HTMLTextAreaElement>;
     @ViewChild("addressArea") addressArea!: ElementRef<HTMLTextAreaElement>;
@@ -196,10 +197,12 @@ export class LocationMessageBuilderComponent implements OnInit, AfterViewInit {
             },
         };
 
+        const httpResponse = this.messageController.sendWhatsAppMessage(payload);
+        this.sent.emit({ senderData: payload.sender_data, httpResponse });
+        this.resetForm();
+
         try {
-            await this.messageController.sendWhatsAppMessage(payload);
-            this.sent.emit(payload.sender_data);
-            this.resetForm();
+            await httpResponse;
         } catch (error) {
             this.logger.error("Error sending location message", error);
             this.error = "Failed to send the location message.";

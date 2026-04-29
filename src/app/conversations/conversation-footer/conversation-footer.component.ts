@@ -11,6 +11,7 @@ import {
     inject,
 } from "@angular/core";
 import { SenderData } from "../../../core/message/model/sender-data.model";
+import { SentMessageEvent } from "../../../core/message/model/sent-message-event.model";
 import { isMediaType, MessageType } from "../../../core/message/model/message-type.model";
 import { MessageControllerService } from "../../../core/message/controller/message-controller.service";
 import { MessageFields } from "../../../core/message/entity/message.entity";
@@ -80,7 +81,7 @@ export class ConversationFooterComponent implements OnInit {
     @Input("toId") toIdInput!: string;
     @Input() sendAvailable = true;
     @Input() buildMessageOnChanges = false;
-    @Output() sent = new EventEmitter<SenderData>();
+    @Output() sent = new EventEmitter<SentMessageEvent>();
     @Output() change = new EventEmitter();
     @Output() typingStateChange = new EventEmitter<boolean>();
     @ViewChild("area") area!: ElementRef<HTMLTextAreaElement>;
@@ -257,10 +258,10 @@ export class ConversationFooterComponent implements OnInit {
                 context,
             },
         };
-        this.sent.emit(payload.sender_data);
+        const httpResponse = this.messageController.sendWhatsAppMessage(payload);
+        this.sent.emit({ senderData: payload.sender_data, httpResponse });
         this.resetForm();
-        const data = await this.messageController.sendWhatsAppMessage(payload);
-        return data;
+        return httpResponse;
     }
 
     private async buildRaw() {
@@ -282,10 +283,10 @@ export class ConversationFooterComponent implements OnInit {
                     to: this.toPhoneNumberInput,
                 },
             };
-            this.sent.emit(payload.sender_data);
+            const httpResponse = this.messageController.sendWhatsAppMessage(payload);
+            this.sent.emit({ senderData: payload.sender_data, httpResponse });
             this.resetForm();
-            const data = await this.messageController.sendWhatsAppMessage(payload);
-            return data;
+            return httpResponse;
         } catch (error) {
             this.handleErr("Error processing raw message.", error);
             return Promise.reject(error);
@@ -347,10 +348,10 @@ export class ConversationFooterComponent implements OnInit {
                 context,
             },
         };
-        this.sent.emit(payload.sender_data);
+        const httpResponse = this.messageController.sendWhatsAppMessage(payload);
+        this.sent.emit({ senderData: payload.sender_data, httpResponse });
         this.resetForm();
-        const data = await this.messageController.sendWhatsAppMessage(payload);
-        return data;
+        return httpResponse;
     }
 
     private resetForm() {
