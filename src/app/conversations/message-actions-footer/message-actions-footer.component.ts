@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild, inject } from "@angular/core";
 import { SenderData } from "../../../core/message/model/sender-data.model";
+import { SentMessageEvent } from "../../../core/message/model/sent-message-event.model";
 import { MessageControllerService } from "../../../core/message/controller/message-controller.service";
 import { SmallButtonComponent } from "../../common/small-button/small-button.component";
 import { MediaControllerService } from "../../../core/media/controller/media-controller.service";
@@ -34,7 +35,7 @@ export class MessageActionsFooterComponent {
     @Input() messages!: Conversation[];
 
     @Output() clear = new EventEmitter();
-    @Output() sent = new EventEmitter<[SenderData, string]>();
+    @Output() sent = new EventEmitter<[SentMessageEvent, string]>();
 
     async sendMessagesToContacts(contacts: ConversationMessagingProductContact[]) {
         const sendPromises = Promise.all(
@@ -56,14 +57,10 @@ export class MessageActionsFooterComponent {
                 to: contact.product_details.phone_number,
             } as SenderData;
             const to_id = contact.id;
-            const promise = this.messageController
-                .sendWhatsAppMessage({
-                    to_id,
-                    sender_data,
-                })
-                .catch(err => this.handleErr(`Failed to send message to ${to_id}`, err));
-            this.sent.emit([sender_data, to_id]);
-            return promise;
+            const httpResponse = this.messageController.sendWhatsAppMessage({ to_id, sender_data });
+            httpResponse.catch(err => this.handleErr(`Failed to send message to ${to_id}`, err));
+            this.sent.emit([{ senderData: sender_data, httpResponse }, to_id]);
+            return httpResponse;
         });
         return await Promise.all(sendPromises);
     }

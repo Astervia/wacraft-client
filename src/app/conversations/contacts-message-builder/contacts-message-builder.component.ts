@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, Output, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { SenderData } from "../../../core/message/model/sender-data.model";
+import { SentMessageEvent } from "../../../core/message/model/sent-message-event.model";
 import { MessageType } from "../../../core/message/model/message-type.model";
 import { MessageControllerService } from "../../../core/message/controller/message-controller.service";
 import { Context } from "../../../core/message/model/context.model";
@@ -45,7 +46,7 @@ export class ContactsMessageBuilderComponent {
 
     @Input("toId") toIdInput!: string;
     @Input("toPhoneNumber") toPhoneNumberInput!: string;
-    @Output() sent = new EventEmitter<SenderData>();
+    @Output() sent = new EventEmitter<SentMessageEvent>();
 
     contacts: ContactInternal[] = [
         {
@@ -102,13 +103,9 @@ export class ContactsMessageBuilderComponent {
             },
         };
 
-        this.sent.emit(payload.sender_data);
-
-        try {
-            return await this.messageController.sendWhatsAppMessage(payload);
-        } catch (error) {
-            return Promise.reject(error);
-        }
+        const httpResponse = this.messageController.sendWhatsAppMessage(payload);
+        this.sent.emit({ senderData: payload.sender_data, httpResponse });
+        return httpResponse;
     }
 
     addContact(): void {
