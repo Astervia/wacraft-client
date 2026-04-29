@@ -4,6 +4,7 @@ import {
     ConversationMessagingProductContact,
 } from "../../../core/message/model/conversation.model";
 
+import { CommonModule } from "@angular/common";
 import { FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ContactControllerService } from "../../../core/contact/controller/contact-controller.service";
 import { MessagingProductContactControllerService } from "../../../core/messaging-product/controller/messaging-product-contact-controller.service";
@@ -16,6 +17,7 @@ import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/tim
 import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { NGXLogger } from "ngx-logger";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgxIntlTelInputModule } from "ngx-intl-tel-input";
@@ -25,11 +27,13 @@ import { isHttpError } from "../../../core/common/model/http-error-shape.model";
 @Component({
     selector: "app-contact-info",
     imports: [
+        CommonModule,
         FormsModule,
         SmallButtonComponent,
         MediaPreviewComponent,
         TimeoutErrorModalComponent,
         MatIconModule,
+        MatTooltipModule,
         RouterModule,
         MatFormFieldModule,
         MatInputModule,
@@ -357,6 +361,34 @@ export class ContactInfoComponent implements OnInit {
         } catch (error: unknown) {
             this.handleErr("Failed to load media and documents.", error);
         }
+    }
+
+    private static readonly EMAIL_RE = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    get nameValid(): boolean {
+        return !!this.messagingProductContact?.contact?.name?.trim();
+    }
+
+    get emailValid(): boolean {
+        const v = this.messagingProductContact?.contact?.email?.trim();
+        if (!v) return true;
+        return ContactInfoComponent.EMAIL_RE.test(v);
+    }
+
+    get phoneValid(): boolean {
+        if (this.messagingProductContact?.id) return true;
+        const e164 = this.phoneControl.value?.e164Number;
+        if (!e164) return false;
+        try {
+            const parsed = parsePhoneNumberFromString(e164);
+            return !!parsed?.isValid();
+        } catch {
+            return false;
+        }
+    }
+
+    get isFormValid(): boolean {
+        return this.nameValid && this.emailValid && this.phoneValid;
     }
 
     closeQueryParams = {

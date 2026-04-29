@@ -59,9 +59,21 @@
                             id="user-name"
                             [(ngModel)]="user.name"
                             [disabled]="!isEditing"
+                            minlength="2"
+                            maxlength="100"
                             placeholder="Enter user name"
-                            class="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-800"
+                            class="w-full rounded-lg border bg-gray-50 p-3 text-sm text-gray-900 outline-none transition-colors focus:ring-2 disabled:cursor-not-allowed disabled:bg-gray-100 dark:bg-gray-700 dark:text-white dark:disabled:bg-gray-800"
+                            [ngClass]="
+                                isEditing && !nameValid
+                                    ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500/60'
+                                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500/20 dark:border-gray-600 dark:focus:border-blue-400'
+                            "
                         />
+                        @if (isEditing && !nameValid) {
+                            <p class="mt-1 text-xs text-red-600 dark:text-red-400" i18n>
+                                Name must be 2 to 100 characters.
+                            </p>
+                        }
                     </div>
 
                     <!-- Password Field (only for new users) -->
@@ -79,8 +91,15 @@
                                     id="user-password"
                                     [(ngModel)]="user.password"
                                     [disabled]="!isEditing"
+                                    minlength="8"
+                                    maxlength="72"
                                     placeholder="Enter password"
-                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 pr-12 text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-800"
+                                    class="w-full rounded-lg border bg-gray-50 p-3 pr-12 text-sm text-gray-900 outline-none transition-colors focus:ring-2 disabled:cursor-not-allowed disabled:bg-gray-100 dark:bg-gray-700 dark:text-white dark:disabled:bg-gray-800"
+                                    [ngClass]="
+                                        isEditing && !passwordValid
+                                            ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500/60'
+                                            : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500/20 dark:border-gray-600 dark:focus:border-blue-400'
+                                    "
                                 />
                                 <button
                                     type="button"
@@ -93,6 +112,11 @@
                                     </span>
                                 </button>
                             </div>
+                            @if (isEditing && !passwordValid) {
+                                <p class="mt-1 text-xs text-red-600 dark:text-red-400" i18n>
+                                    Password must be 8 to 72 characters.
+                                </p>
+                            }
                         </div>
                     }
 
@@ -141,7 +165,12 @@
                                 [disabled]="!isEditing"
                                 type="email"
                                 placeholder="user@example.com"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 pr-12 font-mono text-sm text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400 dark:disabled:bg-gray-800"
+                                class="w-full rounded-lg border bg-gray-50 p-3 pr-12 font-mono text-sm text-gray-900 outline-none transition-colors focus:ring-2 disabled:cursor-not-allowed disabled:bg-gray-100 dark:bg-gray-700 dark:text-white dark:disabled:bg-gray-800"
+                                [ngClass]="
+                                    isEditing && !emailValid
+                                        ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-500/60'
+                                        : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500/20 dark:border-gray-600 dark:focus:border-blue-400'
+                                "
                             />
                             <app-copy-button
                                 class="absolute right-2 top-1/2 -translate-y-1/2"
@@ -150,6 +179,11 @@
                                 [textToCopy]="user.email"
                             ></app-copy-button>
                         </div>
+                        @if (isEditing && !emailValid) {
+                            <p class="mt-1 text-xs text-red-600 dark:text-red-400" i18n>
+                                Enter a valid email address.
+                            </p>
+                        }
                     </div>
 
                     <!-- Action Buttons -->
@@ -184,7 +218,9 @@
                             </button>
                             <button
                                 (click)="saveChanges()"
-                                class="flex-1 rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                [disabled]="!isFormValid"
+                                [matTooltip]="isFormValid ? '' : 'Fill in required fields to save'"
+                                class="flex-1 rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600"
                                 i18n
                             >
                                 Save

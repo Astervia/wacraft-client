@@ -40,8 +40,20 @@
                         id="campaign-name"
                         [(ngModel)]="campaign.name"
                         [disabled]="!isEditing"
-                        class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:opacity-70 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-400 dark:disabled:bg-gray-600"
+                        placeholder="Campaign name"
+                        i18n-placeholder
+                        class="w-full rounded-lg border bg-gray-50 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:ring-1 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:opacity-70 dark:bg-gray-700 dark:text-white dark:disabled:bg-gray-600"
+                        [ngClass]="
+                            isEditing && !nameValid
+                                ? 'border-red-400 focus:border-red-500 focus:ring-red-500 dark:border-red-500/60 dark:focus:border-red-400'
+                                : 'border-gray-200 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-blue-400'
+                        "
                     />
+                    @if (isEditing && !nameValid) {
+                        <p class="mt-1 text-xs text-red-600 dark:text-red-400" i18n>
+                            Name is required.
+                        </p>
+                    }
                 </div>
 
                 @if (campaignId) {
@@ -148,7 +160,9 @@
                         </button>
                         <button
                             (click)="saveChanges()"
-                            class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                            [disabled]="!isFormValid"
+                            [matTooltip]="isFormValid ? '' : 'Fill in required fields to save'"
+                            class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600"
                         >
                             <mat-icon
                                 class="material-icons-outlined !h-4 !w-4 shrink-0 !text-base !leading-none"

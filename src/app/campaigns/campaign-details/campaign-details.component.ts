@@ -191,6 +191,14 @@ export class CampaignDetailsComponent implements OnInit {
         this.activeTab = updated.status === "scheduled" ? "schedule" : "send";
     }
 
+    get nameValid(): boolean {
+        return !!this.campaign?.name?.trim();
+    }
+
+    get isFormValid(): boolean {
+        return !!this.campaign && this.nameValid;
+    }
+
     async loadMessageCount() {
         [this.totalMessages, this.messagesSent, this.unsentMessages] = await Promise.all([
             this.messageController.count({

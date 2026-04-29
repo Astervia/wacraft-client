@@ -5,3 +5,43 @@
 input {
     @apply outline-none;
 }
+
+/* Make ngx-intl-tel-input visually align with the rest of the form */
+:host ::ng-deep .iti {
+    width: 100%;
+}
+
+:host ::ng-deep .iti__country-list {
+    @apply rounded-lg shadow-lg;
+    z-index: 30;
+}
+
+:host ::ng-deep ngx-intl-tel-input .iti input,
+:host ::ng-deep ngx-intl-tel-input input[type="tel"] {
+    @apply w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 transition-colors;
+}
+
+:host ::ng-deep ngx-intl-tel-input .iti input:focus,
+:host ::ng-deep ngx-intl-tel-input input[type="tel"]:focus {
+    @apply border-blue-500 ring-2 ring-blue-500/20;
+    outline: none;
+}
+
+:host ::ng-deep ngx-intl-tel-input .iti input:disabled,
+:host ::ng-deep ngx-intl-tel-input input[type="tel"]:disabled {
+    @apply cursor-not-allowed bg-gray-100;
+}
+
+:is(.dark) :host ::ng-deep ngx-intl-tel-input .iti input,
+:is(.dark) :host ::ng-deep ngx-intl-tel-input input[type="tel"] {
+    @apply border-gray-600 bg-gray-700 text-white;
+}
+
+:is(.dark) :host ::ng-deep ngx-intl-tel-input .iti input:disabled,
+:is(.dark) :host ::ng-deep ngx-intl-tel-input input[type="tel"]:disabled {
+    @apply bg-gray-800;
+}
+
+:host ::ng-deep .phone-invalid ngx-intl-tel-input input[type="tel"] {
+    @apply border-red-400;
+}
