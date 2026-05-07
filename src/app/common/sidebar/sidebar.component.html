@@ -10,12 +10,16 @@
     >
         <button
             id="sidebar-toggle"
-            class="flex aspect-square w-10 items-center justify-center rounded-lg border border-gray-500 text-white dark:border-gray-500"
+            class="flex aspect-square w-10 items-center justify-center rounded-lg border border-gray-500 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:border-gray-500 dark:focus-visible:ring-gray-500"
             (click)="
                 queryParamsService.sidebarOpen
                     ? queryParamsService.closeSidebar()
                     : queryParamsService.openSidebar()
             "
+            [title]="queryParamsService.sidebarOpen ? 'Close sidebar' : 'Open sidebar'"
+            i18n-title
+            [attr.aria-label]="queryParamsService.sidebarOpen ? 'Close sidebar' : 'Open sidebar'"
+            i18n-aria-label
         >
             <i
                 [ngClass]="{
