@@ -146,8 +146,15 @@ export class BillingPlansComponent implements OnInit, OnDestroy {
                 counts.set(c, (counts.get(c) ?? 0) + 1);
             }
         }
-        const top = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
-        if (top) this.preferredCurrency = top[0];
+        let topCurrency = "";
+        let maxCount = -1;
+        for (const [currency, count] of counts) {
+            if (count > maxCount) {
+                maxCount = count;
+                topCurrency = currency;
+            }
+        }
+        if (topCurrency) this.preferredCurrency = topCurrency;
     }
 
     private detectLocaleCurrency(): string | null {
