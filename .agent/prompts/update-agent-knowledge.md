@@ -12,8 +12,7 @@ Preflight (run before proposing any change):
 - `grep -F '<key phrase>' .agent/core/CONVENTIONS.md` (and the target file
   if different) for the rule text you plan to add. If a substantively
   equivalent line already exists, do not open a PR.
-- For `.jules/<role>.md` learning entries, `grep -F '<key phrase>'
-  .jules/<role>.md` first. If covered, do not add a duplicate entry.
+- For `.jules/<role>.md` learning entries, `grep -F '<key phrase>' .jules/<role>.md` first. If covered, do not add a duplicate entry.
 
 Requirements:
 
