@@ -68,20 +68,13 @@ export class UserConversationsStoreService {
                 const messageId = data.message_id;
                 const statusReceivedAt = performance.now();
 
-                // ⚡ Bolt Performance Optimization:
-                // Using for...of instead of [...this.messageHistory.values()].flat().find(...)
-                // Avoids massive array allocations on every status update and allows early exit
-                let message: Conversation | undefined;
+                let message = this.findMessageById(this.messageHistory, messageId);
                 let foundIn: "history" | "unsent" | undefined;
-                for (const [source, conversations] of [
-                    ["history", [...this.messageHistory.values()].flat()] as const,
-                    ["unsent", [...this.unsentMessages.values()].flat()] as const,
-                ]) {
-                    message = conversations.find(item => item.id === messageId);
-                    if (message) {
-                        foundIn = source;
-                        break;
-                    }
+                if (message) {
+                    foundIn = "history";
+                } else {
+                    message = this.findMessageById(this.unsentMessages, messageId);
+                    if (message) foundIn = "unsent";
                 }
 
                 if (!message) {
@@ -233,6 +226,18 @@ export class UserConversationsStoreService {
         await this.unsentMutex.release(messagingProductContactId);
     }
 
+    private findMessageById(
+        map: Map<string, Conversation[]>,
+        id: string,
+    ): Conversation | undefined {
+        for (const list of map.values()) {
+            for (const item of list) {
+                if (item.id === id) return item;
+            }
+        }
+        return undefined;
+    }
+
     private offsetMu = new MutexSwapper<string>();
     async appendConversationIfAtBottom(
         conversation: Conversation,
@@ -359,9 +364,8 @@ export class UserConversationsStoreService {
                 // while the entry was still pending (WS beat HTTP, or a WS for another message
                 // incorrectly evicted our fake entry via fallback). If so, the entry in
                 // unsentMessages is now a stale duplicate with the real id — remove it.
-                const alreadyInHistory = [...this.messageHistory.values()].some(list =>
-                    list.some(m => m.id === realId),
-                );
+                const alreadyInHistory =
+                    this.findMessageById(this.messageHistory, realId) !== undefined;
                 if (alreadyInHistory) {
                     await this.unsentMutex.acquire(messagingProductContactId);
                     const list = this.unsentMessages.get(messagingProductContactId);
