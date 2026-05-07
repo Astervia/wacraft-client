@@ -16,6 +16,7 @@ export class SmallButtonComponent {
     @Input() active = false;
     @Input() width = "40px";
     @Input() alt = "";
+    @Input() ariaLabel = "";
     @ViewChild("button") button!: HTMLButtonElement;
     @ContentChild(TemplateRef) customContent?: TemplateRef<unknown>;
 
