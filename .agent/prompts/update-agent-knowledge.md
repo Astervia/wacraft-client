@@ -4,6 +4,17 @@ You are an automated agent running as a task to keep the `.agent/` directory up-
 
 Your goal is to review recent codebase changes (e.g., recent commits or PRs) and ensure the agent workspace (`.agent/`) accurately reflects how the team is currently building the application.
 
+Preflight (run before proposing any change):
+
+- `git fetch origin develop` and re-read the file you intend to edit at
+  `origin/develop`. Don't trust your local copy — agents have been
+  duplicating rules that already landed.
+- `grep -F '<key phrase>' .agent/core/CONVENTIONS.md` (and the target file
+  if different) for the rule text you plan to add. If a substantively
+  equivalent line already exists, do not open a PR.
+- For `.jules/<role>.md` learning entries, `grep -F '<key phrase>'
+  .jules/<role>.md` first. If covered, do not add a duplicate entry.
+
 Requirements:
 
 - **Small and Atomic**: Because this requires human review, you must output a very small, isolated change. Pick only _one_ update to make per run (e.g., adding one bullet point to `CONVENTIONS.md`, creating one focused prompt in `prompts/`, or fixing one outdated instruction).

@@ -2,6 +2,18 @@
 
 Implement a scoped change in `wacraft-client`.
 
+Preflight (run before opening any PR):
+
+- `git fetch origin develop` and `git diff origin/develop -- <target paths>`.
+  If the pattern you intended to fix is already gone from `develop`, abandon
+  the change and don't open a PR.
+- `grep -F '<key phrase from your learning>' .jules/<role>.md` (e.g.
+  `bolt.md`, `palette.md`, `sentinel.md`). If a learning entry covering the
+  same theme already exists, do not duplicate it — extend at most.
+- For doc-only changes to `.agent/core/CONVENTIONS.md`, grep the file for
+  the exact rule text first. If a substantively equivalent line already
+  exists, abandon the change.
+
 Requirements:
 
 - Trace the current behavior before editing.
