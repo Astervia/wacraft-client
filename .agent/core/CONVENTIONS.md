@@ -57,6 +57,11 @@ Repository-wide implementation rules for `wacraft-client`.
 - When hiding native focus rings on interactive elements (e.g., using Tailwind's `focus:outline-none`), always provide an accessible fallback for keyboard navigation, such as `focus-visible:ring-2`.
 - Always ensure icon-only interactive elements have proper `aria-label` attributes.
 
+## Security
+
+- Prevent XSS by using `DomSanitizer.sanitize(SecurityContext.URL, url)` instead of `bypassSecurityTrustUrl()` when handling user-supplied URLs. `bypassSecurityTrust*` only marks a value as trusted; it does not sanitize. Reserve it for verified internal values.
+- Always pair `target="_blank"` with `rel="noopener noreferrer"` on external links to prevent reverse-tabnabbing.
+
 ## Verification
 
 - For scoped code changes, prefer targeted checks first.
