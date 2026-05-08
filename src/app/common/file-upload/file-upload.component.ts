@@ -12,8 +12,10 @@ import { MatIconModule } from "@angular/material/icon";
 export class FileUploadComponent {
     @Output() change = new EventEmitter<Event>();
     @Input() acceptedFormats?: string = "";
+    @Input() accept?: string;
     uploadedFileName: string | null = null;
     isDragOver = false;
+    hasInvalidType = false;
 
     @ViewChild("fileInput") fileInput?: ElementRef<HTMLInputElement>;
 
@@ -45,16 +47,50 @@ export class FileUploadComponent {
 
     clearSelection() {
         this.uploadedFileName = null;
+        this.hasInvalidType = false;
         this.change.emit({ target: { files: [] } } as unknown as Event);
     }
 
     private selectFiles(files?: FileList | File[]) {
         if (files && files.length > 0) {
-            this.uploadedFileName = files[0].name;
+            const fileArray = Array.from(files);
+            const invalid = fileArray.find(file => !this.fileMatchesAccept(file));
+            if (invalid) {
+                this.hasInvalidType = true;
+                this.uploadedFileName = null;
+                if (this.fileInput) this.fileInput.nativeElement.value = "";
+                this.change.emit({ target: { files: [] } } as unknown as Event);
+                return;
+            }
+
+            this.hasInvalidType = false;
+            this.uploadedFileName = fileArray[0].name;
             this.change.emit({ target: { files } } as unknown as Event);
             return;
         }
 
         this.clearSelection();
+    }
+
+    private fileMatchesAccept(file: File): boolean {
+        if (!this.accept) return true;
+
+        const tokens = this.accept
+            .split(",")
+            .map(token => token.trim().toLowerCase())
+            .filter(Boolean);
+        if (tokens.length === 0) return true;
+
+        const fileName = file.name.toLowerCase();
+        const fileType = file.type.toLowerCase();
+
+        return tokens.some(token => {
+            if (token.startsWith(".")) return fileName.endsWith(token);
+            if (token.endsWith("/*")) {
+                const prefix = token.slice(0, token.length - 1);
+                return fileType.startsWith(prefix);
+            }
+            return fileType === token;
+        });
     }
 }
