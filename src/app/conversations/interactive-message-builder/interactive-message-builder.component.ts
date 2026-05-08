@@ -22,11 +22,11 @@ import { SenderData } from "../../../core/message/model/sender-data.model";
 import { SentMessageEvent } from "../../../core/message/model/sent-message-event.model";
 import { Context } from "../../../core/message/model/context.model";
 import { MatIconModule } from "@angular/material/icon";
-import { FileUploadComponent } from "../../common/file-upload/file-upload.component";
+import { MediaMessageFileUploadComponent } from "../../messages/media-message-file-upload/media-message-file-upload.component";
 
 @Component({
     selector: "app-interactive-message-builder",
-    imports: [FormsModule, CommonModule, MatIconModule, FileUploadComponent],
+    imports: [FormsModule, CommonModule, MatIconModule, MediaMessageFileUploadComponent],
     templateUrl: "./interactive-message-builder.component.html",
     styleUrl: "./interactive-message-builder.component.scss",
     preserveWhitespaces: false,

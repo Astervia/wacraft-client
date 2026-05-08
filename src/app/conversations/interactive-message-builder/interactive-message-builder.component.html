@@ -95,12 +95,13 @@
                     }
                     <!-- File Upload -->
                     @if (!mediaByUrl) {
-                        <app-file-upload
+                        <app-media-message-file-upload
                             name="fileInput"
                             id="file-input"
                             class="col-span-8"
+                            [type]="interactiveHeaderType"
                             (change)="onFileSelected($event)"
-                        ></app-file-upload>
+                        ></app-media-message-file-upload>
                     }
                 </div>
                 @if (errors["headerMedia"]) {
