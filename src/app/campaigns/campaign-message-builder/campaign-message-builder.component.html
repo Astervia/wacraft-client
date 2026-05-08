@@ -63,6 +63,7 @@
             id="file-input"
             (change)="onFileSelected($event)"
             [acceptedFormats]="uploadFileType === 'json' ? 'JSON' : 'CSV'"
+            [accept]="uploadFileType === 'json' ? '.json,application/json' : '.csv,text/csv'"
             i18n
         ></app-file-upload>
 
