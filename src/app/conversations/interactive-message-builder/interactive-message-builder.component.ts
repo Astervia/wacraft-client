@@ -271,7 +271,7 @@ export class InteractiveMessageBuilderComponent {
 
     onFileSelected(event: Event) {
         const target = event.target as HTMLInputElement;
-        if (!target.files || target.files.length > 0) return (this.selectedFile = undefined);
+        if (!target.files || target.files.length <= 0) return (this.selectedFile = undefined);
 
         this.selectedFile = target.files[0];
     }
