@@ -44,15 +44,12 @@ export class InteractiveMessageBuilderComponent {
     totalRows = 0;
     selectedFile?: File;
     link = "";
-    caption = "";
     mediaByUrl = false;
 
     @ViewChild("interactiveBodyArea")
     interactiveBodyArea!: ElementRef<HTMLTextAreaElement>;
     @ViewChild("headerMediaLinkArea")
     headerMediaLinkArea!: ElementRef<HTMLTextAreaElement>;
-    @ViewChild("headerMediaCaptionArea")
-    headerMediaCaptionArea!: HTMLTextAreaElement;
     @Input("toId") toIdInput!: string;
     @Input("toPhoneNumber") toPhoneNumberInput!: string;
     @Output() sent = new EventEmitter<SentMessageEvent>();
@@ -128,7 +125,6 @@ export class InteractiveMessageBuilderComponent {
                           [this.interactiveHeaderType]: {
                               link,
                               id,
-                              caption: this.caption === "" ? undefined : this.caption,
                           },
                       }),
             },
@@ -186,7 +182,6 @@ export class InteractiveMessageBuilderComponent {
             return Promise.reject(error);
         } finally {
             setTimeout(() => {
-                this.adjustHeight(this.headerMediaCaptionArea);
                 this.adjustHeight(this.headerMediaLinkArea.nativeElement);
                 this.adjustHeight(this.interactiveBodyArea.nativeElement);
             });
