@@ -102,19 +102,6 @@
                             (change)="onFileSelected($event)"
                         ></app-file-upload>
                     }
-                    <!-- Caption -->
-                    <textarea
-                        class="col-span-12 min-h-10 w-full resize-none rounded-lg bg-gray-300 px-3 py-2 outline-none dark:bg-gray-600 dark:text-white"
-                        placeholder="Caption (optional)"
-                        rows="1"
-                        [(ngModel)]="caption"
-                        [ngClass]="{
-                            'border border-red-500': errors['headerMedia'],
-                        }"
-                        (input)="adjustHeight(headerMediaCaptionArea)"
-                        name="mediaCaption"
-                        #headerMediaCaptionArea
-                    ></textarea>
                 </div>
                 @if (errors["headerMedia"]) {
                     <div class="mt-1 text-sm text-red-500">
