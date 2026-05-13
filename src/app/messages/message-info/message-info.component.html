@@ -5,7 +5,7 @@
         'text-right': !message.sender_data,
     }"
 >
-    <p>{{ message.created_at | date: "short" }}</p>
+    <p>{{ message.created_at | localDate }}</p>
 
     <div class="ml-2 flex flex-row items-center justify-center">
         @if (sent && message.statuses?.[0]?.product_data?.status; as status) {

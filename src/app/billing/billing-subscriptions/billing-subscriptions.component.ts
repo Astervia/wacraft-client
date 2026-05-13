@@ -4,6 +4,7 @@ import { BillingSubscriptionStoreService } from "../../../core/billing/store/bil
 import { WorkspaceStoreService } from "../../../core/workspace/store/workspace-store.service";
 import { Subscription } from "../../../core/billing/entity/subscription.entity";
 import { Policy } from "../../../core/workspace/model/policy.model";
+import { LocalSettingsService } from "../../local-settings.service";
 
 @Component({
     selector: "app-billing-subscriptions",
@@ -14,6 +15,7 @@ import { Policy } from "../../../core/workspace/model/policy.model";
 export class BillingSubscriptionsComponent implements OnInit {
     subscriptionStore = inject(BillingSubscriptionStoreService);
     workspaceStore = inject(WorkspaceStoreService);
+    private localSettings = inject(LocalSettingsService);
 
     errorMessage = "";
     private scrolling = false;
@@ -103,14 +105,20 @@ export class BillingSubscriptionsComponent implements OnInit {
         if (status === "cancelling") {
             return (
                 "Cancellation pending — Active until " +
-                new Date(sub.expires_at).toLocaleDateString()
+                new Date(sub.expires_at).toLocaleDateString(this.localSettings.locale)
             );
         }
         if (status === "expired") return "Expired";
         if (sub.payment_mode === "subscription") {
-            return "Active — Renews on " + new Date(sub.expires_at).toLocaleDateString();
+            return (
+                "Active — Renews on " +
+                new Date(sub.expires_at).toLocaleDateString(this.localSettings.locale)
+            );
         }
-        return "Active — Expires on " + new Date(sub.expires_at).toLocaleDateString();
+        return (
+            "Active — Expires on " +
+            new Date(sub.expires_at).toLocaleDateString(this.localSettings.locale)
+        );
     }
 
     canCancel(sub: Subscription): boolean {
@@ -151,7 +159,7 @@ export class BillingSubscriptionsComponent implements OnInit {
     }
 
     async cancelSubscription(sub: Subscription): Promise<void> {
-        const expiresAt = new Date(sub.expires_at).toLocaleDateString();
+        const expiresAt = new Date(sub.expires_at).toLocaleDateString(this.localSettings.locale);
         if (
             !confirm(
                 `Are you sure you want to cancel this subscription? It will remain active until ${expiresAt} and you will not be charged again.`,

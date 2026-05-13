@@ -4,10 +4,17 @@ import { Conversation } from "../../../core/message/model/conversation.model";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MessageStatusIconComponent } from "../../common/message-status-icon/message-status-icon.component";
+import { LocalDatePipe } from "../../../core/common/pipe/local-date.pipe";
 
 @Component({
     selector: "app-message-info",
-    imports: [CommonModule, MatIconModule, MatTooltipModule, MessageStatusIconComponent],
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MessageStatusIconComponent,
+        LocalDatePipe,
+    ],
     templateUrl: "./message-info.component.html",
     styleUrl: "./message-info.component.scss",
     standalone: true,

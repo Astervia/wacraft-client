@@ -97,4 +97,15 @@ export class LocalSettingsService {
         this.sendTyping = value;
         localStorage.setItem("sendTyping", String(value));
     }
+
+    locale: string = localStorage.getItem("locale") || navigator.language || "en-US";
+    setLocale(value: string | null) {
+        if (value) {
+            localStorage.setItem("locale", value);
+            this.locale = value;
+        } else {
+            localStorage.removeItem("locale");
+            this.locale = navigator.language || "en-US";
+        }
+    }
 }

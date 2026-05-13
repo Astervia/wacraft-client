@@ -20,6 +20,7 @@ import { MessageDataPipe } from "../../../core/message/pipe/message-data.pipe";
 import { MessageContentPreviewComponent } from "../../messages/message-content-preview/message-content-preview.component";
 import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
 import { MessageStatusIconComponent } from "../../common/message-status-icon/message-status-icon.component";
+import { LocalDatePipe } from "../../../core/common/pipe/local-date.pipe";
 
 @Component({
     selector: "app-conversation-preview",
@@ -30,6 +31,7 @@ import { MessageStatusIconComponent } from "../../common/message-status-icon/mes
         MessageDataPipe,
         RouterModule,
         MessageStatusIconComponent,
+        LocalDatePipe,
     ],
     templateUrl: "./conversation-preview.component.html",
     styleUrl: "./conversation-preview.component.scss",
