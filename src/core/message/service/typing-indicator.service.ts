@@ -1,142 +1,278 @@
 import { Injectable, OnDestroy, inject } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
+import { distinctUntilChanged, map } from "rxjs/operators";
+import { v4 as uuidv4 } from "uuid";
+import { NGXLogger } from "ngx-logger";
 import { UserConversationsStoreService } from "../store/user-conversations-store.service";
 import { LocalSettingsService } from "../../../app/local-settings.service";
-import { Subject } from "rxjs";
+import { MutexSwapper } from "../../synch/mutex-swapper/mutex-swapper";
+
+type SessionPhase = "idle-extendable" | "response-awaiting";
+type SessionEndReason = "idle-timeout" | "response-received" | "explicit-stop";
+
+interface TypingSession {
+    id: string;
+    mpcId: string;
+    phase: SessionPhase;
+    startedAt: number;
+    endedAt?: number;
+    endReason?: SessionEndReason;
+    idleTimer?: ReturnType<typeof setTimeout>;
+}
+
+interface ConversationTypingState {
+    sessions: Map<string, TypingSession>;
+    count$: BehaviorSubject<number>;
+    refreshTimer?: ReturnType<typeof setTimeout>;
+}
 
 /**
- * Service to manage typing indicators for WhatsApp conversations.
+ * Tracks typing sessions per conversation.
  *
- * According to WhatsApp/Meta documentation:
- * - Typing indicator is dismissed after 25 seconds or when you send a message
- * - Only display typing indicator if you are going to respond
+ * Per WhatsApp/Meta, a typing indicator dismisses after 25s of silence or when
+ * a message is sent. A conversation can hold multiple overlapping sessions:
+ * the user can start a new keystroke session while a previous one is still
+ * awaiting the server's response to a sent message.
  *
- * This service implements a smart typing system that:
- * 1. Sends typing indicator when user starts typing
- * 2. Automatically refreshes the indicator before the 25s window expires
- * 3. Prevents sending duplicate requests within the refresh window
- * 4. Emits state changes for UI updates
+ * The active session count drives the UI; mutations serialize per mpcId via
+ * MutexSwapper so concurrent keystrokes, idle-timer fires, and response
+ * settlements cannot race.
  */
-@Injectable({
-    providedIn: "root",
-})
+@Injectable({ providedIn: "root" })
 export class TypingIndicatorService implements OnDestroy {
     private userConversationsStore = inject(UserConversationsStoreService);
     private localSettings = inject(LocalSettingsService);
+    private logger = inject(NGXLogger);
 
-    // WhatsApp typing indicator expires after 25 seconds
-    private readonly TYPING_DURATION_MS = 25000;
+    static readonly IDLE_TIMEOUT_MS = 25000;
+    static readonly REFRESH_INTERVAL_MS = 20000;
 
-    // Safety margin to refresh typing before it expires (in milliseconds)
-    // We refresh at 20 seconds to account for network latency and ensure
-    // continuous typing display without gaps
-    private readonly REFRESH_MARGIN_MS = 5000;
+    private state = new Map<string, ConversationTypingState>();
+    private mutex = new MutexSwapper<string>();
 
-    // The actual refresh interval (25s - 5s = 20s)
-    private readonly REFRESH_INTERVAL_MS = this.TYPING_DURATION_MS - this.REFRESH_MARGIN_MS;
+    typingCount$(mpcId: string): Observable<number> {
+        return this.getOrCreateState(mpcId).count$.asObservable();
+    }
 
-    // Map to track active typing timers per conversation
-    private typingTimers = new Map<string, NodeJS.Timeout>();
-
-    // Map to track when typing was last sent per conversation
-    private lastTypingSent = new Map<string, number>();
-
-    // Subject to emit typing state changes per conversation
-    private typingStateSubjects = new Map<string, Subject<boolean>>();
-
-    /**
-     * Get or create a typing state subject for a conversation
-     */
-    getTypingStateObservable(messagingProductContactId: string): Subject<boolean> {
-        if (!this.typingStateSubjects.has(messagingProductContactId)) {
-            this.typingStateSubjects.set(messagingProductContactId, new Subject<boolean>());
-        }
-        return this.typingStateSubjects.get(messagingProductContactId)!;
+    isTyping$(mpcId: string): Observable<boolean> {
+        return this.typingCount$(mpcId).pipe(
+            map(n => n > 0),
+            distinctUntilChanged(),
+        );
     }
 
     /**
-     * Triggers typing indicator for a specific conversation.
-     * Intelligently manages the 25-second typing window.
-     *
-     * @param messagingProductContactId The ID of the contact/conversation
+     * Note a keystroke. Extends the current idle-extendable session if one
+     * exists; otherwise opens a fresh session. No-op when sending typing is
+     * disabled in local settings — including the local balloon.
      */
-    async triggerTyping(messagingProductContactId: string): Promise<void> {
-        // Check if typing is enabled in settings
-        if (!this.localSettings.sendTyping) {
-            return;
-        }
+    async noteUserInput(mpcId: string): Promise<void> {
+        if (!this.localSettings.sendTyping) return;
 
-        const now = Date.now();
-        const lastSent = this.lastTypingSent.get(messagingProductContactId);
-
-        // If we recently sent a typing indicator (within the refresh window),
-        // don't send another one yet
-        if (lastSent && now - lastSent < this.REFRESH_INTERVAL_MS) {
-            return;
-        }
-
-        // Send typing indicator to the server
+        let shouldPingNow = false;
+        await this.mutex.acquire(mpcId);
         try {
-            await this.userConversationsStore.sendTyping(messagingProductContactId);
-            this.lastTypingSent.set(messagingProductContactId, now);
+            const state = this.getOrCreateState(mpcId);
+            const existing = this.findIdleExtendableSession(state);
+            if (existing) {
+                this.resetIdleTimer(mpcId, existing);
+                return;
+            }
+            const session: TypingSession = {
+                id: uuidv4(),
+                mpcId,
+                phase: "idle-extendable",
+                startedAt: Date.now(),
+            };
+            this.resetIdleTimer(mpcId, session);
+            state.sessions.set(session.id, session);
+            state.count$.next(state.sessions.size);
 
-            // Emit typing state change
-            const subject = this.getTypingStateObservable(messagingProductContactId);
-            subject.next(true);
+            if (!state.refreshTimer) {
+                shouldPingNow = true;
+                state.refreshTimer = setTimeout(
+                    () => this.refreshTick(mpcId),
+                    TypingIndicatorService.REFRESH_INTERVAL_MS,
+                );
+            }
+        } finally {
+            await this.mutex.release(mpcId);
+        }
+        if (shouldPingNow) this.postTypingPing(mpcId);
+    }
 
-            // Clear any existing timer for this conversation
-            this.clearTypingTimer(messagingProductContactId);
+    /**
+     * Transition the current idle-extendable session into response-awaiting.
+     * The session closes when `response` settles (resolved or rejected).
+     * No-op if no idle-extendable session exists.
+     */
+    async awaitResponse(mpcId: string, response: Promise<unknown>): Promise<void> {
+        let sessionId: string | undefined;
+        await this.mutex.acquire(mpcId);
+        try {
+            const state = this.state.get(mpcId);
+            if (!state) return;
+            const idle = this.findIdleExtendableSession(state);
+            if (!idle) return;
+            if (idle.idleTimer) {
+                clearTimeout(idle.idleTimer);
+                idle.idleTimer = undefined;
+            }
+            idle.phase = "response-awaiting";
+            sessionId = idle.id;
+        } finally {
+            await this.mutex.release(mpcId);
+        }
+        if (!sessionId) return;
+        try {
+            await response;
+        } catch {
+            // Drop the balloon regardless of response outcome.
+        }
+        await this.closeSession(mpcId, sessionId, "response-received");
+    }
 
-            // Set up a timer to auto-refresh typing indicator before it expires
-            const timer = setTimeout(() => {
-                // Auto-refresh: send typing again if still within typing session
-                // This ensures continuous typing display if user is still composing
-                this.clearTypingTimer(messagingProductContactId);
-
-                // Emit typing stopped if no new typing triggered
-                subject.next(false);
-            }, this.REFRESH_INTERVAL_MS);
-
-            this.typingTimers.set(messagingProductContactId, timer);
-        } catch (error) {
-            // Silently fail - typing indicator is not critical functionality
-            console.error("Failed to send typing indicator:", error);
+    /** Close every active session for a conversation. */
+    async stopAll(mpcId: string): Promise<void> {
+        await this.mutex.acquire(mpcId);
+        try {
+            const state = this.state.get(mpcId);
+            if (!state) return;
+            for (const session of state.sessions.values()) {
+                if (session.idleTimer) {
+                    clearTimeout(session.idleTimer);
+                    session.idleTimer = undefined;
+                }
+                session.endedAt = Date.now();
+                session.endReason = "explicit-stop";
+            }
+            state.sessions.clear();
+            this.stopRefreshLoopLocked(state);
+            state.count$.next(0);
+        } finally {
+            await this.mutex.release(mpcId);
         }
     }
 
-    /**
-     * Stops the typing indicator for a conversation.
-     * Call this when user sends a message or clears the input.
-     *
-     * @param messagingProductContactId The ID of the contact/conversation
-     */
-    stopTyping(messagingProductContactId: string): void {
-        this.clearTypingTimer(messagingProductContactId);
-        this.lastTypingSent.delete(messagingProductContactId);
-
-        // Emit typing stopped
-        const subject = this.getTypingStateObservable(messagingProductContactId);
-        subject.next(false);
-    }
-
-    /**
-     * Clears the typing timer for a conversation
-     */
-    private clearTypingTimer(messagingProductContactId: string): void {
-        const timer = this.typingTimers.get(messagingProductContactId);
-        if (timer) {
-            clearTimeout(timer);
-            this.typingTimers.delete(messagingProductContactId);
-        }
-    }
-
-    /**
-     * Clean up all timers (call on service destroy)
-     */
     ngOnDestroy(): void {
-        this.typingTimers.forEach(timer => clearTimeout(timer));
-        this.typingTimers.clear();
-        this.lastTypingSent.clear();
-        this.typingStateSubjects.forEach(subject => subject.complete());
-        this.typingStateSubjects.clear();
+        for (const state of this.state.values()) {
+            for (const session of state.sessions.values()) {
+                if (session.idleTimer) clearTimeout(session.idleTimer);
+            }
+            if (state.refreshTimer) clearTimeout(state.refreshTimer);
+            state.count$.complete();
+        }
+        this.state.clear();
+    }
+
+    private getOrCreateState(mpcId: string): ConversationTypingState {
+        let state = this.state.get(mpcId);
+        if (!state) {
+            state = {
+                sessions: new Map(),
+                count$: new BehaviorSubject<number>(0),
+            };
+            this.state.set(mpcId, state);
+        }
+        return state;
+    }
+
+    private findIdleExtendableSession(state: ConversationTypingState): TypingSession | undefined {
+        for (const session of state.sessions.values()) {
+            if (session.phase === "idle-extendable") return session;
+        }
+        return undefined;
+    }
+
+    private resetIdleTimer(mpcId: string, session: TypingSession): void {
+        if (session.idleTimer) clearTimeout(session.idleTimer);
+        const timer: ReturnType<typeof setTimeout> = setTimeout(
+            () => void this.onIdleTimerFire(mpcId, session.id, timer),
+            TypingIndicatorService.IDLE_TIMEOUT_MS,
+        );
+        session.idleTimer = timer;
+    }
+
+    private async onIdleTimerFire(
+        mpcId: string,
+        sessionId: string,
+        firingTimer: ReturnType<typeof setTimeout>,
+    ): Promise<void> {
+        await this.mutex.acquire(mpcId);
+        try {
+            const state = this.state.get(mpcId);
+            const session = state?.sessions.get(sessionId);
+            // Guard against extension/cancellation that happened between fire
+            // and mutex acquisition: a newer timer means input arrived; an
+            // undefined timer means we transitioned to response-awaiting.
+            if (!state || !session || session.idleTimer !== firingTimer) return;
+            session.idleTimer = undefined;
+            session.endedAt = Date.now();
+            session.endReason = "idle-timeout";
+            state.sessions.delete(sessionId);
+            state.count$.next(state.sessions.size);
+            if (state.sessions.size === 0) this.stopRefreshLoopLocked(state);
+        } finally {
+            await this.mutex.release(mpcId);
+        }
+    }
+
+    private async closeSession(
+        mpcId: string,
+        sessionId: string,
+        reason: SessionEndReason,
+    ): Promise<void> {
+        await this.mutex.acquire(mpcId);
+        try {
+            const state = this.state.get(mpcId);
+            const session = state?.sessions.get(sessionId);
+            if (!state || !session) return;
+            if (session.idleTimer) {
+                clearTimeout(session.idleTimer);
+                session.idleTimer = undefined;
+            }
+            session.endedAt = Date.now();
+            session.endReason = reason;
+            state.sessions.delete(sessionId);
+            state.count$.next(state.sessions.size);
+            if (state.sessions.size === 0) this.stopRefreshLoopLocked(state);
+        } finally {
+            await this.mutex.release(mpcId);
+        }
+    }
+
+    private stopRefreshLoopLocked(state: ConversationTypingState): void {
+        if (state.refreshTimer) {
+            clearTimeout(state.refreshTimer);
+            state.refreshTimer = undefined;
+        }
+    }
+
+    private refreshTick(mpcId: string): void {
+        void (async () => {
+            let shouldPost = false;
+            await this.mutex.acquire(mpcId);
+            try {
+                const state = this.state.get(mpcId);
+                if (!state) return;
+                state.refreshTimer = undefined;
+                if (state.sessions.size === 0) return;
+                shouldPost = true;
+                state.refreshTimer = setTimeout(
+                    () => this.refreshTick(mpcId),
+                    TypingIndicatorService.REFRESH_INTERVAL_MS,
+                );
+            } finally {
+                await this.mutex.release(mpcId);
+            }
+            if (shouldPost) this.postTypingPing(mpcId);
+        })();
+    }
+
+    private postTypingPing(mpcId: string): void {
+        if (!this.localSettings.sendTyping) return;
+        this.userConversationsStore
+            .sendTyping(mpcId)
+            .catch((err: unknown) => this.logger.error("Failed to send typing indicator:", err));
     }
 }

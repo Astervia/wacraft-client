@@ -146,8 +146,7 @@ export class ConversationFooterComponent implements OnInit {
     errors: Record<string, string> = {};
 
     ngOnInit(): void {
-        // Subscribe to typing state changes and emit to parent
-        this.typingIndicator.getTypingStateObservable(this.toIdInput).subscribe(isTyping => {
+        this.typingIndicator.isTyping$(this.toIdInput).subscribe(isTyping => {
             this.typingStateChange.emit(isTyping);
         });
     }
@@ -181,6 +180,7 @@ export class ConversationFooterComponent implements OnInit {
             switch (this.messageType) {
                 case MessageType.text: {
                     const sendText = this.sendText(context);
+                    this.typingIndicator.awaitResponse(this.toIdInput, sendText);
                     setTimeout(() => {
                         this.adjustHeight(this.area.nativeElement);
                     });
@@ -193,6 +193,7 @@ export class ConversationFooterComponent implements OnInit {
                 case MessageType.sticker:
                 case MessageType.document: {
                     const sendMedia = this.sendMedia(context);
+                    this.typingIndicator.awaitResponse(this.toIdInput, sendMedia);
                     setTimeout(() => {
                         this.adjustHeight(this.mediaLinkArea.nativeElement);
                         this.adjustHeight(this.mediaCaptionArea.nativeElement);
@@ -203,24 +204,28 @@ export class ConversationFooterComponent implements OnInit {
                 }
                 case MessageType.interactive: {
                     const sendInteractive = this.interactiveMessageBuilder.sendInteractive(context);
+                    this.typingIndicator.awaitResponse(this.toIdInput, sendInteractive);
                     this.replyToMessage = undefined;
                     const sentInteractive = await sendInteractive;
                     return sentInteractive;
                 }
                 case MessageType.location: {
                     const sendLocation = this.locationMessageBuilder.send(context);
+                    this.typingIndicator.awaitResponse(this.toIdInput, sendLocation);
                     this.replyToMessage = undefined;
                     const sentLocation = await sendLocation;
                     return sentLocation;
                 }
                 case MessageType.contacts: {
                     const sendContacts = this.contactsMessageBuilder.send(context);
+                    this.typingIndicator.awaitResponse(this.toIdInput, sendContacts);
                     this.replyToMessage = undefined;
                     const sentContacts = await sendContacts;
                     return sentContacts;
                 }
                 default: {
                     const sendRaw = this.sendRaw(context);
+                    this.typingIndicator.awaitResponse(this.toIdInput, sendRaw);
                     setTimeout(() => {
                         this.adjustHeight(this.area.nativeElement);
                     });
@@ -363,9 +368,6 @@ export class ConversationFooterComponent implements OnInit {
         this.mediaByUrl = false;
         this.selectedFile = undefined;
         this.errors = {};
-
-        // Stop typing indicator when message is sent
-        this.typingIndicator.stopTyping(this.toIdInput);
     }
 
     isMediaType = isMediaType;
@@ -450,13 +452,8 @@ export class ConversationFooterComponent implements OnInit {
         this.change.emit();
     }
 
-    /**
-     * Handles typing indicator logic when user types in text fields
-     */
     handleTyping() {
-        // Trigger typing for any text input in the message composer
-        // This includes text messages, captions, interactive messages, etc.
-        this.typingIndicator.triggerTyping(this.toIdInput);
+        this.typingIndicator.noteUserInput(this.toIdInput);
     }
 
     async buildMessage() {
