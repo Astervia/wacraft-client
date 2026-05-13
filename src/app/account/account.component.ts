@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ViewChild, inject } from "@angular/core";
+import { Component, ElementRef, OnInit, Renderer2, ViewChild, inject } from "@angular/core";
 import { UserControllerService } from "../../core/user/controller/user-controller.service";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -44,6 +44,99 @@ export class AccountComponent implements OnInit {
 
     isEditing = false;
     isDropdownOpen = false;
+    isLocaleDropdownOpen = false;
+    localeSearch = "";
+    localeDropdownStyle: Record<string, string> = {};
+
+    @ViewChild("localeTrigger") localeTrigger!: ElementRef<HTMLButtonElement>;
+
+    readonly localeOptions: { code: string; label: string }[] = [
+        { code: "en-US", label: "English (United States)" },
+        { code: "en-GB", label: "English (United Kingdom)" },
+        { code: "en-AU", label: "English (Australia)" },
+        { code: "en-CA", label: "English (Canada)" },
+        { code: "pt-BR", label: "Português (Brasil)" },
+        { code: "pt-PT", label: "Português (Portugal)" },
+        { code: "de-DE", label: "Deutsch (Deutschland)" },
+        { code: "de-AT", label: "Deutsch (Österreich)" },
+        { code: "de-CH", label: "Deutsch (Schweiz)" },
+        { code: "fr-FR", label: "Français (France)" },
+        { code: "fr-CA", label: "Français (Canada)" },
+        { code: "fr-BE", label: "Français (Belgique)" },
+        { code: "es-ES", label: "Español (España)" },
+        { code: "es-MX", label: "Español (México)" },
+        { code: "es-AR", label: "Español (Argentina)" },
+        { code: "es-CO", label: "Español (Colombia)" },
+        { code: "it-IT", label: "Italiano (Italia)" },
+        { code: "nl-NL", label: "Nederlands (Nederland)" },
+        { code: "nl-BE", label: "Nederlands (België)" },
+        { code: "pl-PL", label: "Polski (Polska)" },
+        { code: "ru-RU", label: "Русский (Россия)" },
+        { code: "uk-UA", label: "Українська (Україна)" },
+        { code: "cs-CZ", label: "Čeština (Česká republika)" },
+        { code: "hu-HU", label: "Magyar (Magyarország)" },
+        { code: "ro-RO", label: "Română (România)" },
+        { code: "sv-SE", label: "Svenska (Sverige)" },
+        { code: "da-DK", label: "Dansk (Danmark)" },
+        { code: "fi-FI", label: "Suomi (Suomi)" },
+        { code: "no-NO", label: "Norsk (Norge)" },
+        { code: "tr-TR", label: "Türkçe (Türkiye)" },
+        { code: "he-IL", label: "עברית (ישראל)" },
+        { code: "ar-SA", label: "العربية (المملكة العربية السعودية)" },
+        { code: "ar-EG", label: "العربية (مصر)" },
+        { code: "ja-JP", label: "日本語 (日本)" },
+        { code: "ko-KR", label: "한국어 (대한민국)" },
+        { code: "zh-CN", label: "中文 (简体)" },
+        { code: "zh-TW", label: "中文 (繁體)" },
+        { code: "zh-HK", label: "中文 (香港)" },
+        { code: "hi-IN", label: "हिन्दी (भारत)" },
+        { code: "id-ID", label: "Bahasa Indonesia (Indonesia)" },
+        { code: "ms-MY", label: "Bahasa Melayu (Malaysia)" },
+        { code: "th-TH", label: "ภาษาไทย (ประเทศไทย)" },
+        { code: "vi-VN", label: "Tiếng Việt (Việt Nam)" },
+    ];
+
+    get filteredLocales() {
+        const q = this.localeSearch.toLowerCase();
+        if (!q) return this.localeOptions;
+        return this.localeOptions.filter(
+            o => o.code.toLowerCase().includes(q) || o.label.toLowerCase().includes(q),
+        );
+    }
+
+    get currentLocaleLabel(): string {
+        return this.localeOptions.find(o => o.code === this.localSettings.locale)?.label ?? "";
+    }
+
+    openLocaleDropdown() {
+        this.localeSearch = "";
+        const rect = this.localeTrigger.nativeElement.getBoundingClientRect();
+        const margin = 8;
+        const spaceBelow = window.innerHeight - rect.bottom - margin;
+        const spaceAbove = rect.top - margin;
+        const maxAllowed = 320;
+
+        const style: Record<string, string> = {
+            left: `${rect.left}px`,
+            width: `${rect.width}px`,
+        };
+
+        if (spaceBelow >= 150 || spaceBelow >= spaceAbove) {
+            style["top"] = `${rect.bottom + 4}px`;
+            style["maxHeight"] = `${Math.min(spaceBelow, maxAllowed)}px`;
+        } else {
+            style["bottom"] = `${window.innerHeight - rect.top + 4}px`;
+            style["maxHeight"] = `${Math.min(spaceAbove, maxAllowed)}px`;
+        }
+
+        this.localeDropdownStyle = style;
+        this.isLocaleDropdownOpen = true;
+    }
+
+    selectLocale(code: string) {
+        this.localSettings.setLocale(code);
+        this.isLocaleDropdownOpen = false;
+    }
 
     @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
@@ -96,6 +189,22 @@ export class AccountComponent implements OnInit {
 
     toggleSendTyping(sendTyping: boolean) {
         this.localSettings.setSendTyping(sendTyping);
+    }
+
+    resetLocale() {
+        this.localSettings.setLocale(null);
+        this.isLocaleDropdownOpen = false;
+    }
+
+    get localeDatePreview(): string {
+        try {
+            return new Date().toLocaleString(this.localSettings.locale, {
+                dateStyle: "short",
+                timeStyle: "short",
+            });
+        } catch {
+            return "";
+        }
     }
 
     errorStr = "";
