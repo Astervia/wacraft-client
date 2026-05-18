@@ -41,7 +41,7 @@
         "date-fns": "^4.1.0",
         "file-saver": "^2.0.5",
         "google-libphonenumber": "^3.2.40",
-        "intl-tel-input": "^19.5.7",
+        "intl-tel-input": "^28.1.0",
         "leaflet": "^1.9.4",
         "libphonenumber-js": "^1.12.8",
         "locale-currency": "^1.0.0",
