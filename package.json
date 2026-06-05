@@ -36,7 +36,7 @@
         "@types/papaparse": "^5.3.14",
         "apexcharts": "^5.3.6",
         "async-mutex": "^0.5.0",
-        "axios": "^1.7.5",
+        "axios": "^1.17.0",
         "csvtojson": "^2.0.10",
         "date-fns": "^4.1.0",
         "file-saver": "^2.0.5",
