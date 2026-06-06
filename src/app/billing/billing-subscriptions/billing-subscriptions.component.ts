@@ -22,6 +22,7 @@ export class BillingSubscriptionsComponent implements OnInit {
 
     syncingSubscriptionId: string | null = null;
     retryingSubscriptionId: string | null = null;
+    resumingCheckoutId: string | null = null;
 
     // Subscription scope
     subscriptionScope: "user" | "workspace" = "user";
@@ -206,6 +207,31 @@ export class BillingSubscriptionsComponent implements OnInit {
             sub.payment_mode === "subscription" &&
             !!sub.stripe_subscription_id
         );
+    }
+
+    canResumeCheckout(sub: Subscription): boolean {
+        return sub.status === "pending";
+    }
+
+    async resumeCheckout(sub: Subscription): Promise<void> {
+        this.resumingCheckoutId = sub.id;
+        this.errorMessage = "";
+        try {
+            const url = await this.subscriptionStore.resumeCheckout(
+                sub.id,
+                this.subscriptionScope === "workspace",
+            );
+            if (url) {
+                window.location.href = url;
+            } else {
+                this.errorMessage =
+                    'Unable to open checkout. The payment may already be completed — try "Check payment status".';
+            }
+        } catch {
+            this.errorMessage = "Unable to open checkout. Please try again.";
+        } finally {
+            this.resumingCheckoutId = null;
+        }
     }
 
     async retrySubscription(sub: Subscription): Promise<void> {

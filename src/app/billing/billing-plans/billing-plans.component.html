@@ -307,7 +307,7 @@
                                 }
 
                                 <div class="mt-4">
-                                    @if (plan.prices.length > 0) {
+                                    @if (canBuy(plan)) {
                                         <div class="flex items-baseline gap-2">
                                             <span
                                                 class="text-3xl font-bold text-gray-900 dark:text-white"
@@ -328,9 +328,21 @@
                                             </p>
                                         }
                                     } @else {
-                                        <span class="text-sm text-gray-400 dark:text-gray-500" i18n
-                                            >No pricing available</span
+                                        <div class="flex items-baseline gap-2">
+                                            <span
+                                                class="text-3xl font-bold text-gray-900 dark:text-white"
+                                                i18n
+                                            >
+                                                Free
+                                            </span>
+                                        </div>
+                                        <p
+                                            class="mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                            i18n
                                         >
+                                            Default plan — applied automatically when you have no
+                                            active subscription
+                                        </p>
                                     }
                                 </div>
 
@@ -349,18 +361,24 @@
                                 </ul>
 
                                 <div class="mt-5 flex gap-2">
-                                    @if (checkoutLoading) {
+                                    @if (!canBuy(plan)) {
                                         <button
-                                            (click)="checkout(plan, 'payment')"
-                                            [disabled]="checkoutLoading"
+                                            [disabled]="true"
+                                            class="flex-1 cursor-not-allowed rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-400 dark:border-gray-700 dark:text-gray-500"
+                                            i18n
+                                        >
+                                            Default plan — no purchase needed
+                                        </button>
+                                    } @else if (checkoutLoading) {
+                                        <button
+                                            [disabled]="true"
                                             class="flex-1 rounded-lg border border-blue-600 px-4 py-2.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20"
                                             i18n
                                         >
                                             Processing...
                                         </button>
                                         <button
-                                            (click)="checkout(plan, 'subscription')"
-                                            [disabled]="checkoutLoading"
+                                            [disabled]="true"
                                             class="flex-1 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400"
                                             i18n
                                         >
@@ -392,4 +410,7 @@
             </div>
         }
     </div>
+
+    <!-- Bottom spacing so cards aren't glued to the viewport edge -->
+    <div class="h-2" aria-hidden="true"></div>
 </div>

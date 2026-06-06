@@ -106,6 +106,34 @@
                                 </div>
 
                                 <div class="flex items-center gap-2">
+                                    @if (canResumeCheckout(sub)) {
+                                        <button
+                                            (click)="resumeCheckout(sub)"
+                                            [disabled]="resumingCheckoutId === sub.id"
+                                            class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                            i18n
+                                        >
+                                            <svg
+                                                class="h-4 w-4"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3Z"
+                                                />
+                                            </svg>
+                                            {{
+                                                resumingCheckoutId === sub.id
+                                                    ? "Opening…"
+                                                    : "Resume checkout"
+                                            }}
+                                        </button>
+                                    }
                                     @if (canSync(sub)) {
                                         <button
                                             (click)="syncSubscription(sub)"
@@ -226,4 +254,7 @@
             </div>
         }
     </div>
+
+    <!-- Bottom spacing so cards aren't glued to the viewport edge -->
+    <div class="h-2" aria-hidden="true"></div>
 </div>

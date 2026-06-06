@@ -178,4 +178,21 @@ export class BillingSubscriptionStoreService {
             return null;
         }
     }
+
+    async resumeCheckout(id: string, withWorkspace = false): Promise<string | null> {
+        try {
+            const response = await this.subscriptionController.resumeCheckout(
+                id,
+                {
+                    success_url: `${window.location.origin}/billing-success`,
+                    cancel_url: `${window.location.origin}/billing-cancel`,
+                },
+                withWorkspace,
+            );
+            return response.checkout_url || null;
+        } catch (error) {
+            this.logger.error("Error resuming checkout", error);
+            return null;
+        }
+    }
 }

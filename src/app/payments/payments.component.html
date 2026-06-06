@@ -1,0 +1,155 @@
+<div class="h-full" (scroll)="onScroll($event)">
+    <p class="mb-5 text-sm text-gray-600 dark:text-gray-400" i18n>
+        Your payment history. Download a boleto to pay it, or view a receipt.
+    </p>
+
+    @if (errorMessage) {
+        <div
+            class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/50 dark:bg-red-900/20"
+        >
+            <span class="text-sm text-red-700 dark:text-red-400">{{ errorMessage }}</span>
+        </div>
+    }
+
+    <!-- Scope Selector -->
+    <div class="mb-5">
+        <div class="flex gap-2">
+            <button
+                (click)="selectScope('user')"
+                class="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                [ngClass]="{
+                    'bg-blue-600 text-white dark:bg-blue-500': paymentScope === 'user',
+                    'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600':
+                        paymentScope !== 'user',
+                }"
+                i18n
+            >
+                My Payments
+            </button>
+            @if (canViewWorkspacePayments) {
+                <button
+                    (click)="selectScope('workspace')"
+                    class="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                    [ngClass]="{
+                        'bg-blue-600 text-white dark:bg-blue-500': paymentScope === 'workspace',
+                        'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600':
+                            paymentScope !== 'workspace',
+                    }"
+                    i18n
+                >
+                    Workspace Payments
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="mb-6">
+        @if (paymentStore.loading) {
+            <div class="text-sm text-gray-500 dark:text-gray-400" i18n>Loading payments...</div>
+        } @else if (payments.length === 0) {
+            <div
+                class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+            >
+                <p class="text-sm text-gray-500 dark:text-gray-400" i18n>No payments yet.</p>
+            </div>
+        } @else {
+            <div class="space-y-4">
+                @for (payment of payments; track payment.id) {
+                    <div
+                        class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
+                    >
+                        <div class="p-5">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2">
+                                        <h3
+                                            class="text-base font-semibold text-gray-900 dark:text-white"
+                                        >
+                                            {{ formatAmount(payment) }}
+                                        </h3>
+                                        <span
+                                            class="rounded-full px-2 py-0.5 text-xs font-medium"
+                                            [ngClass]="statusBadgeClass(payment.status)"
+                                        >
+                                            {{ statusLabel(payment.status) }}
+                                        </span>
+                                    </div>
+                                    <div
+                                        class="mt-1 flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
+                                    >
+                                        <span
+                                            class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                                        >
+                                            {{ paymentMethodLabel(payment) }}
+                                        </span>
+                                        <span class="text-xs">
+                                            {{ payment.created_at | date: "medium" }}
+                                        </span>
+                                    </div>
+                                    @if (payment.description) {
+                                        <p
+                                            class="mt-2 truncate text-sm text-gray-600 dark:text-gray-300"
+                                        >
+                                            {{ payment.description }}
+                                        </p>
+                                    }
+                                </div>
+
+                                <div class="flex shrink-0 flex-col items-end gap-2">
+                                    @if (payment.boleto_url) {
+                                        <button
+                                            (click)="openUrl(payment.boleto_url)"
+                                            class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                            i18n
+                                        >
+                                            <svg
+                                                class="h-4 w-4"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M12 4v12m0 0 4-4m-4 4-4-4m-4 8h16"
+                                                />
+                                            </svg>
+                                            Download boleto
+                                        </button>
+                                        @if (payment.boleto_pdf_url) {
+                                            <a
+                                                [href]="payment.boleto_pdf_url"
+                                                target="_blank"
+                                                rel="noopener"
+                                                class="text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
+                                                i18n
+                                            >
+                                                Open PDF
+                                            </a>
+                                        }
+                                    }
+                                    @if (payment.receipt_url) {
+                                        <a
+                                            [href]="payment.receipt_url"
+                                            target="_blank"
+                                            rel="noopener"
+                                            class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                                            i18n
+                                        >
+                                            View receipt
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Bottom spacing so cards aren't glued to the viewport edge -->
+    <div class="h-2" aria-hidden="true"></div>
+</div>

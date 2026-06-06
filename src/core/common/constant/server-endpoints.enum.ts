@@ -56,6 +56,8 @@ export enum ServerEndpoints {
     billing_reactivate = "reactivate",
     billing_sync = "sync",
     billing_retry = "retry",
+    billing_checkout_url = "checkout-url",
+    billing_payment = "payment",
 
     schedule = "schedule",
 }
