@@ -436,7 +436,7 @@
                                             {{ plan.slug }}
                                         </td>
                                         <td class="px-4 py-3">
-                                            @if (plan.prices.length === 0) {
+                                            @if ((plan.prices?.length ?? 0) === 0) {
                                                 <span
                                                     class="text-xs italic text-gray-400 dark:text-gray-500"
                                                     i18n
@@ -444,7 +444,7 @@
                                                 >
                                             } @else {
                                                 <div class="flex flex-wrap gap-1">
-                                                    @for (p of plan.prices; track p.id) {
+                                                    @for (p of plan.prices ?? []; track p.id) {
                                                         <span
                                                             class="rounded-full px-2 py-0.5 text-xs font-medium"
                                                             [ngClass]="
@@ -536,7 +536,7 @@
                                                 </p>
 
                                                 <!-- Prices table -->
-                                                @if (managingPricesPlan.prices.length > 0) {
+                                                @if ((managingPricesPlan.prices?.length ?? 0) > 0) {
                                                     <div
                                                         class="mb-4 overflow-hidden rounded-lg border border-indigo-100 dark:border-indigo-900/40"
                                                     >
@@ -563,7 +563,8 @@
                                                                 class="divide-y divide-indigo-50 dark:divide-indigo-900/30"
                                                             >
                                                                 @for (
-                                                                    p of managingPricesPlan.prices;
+                                                                    p of managingPricesPlan.prices ??
+                                                                        [];
                                                                     track p.id
                                                                 ) {
                                                                     <tr

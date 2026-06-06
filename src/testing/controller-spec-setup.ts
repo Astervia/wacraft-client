@@ -26,6 +26,10 @@ export function setupControllerHttp(): jasmine.SpyObj<AxiosInstance> {
     http.patch.and.resolveTo({ data: undefined });
     http.delete.and.resolveTo({ data: undefined });
     spyOn(axios, "create").and.returnValue(http);
+    // `requestWithoutWorkspace` calls the default `axios.request` directly (bypassing
+    // the per-controller instance) so no X-Workspace-ID header is sent. Stub it so
+    // those calls resolve instead of hitting the network.
+    spyOn(axios, "request").and.resolveTo({ data: undefined } as never);
 
     TestBed.configureTestingModule({
         providers: [

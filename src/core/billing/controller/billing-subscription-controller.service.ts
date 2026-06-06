@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { MainServerControllerService } from "../../common/controller/main-server-controller.service";
 import { ServerEndpoints } from "../../common/constant/server-endpoints.enum";
 import { Subscription } from "../entity/subscription.entity";
-import { CheckoutRequest, CheckoutResponse } from "../model/checkout.model";
+import { CheckoutRequest, CheckoutResponse, ResumeCheckoutRequest } from "../model/checkout.model";
 import { CreateManualSubscription } from "../model/create-manual-subscription.model";
 import { Paginate } from "../../common/model/paginate.model";
 import { DateOrder } from "../../common/model/date-order.model";
@@ -45,6 +45,20 @@ export class BillingSubscriptionControllerService extends MainServerControllerSe
             return (await this.http.post<CheckoutResponse>(url, data)).data;
         }
         return (await this.requestWithoutWorkspace<CheckoutResponse>("post", url, { data })).data;
+    }
+
+    async resumeCheckout(
+        id: string,
+        data: ResumeCheckoutRequest,
+        withWorkspace = true,
+    ): Promise<CheckoutResponse> {
+        const url = `${ServerEndpoints.billing_subscription}/${ServerEndpoints.billing_checkout_url}`;
+        const params = { id };
+        if (withWorkspace) {
+            return (await this.http.post<CheckoutResponse>(url, data, { params })).data;
+        }
+        return (await this.requestWithoutWorkspace<CheckoutResponse>("post", url, { data, params }))
+            .data;
     }
 
     async createManual(data: CreateManualSubscription): Promise<Subscription> {

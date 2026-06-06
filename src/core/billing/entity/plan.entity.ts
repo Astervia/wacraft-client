@@ -11,7 +11,8 @@ export interface PlanFields extends Audit {
     is_default: boolean;
     is_custom: boolean;
     active: boolean;
-    prices: PlanPrice[];
+    // Optional: the backend omits this field entirely for plans that have no prices.
+    prices?: PlanPrice[];
 }
 
 export type Plan = PlanFields;

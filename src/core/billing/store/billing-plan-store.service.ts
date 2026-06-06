@@ -45,7 +45,10 @@ export class BillingPlanStoreService {
     }
 
     add(plans: Plan[]) {
-        this.plans = [...this.plans, ...plans];
+        // Normalize: the backend omits `prices` for plans with none, so guarantee an
+        // array here to keep every consumer's iteration/length checks safe.
+        const normalized = plans.map(plan => ({ ...plan, prices: plan.prices ?? [] }));
+        this.plans = [...this.plans, ...normalized];
     }
 
     async load(): Promise<void> {

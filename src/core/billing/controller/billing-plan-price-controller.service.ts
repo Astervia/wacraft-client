@@ -29,28 +29,32 @@ export class BillingPlanPriceControllerService extends MainServerControllerServi
         ).data;
     }
 
+    // Plan prices are platform-global (superuser-managed), not workspace-scoped, so these
+    // writes must NOT send the X-Workspace-ID header.
     async create(planId: string, data: CreatePlanPrice): Promise<PlanPrice> {
         return (
-            await this.http.post<PlanPrice>(
+            await this.requestWithoutWorkspace<PlanPrice>(
+                "post",
                 `${ServerEndpoints.billing_plan}/${planId}/${ServerEndpoints.billing_plan_price}`,
-                data,
+                { data },
             )
         ).data;
     }
 
     async update(planId: string, id: string, data: UpdatePlanPrice): Promise<PlanPrice> {
         return (
-            await this.http.put<PlanPrice>(
+            await this.requestWithoutWorkspace<PlanPrice>(
+                "put",
                 `${ServerEndpoints.billing_plan}/${planId}/${ServerEndpoints.billing_plan_price}`,
-                data,
-                { params: { id } },
+                { data, params: { id } },
             )
         ).data;
     }
 
     async delete(planId: string, id: string): Promise<void> {
         return (
-            await this.http.delete<void>(
+            await this.requestWithoutWorkspace<void>(
+                "delete",
                 `${ServerEndpoints.billing_plan}/${planId}/${ServerEndpoints.billing_plan_price}`,
                 { params: { id } },
             )

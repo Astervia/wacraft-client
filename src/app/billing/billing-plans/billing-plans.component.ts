@@ -45,7 +45,7 @@ export class BillingPlansComponent implements OnInit, OnDestroy {
         const seen = new Set<string>();
         for (const plan of this.planStore.plans) {
             if (!plan.active) continue;
-            for (const p of plan.prices) seen.add(p.currency.toLowerCase());
+            for (const p of plan.prices ?? []) seen.add(p.currency.toLowerCase());
         }
         return [...seen].sort();
     }
@@ -141,7 +141,7 @@ export class BillingPlansComponent implements OnInit, OnDestroy {
         const counts = new Map<string, number>();
         for (const plan of this.planStore.plans) {
             if (!plan.active) continue;
-            for (const p of plan.prices) {
+            for (const p of plan.prices ?? []) {
                 const c = p.currency.toLowerCase();
                 counts.set(c, (counts.get(c) ?? 0) + 1);
             }
@@ -222,23 +222,29 @@ export class BillingPlansComponent implements OnInit, OnDestroy {
     }
 
     private defaultPrice(plan: Plan): PlanPrice | undefined {
-        return plan.prices.find(p => p.is_default) ?? plan.prices[0];
+        const prices = plan.prices ?? [];
+        return prices.find(p => p.is_default) ?? prices[0];
     }
 
     selectedPrice(plan: Plan): PlanPrice | undefined {
+        const prices = plan.prices ?? [];
         if (this.preferredCurrency) {
-            const match = plan.prices.find(
-                p => p.currency.toLowerCase() === this.preferredCurrency,
-            );
+            const match = prices.find(p => p.currency.toLowerCase() === this.preferredCurrency);
             if (match) return match;
         }
         return this.defaultPrice(plan);
     }
 
+    // A plan can only be purchased when it has at least one price.
+    canBuy(plan: Plan): boolean {
+        return (plan.prices?.length ?? 0) > 0;
+    }
+
     // True when the shown price is the plan default, not the user's preferred currency
     isUsingFallback(plan: Plan): boolean {
-        if (!this.preferredCurrency || plan.prices.length === 0) return false;
-        return !plan.prices.some(p => p.currency.toLowerCase() === this.preferredCurrency);
+        const prices = plan.prices ?? [];
+        if (!this.preferredCurrency || prices.length === 0) return false;
+        return !prices.some(p => p.currency.toLowerCase() === this.preferredCurrency);
     }
 
     formatSelectedPrice(plan: Plan): string {
@@ -254,6 +260,10 @@ export class BillingPlansComponent implements OnInit, OnDestroy {
 
     // Checkout
     async checkout(plan: Plan, paymentMode: PaymentMode = "payment"): Promise<void> {
+        if (!this.canBuy(plan)) {
+            this.errorMessage = "This plan has no pricing available and cannot be purchased.";
+            return;
+        }
         this.checkoutLoading = true;
         this.errorMessage = "";
         try {

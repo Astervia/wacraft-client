@@ -14,3 +14,8 @@ export interface CheckoutResponse {
     checkout_url: string;
     external_id: string;
 }
+
+export interface ResumeCheckoutRequest {
+    success_url: string;
+    cancel_url: string;
+}
