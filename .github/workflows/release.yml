@@ -19,11 +19,31 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v6
 
-            - name: Extract tag name
+            - name: Extract tag & stability
               id: vars
               run: |
                   TAG="${GITHUB_REF#refs/tags/}"
                   echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+                  # A "stable" release is a clean vX.Y.Z tag (no pre-release suffix).
+                  if [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                      echo "stable=true" >> "$GITHUB_OUTPUT"
+                  else
+                      echo "stable=false" >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Compute Docker tags
+              id: dockertags
+              run: |
+                  # Always tag the version. Only stable releases also move ":latest".
+                  TAGS="${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}"
+                  if [ "${{ steps.vars.outputs.stable }}" = "true" ]; then
+                      TAGS="${TAGS}"$'\n'"${{ env.IMAGE_NAME }}:latest"
+                  fi
+                  {
+                      echo "tags<<EOF"
+                      echo "$TAGS"
+                      echo "EOF"
+                  } >> "$GITHUB_OUTPUT"
 
             - name: Install Cosign
               uses: sigstore/cosign-installer@v4.1.2
@@ -43,21 +63,25 @@ jobs:
                   context: .
                   file: ./Dockerfile
                   push: true
-                  tags: |
-                      ${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
-                      ${{ env.IMAGE_NAME }}:latest
+                  tags: ${{ steps.dockertags.outputs.tags }}
+
             - name: Signing the published Docker image
               env:
                   COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
                   COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
               run: |
                   # tag version signing
-                    cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}"
-                  # latest version signing
-                    cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ env.IMAGE_NAME }}:latest"
+                  cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}"
+                  # Only stable releases publish & sign ':latest'.
+                  if [ "${{ steps.vars.outputs.stable }}" = "true" ]; then
+                      cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ env.IMAGE_NAME }}:latest"
+                  fi
 
             - name: Publish GitHub release
               uses: softprops/action-gh-release@v3
               with:
                   tag_name: ${{ steps.vars.outputs.tag }}
                   generate_release_notes: true
+                  # Pre-release tags are marked as such and never become "Latest".
+                  prerelease: ${{ steps.vars.outputs.stable != 'true' }}
+                  make_latest: ${{ steps.vars.outputs.stable == 'true' }}
