@@ -6,6 +6,7 @@ import {
     OnInit,
     Output,
     SecurityContext,
+    ViewChild,
     inject,
 } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -15,10 +16,12 @@ import { UseMedia } from "../../../core/message/model/media-data.model";
 import { MediaStoreService } from "../../../core/media/store/media-store.service";
 import { MatIconModule } from "@angular/material/icon";
 import { NGXLogger } from "ngx-logger";
+import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
+import { isHttpError } from "../../../core/common/model/http-error-shape.model";
 
 @Component({
     selector: "app-message-media-content",
-    imports: [CommonModule, MatIconModule],
+    imports: [CommonModule, MatIconModule, TimeoutErrorModalComponent],
     templateUrl: "./message-media-content.component.html",
     styleUrl: "./message-media-content.component.scss",
     standalone: true,
@@ -35,6 +38,8 @@ export class MessageMediaContentComponent implements OnInit {
     @Input() messageType!: MessageType | ReceivedMessageType;
     @Input() isSent!: boolean;
     @Output() asyncContentLoaded = new EventEmitter();
+
+    @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
     mediaSafeUrl = "";
 
@@ -56,7 +61,11 @@ export class MessageMediaContentComponent implements OnInit {
             return;
         }
         if (!this.mediaData.id) return;
-        this.mediaSafeUrl = await this.mediaStore.downloadMediaById(this.mediaData.id);
+        try {
+            this.mediaSafeUrl = await this.mediaStore.downloadMediaById(this.mediaData.id);
+        } catch (error) {
+            this.handleErr("Failed to load media. Please try again.", error);
+        }
     }
 
     async downloadMedia() {
@@ -79,7 +88,13 @@ export class MessageMediaContentComponent implements OnInit {
         }
 
         if (!this.mediaData.id) return;
-        const urlString: string = await this.mediaStore.downloadMediaById(this.mediaData.id);
+        let urlString: string;
+        try {
+            urlString = await this.mediaStore.downloadMediaById(this.mediaData.id);
+        } catch (error) {
+            this.handleErr("Failed to download media. Please try again.", error);
+            return;
+        }
 
         if (!urlString) {
             this.logger.error("Failed to sanitize the URL");
@@ -121,5 +136,20 @@ export class MessageMediaContentComponent implements OnInit {
         const autoPreview = this.localSettings.autoPreview[`${this.messageType}`];
         if (!autoPreview) return;
         return await this.setMediaUrl();
+    }
+
+    errorStr = "";
+    errorData: unknown;
+    handleErr(message: string, err: unknown) {
+        if (isHttpError(err)) {
+            this.errorData = err.response?.data;
+            this.errorStr = err.response?.data?.description ?? message;
+        } else {
+            this.errorData = err;
+            this.errorStr = message;
+        }
+
+        this.logger.error("Async error", err);
+        this.errorModal.openModal();
     }
 }
