@@ -31,7 +31,7 @@
         "@angular/router": "^20.3.18",
         "@angular/service-worker": "^20.3.18",
         "@ctrl/ngx-emoji-mart": "^9.2.0",
-        "@fortawesome/fontawesome-free": "^6.6.0",
+        "@fortawesome/fontawesome-free": "^7.2.0",
         "@types/leaflet": "^1.9.21",
         "@types/papaparse": "^5.3.14",
         "apexcharts": "^5.3.6",
