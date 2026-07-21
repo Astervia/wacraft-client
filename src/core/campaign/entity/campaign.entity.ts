@@ -2,12 +2,7 @@ import { Audit } from "../../common/model/audit.model";
 import { MessagingProduct } from "../../messaging-product/entity/messaging-product.entity";
 
 export type CampaignStatus =
-    | "draft"
-    | "scheduled"
-    | "running"
-    | "completed"
-    | "failed"
-    | "cancelled";
+    "draft" | "scheduled" | "running" | "completed" | "failed" | "cancelled";
 
 export interface CampaignFields extends Audit {
     name: string;

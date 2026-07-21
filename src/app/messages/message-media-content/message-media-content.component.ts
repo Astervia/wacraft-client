@@ -124,14 +124,12 @@ export class MessageMediaContentComponent implements OnInit {
     }
 
     async handleAutoPreview() {
-        if (
-            !(
-                this.messageType === MessageType.image ||
-                this.messageType === MessageType.video ||
-                this.messageType === MessageType.audio ||
-                this.messageType === MessageType.sticker
-            )
-        )
+        if (!(
+            this.messageType === MessageType.image ||
+            this.messageType === MessageType.video ||
+            this.messageType === MessageType.audio ||
+            this.messageType === MessageType.sticker
+        ))
             return;
         const autoPreview = this.localSettings.autoPreview[`${this.messageType}`];
         if (!autoPreview) return;

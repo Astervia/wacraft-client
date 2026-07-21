@@ -137,7 +137,7 @@ export class WebhookLogsComponent implements OnInit {
         if (
             // Check if the user has scrolled to the bottom of the element
             !(
-                (element.scrollHeight - element.scrollTop <= element.clientHeight + 100)
+                element.scrollHeight - element.scrollTop <= element.clientHeight + 100
                 // Check if some request is being performed
             ) ||
             this.isLoading
