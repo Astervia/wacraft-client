@@ -137,14 +137,12 @@ export class MediaPreviewComponent implements OnInit {
 
     async handleAutoPreview() {
         const type = this.messageDataPipe.transform(this.message).type;
-        if (
-            !(
-                type === MessageType.image ||
-                type === MessageType.video ||
-                type === MessageType.audio ||
-                type === MessageType.sticker
-            )
-        )
+        if (!(
+            type === MessageType.image ||
+            type === MessageType.video ||
+            type === MessageType.audio ||
+            type === MessageType.sticker
+        ))
             return;
         const autoPreview = this.localSettings.autoPreview[`${type}`];
         if (!autoPreview) return;

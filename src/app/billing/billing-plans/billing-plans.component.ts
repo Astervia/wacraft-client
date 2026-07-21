@@ -52,12 +52,10 @@ export class BillingPlansComponent implements OnInit, OnDestroy {
 
     onScroll(event: Event): void {
         const element = event.target as HTMLElement;
-        if (
-            !(
-                element.scrollHeight - element.scrollTop <= element.clientHeight + 100 &&
-                !this.scrolling
-            )
-        )
+        if (!(
+            element.scrollHeight - element.scrollTop <= element.clientHeight + 100 &&
+            !this.scrolling
+        ))
             return;
 
         if (!this.planStore.reachedMaxLimit) {
